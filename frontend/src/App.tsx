@@ -23,6 +23,7 @@ const HealthPage = React.lazy(() => import('./pages/HealthPage.js'));
 const GoalsPage = React.lazy(() => import('./pages/GoalsPage.js'));
 const SimulationPage = React.lazy(() => import('./pages/SimulationPage.js'));
 const AiCoachPage = React.lazy(() => import('./pages/AiCoachPage.js'));
+const SettingsPage = React.lazy(() => import('./pages/SettingsPage.js'));
 
 // Placeholder components
 const PlaceholderPage = ({ title }: { title: string }) => (
@@ -88,7 +89,11 @@ export function App() {
                 </React.Suspense>
               } />
               
-              <Route path="settings" element={<PlaceholderPage title="Settings" />} />
+              <Route path="settings" element={
+                <React.Suspense fallback={<div className="p-6 h-full flex items-center justify-center text-sm text-[var(--color-text-secondary)]"><span className="animate-pulse">Loading Settings...</span></div>}>
+                  <SettingsPage />
+                </React.Suspense>
+              } />
               <Route path="*" element={<NotFoundPage />} />
             </Route>
           </Routes>

@@ -3,6 +3,7 @@ import { Upload, Target, Bot, Database, Sparkles, ArrowRight } from 'lucide-reac
 import { Link } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
+import { apiClient } from '../../../lib/axios.js';
 
 export function DashboardOnboarding() {
   const queryClient = useQueryClient();
@@ -11,14 +12,9 @@ export function DashboardOnboarding() {
   const handleLoadDemo = async () => {
     setIsLoading(true);
     try {
-      const res = await fetch('/api/demo/seed', {
-        method: 'POST',
-        headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
-      });
-      if (res.ok) {
-        await queryClient.invalidateQueries();
-        window.location.href = '/';
-      }
+      await apiClient.post('/demo/seed');
+      await queryClient.invalidateQueries();
+      window.location.href = '/';
     } catch (err) {
       console.error(err);
       setIsLoading(false);

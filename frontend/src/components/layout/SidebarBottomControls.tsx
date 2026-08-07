@@ -3,6 +3,7 @@ import { useUiStore } from '../../store/uiStore.js';
 import { Presentation, Database, Info, AlertTriangle } from 'lucide-react';
 import { cn } from '../../lib/utils.js';
 import { useQueryClient } from '@tanstack/react-query';
+import { apiClient } from '../../lib/axios.js';
 
 export function SidebarBottomControls() {
   const { presentationMode, setPresentationMode, setAboutModalOpen } = useUiStore();
@@ -13,14 +14,9 @@ export function SidebarBottomControls() {
   const handleLoadDemo = async () => {
     setIsLoading(true);
     try {
-      const res = await fetch('/api/demo/seed', {
-        method: 'POST',
-        headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
-      });
-      if (res.ok) {
-        await queryClient.invalidateQueries();
-        window.location.href = '/'; // hard reload to reset all states
-      }
+      await apiClient.post('/demo/seed');
+      await queryClient.invalidateQueries();
+      window.location.href = '/'; // hard reload to reset all states
     } catch (err) {
       console.error('Failed to load demo workspace', err);
     } finally {
