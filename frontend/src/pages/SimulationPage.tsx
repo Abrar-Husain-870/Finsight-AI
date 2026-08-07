@@ -40,7 +40,7 @@ export default function SimulationPage() {
                 <label className="text-sm font-medium text-[var(--color-text-primary)] flex justify-between">
                   Monthly Income Shift
                   <span className={parseFloat(incomeAdjStr) >= 0 ? "text-green-500" : "text-red-500"}>
-                    {parseFloat(incomeAdjStr) >= 0 ? '+' : ''}${parseFloat(incomeAdjStr) || 0}
+                    {parseFloat(incomeAdjStr) >= 0 ? '+' : ''}{formatMoney((parseFloat(incomeAdjStr) || 0) * 100)}
                   </span>
                 </label>
                 <input 
@@ -51,8 +51,8 @@ export default function SimulationPage() {
                   className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700"
                 />
                 <div className="flex justify-between text-xs text-[var(--color-text-secondary)]">
-                  <span>-$5k</span>
-                  <span>+$5k</span>
+                  <span>-{formatMoney(500000).replace(/\.\d{2}$/, '')}</span>
+                  <span>+{formatMoney(500000).replace(/\.\d{2}$/, '')}</span>
                 </div>
               </div>
 
@@ -60,7 +60,7 @@ export default function SimulationPage() {
                 <label className="text-sm font-medium text-[var(--color-text-primary)] flex justify-between">
                   Monthly Expense Shift
                   <span className={parseFloat(expenseAdjStr) > 0 ? "text-red-500" : parseFloat(expenseAdjStr) < 0 ? "text-green-500" : "text-gray-500"}>
-                    {parseFloat(expenseAdjStr) > 0 ? '+' : ''}${parseFloat(expenseAdjStr) || 0}
+                    {parseFloat(expenseAdjStr) > 0 ? '+' : ''}{formatMoney((parseFloat(expenseAdjStr) || 0) * 100)}
                   </span>
                 </label>
                 <input 
@@ -71,8 +71,8 @@ export default function SimulationPage() {
                   className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700"
                 />
                 <div className="flex justify-between text-xs text-[var(--color-text-secondary)]">
-                  <span>-$5k (Save more)</span>
-                  <span>+$5k (Spend more)</span>
+                  <span>-{formatMoney(500000).replace(/\.\d{2}$/, '')} (Save more)</span>
+                  <span>+{formatMoney(500000).replace(/\.\d{2}$/, '')} (Spend more)</span>
                 </div>
               </div>
               

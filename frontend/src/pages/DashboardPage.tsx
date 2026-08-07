@@ -59,28 +59,28 @@ export default function DashboardPage() {
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
         <MetricCard
           title="Net Cash Flow"
-          value={summary ? formatMoney(summary.netCashFlow) : '$0.00'}
+          value={summary ? formatMoney(summary.netCashFlow) : formatMoney(0)}
           icon={Wallet}
           iconColorClass="text-[var(--color-accent-primary)] bg-[var(--color-accent-primary)]/10"
           isLoading={isLoading}
         />
         <MetricCard
           title="Total Income"
-          value={summary ? formatMoney(summary.totalIncome) : '$0.00'}
+          value={summary ? formatMoney(summary.totalIncome) : formatMoney(0)}
           icon={TrendingUp}
           iconColorClass="text-[var(--color-success)] bg-[var(--color-success)]/10"
           isLoading={isLoading}
         />
         <MetricCard
           title="Total Expenses"
-          value={summary ? formatMoney(summary.totalExpenses) : '$0.00'}
+          value={summary ? formatMoney(summary.totalExpenses) : formatMoney(0)}
           icon={TrendingDown}
           iconColorClass="text-[var(--color-danger)] bg-[var(--color-danger)]/10"
           isLoading={isLoading}
         />
         <MetricCard
           title="Savings"
-          value={summary ? formatMoney(summary.savings) : '$0.00'}
+          value={summary ? formatMoney(summary.savings) : formatMoney(0)}
           icon={Target}
           iconColorClass="text-purple-500 bg-purple-500/10"
           isLoading={isLoading}

@@ -2,11 +2,13 @@ import React from 'react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { MonthlyTrend, fromMinor } from '@finsight/shared';
 import { useTheme } from '../../../providers/ThemeProvider.js';
+import { useCurrency } from '../../../lib/hooks/useCurrency.js';
 import { motion } from 'framer-motion';
 
 export function MonthlyTrendChart({ data }: { data: MonthlyTrend[] }) {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
+  const { formatMoney } = useCurrency();
 
   const chartData = React.useMemo(() => {
     return data.map(d => {
@@ -61,7 +63,7 @@ export function MonthlyTrendChart({ data }: { data: MonthlyTrend[] }) {
             axisLine={false}
             tickLine={false}
             tick={{ fill: isDark ? '#9ca3af' : '#6b7280', fontSize: 12 }}
-            tickFormatter={(val) => `$${val}`}
+            tickFormatter={(val) => formatMoney(val * 100).replace(/\.\d{2}$/, '')} // Format major units without cents
             width={60}
           />
           <Tooltip 
@@ -71,7 +73,7 @@ export function MonthlyTrendChart({ data }: { data: MonthlyTrend[] }) {
               borderRadius: '8px',
               color: isDark ? '#f3f4f6' : '#111827'
             }}
-            formatter={(value: string | number | readonly (string | number)[] | undefined) => [`$${Number(value || 0).toFixed(2)}`, undefined]}
+            formatter={(value: string | number | readonly (string | number)[] | undefined) => [formatMoney(Number(value || 0) * 100), undefined]}
           />
           <Area type="monotone" dataKey="Income" stroke="#10b981" strokeWidth={2} fillOpacity={1} fill="url(#colorIncome)" />
           <Area type="monotone" dataKey="Expense" stroke="#ef4444" strokeWidth={2} fillOpacity={1} fill="url(#colorExpense)" />

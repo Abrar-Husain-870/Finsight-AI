@@ -1,5 +1,6 @@
 import React from 'react';
-import { TransactionResponse, formatMoney } from '@finsight/shared';
+import { TransactionResponse } from '@finsight/shared';
+import { useCurrency } from '../../../lib/hooks/useCurrency.js';
 import { useCategoryTree } from '../../categories/hooks/useCategories.js';
 import { CategoryIcon } from '../../categories/components/CategoryIcon.js';
 import { Edit2, Trash2 } from 'lucide-react';
@@ -12,6 +13,7 @@ interface TransactionRowProps {
 }
 
 export const TransactionRow = React.memo(function TransactionRow({ transaction, onEdit, onDelete }: TransactionRowProps) {
+  const { formatMoney } = useCurrency();
   const { data: tree } = useCategoryTree();
   
   // Find category details
@@ -70,7 +72,7 @@ export const TransactionRow = React.memo(function TransactionRow({ transaction, 
           {transaction.description || '-'}
         </td>
         <td className="whitespace-nowrap px-3 py-4 text-sm font-semibold text-right text-[var(--color-text-primary)]">
-          {formatMoney(transaction.amount, transaction.currency)}
+          {formatMoney(transaction.amount)}
         </td>
         <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
           <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity focus-within:opacity-100">
@@ -100,7 +102,7 @@ export const TransactionRow = React.memo(function TransactionRow({ transaction, 
               <span className="text-xs text-[var(--color-text-secondary)]">{categoryName}</span>
             </div>
           </div>
-          <span className="font-semibold text-[var(--color-text-primary)] text-sm">{formatMoney(transaction.amount, transaction.currency)}</span>
+          <span className="font-semibold text-[var(--color-text-primary)] text-sm">{formatMoney(transaction.amount)}</span>
         </div>
         <div className="flex justify-between items-center mt-2">
           <span className="text-xs text-[var(--color-text-secondary)]">{formattedDate}</span>
