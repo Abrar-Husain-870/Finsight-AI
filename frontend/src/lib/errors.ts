@@ -27,7 +27,7 @@ export function mapHttpError(error: unknown): AppError {
     }
 
     const status = axiosError.response.status;
-    const data = axiosError.response.data as any;
+    const data = axiosError.response.data as { error?: { message?: string, code?: string, requestId?: string } };
     
     // Extract standardized message and code from backend ApiErrorResponse
     const message = data?.error?.message || axiosError.message;

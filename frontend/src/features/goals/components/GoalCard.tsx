@@ -4,7 +4,7 @@ import { GoalResponse, formatMoney } from '@finsight/shared';
 import { GoalProgressRing } from './GoalProgressRing.js';
 import { cn } from '../../../lib/utils.js';
 import { Target, Calendar, AlertCircle, Trophy } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 
 interface Props {
   goal: GoalResponse;

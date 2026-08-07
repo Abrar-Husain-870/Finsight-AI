@@ -11,19 +11,18 @@ export class DemoService {
     const categories = await prisma.category.findMany();
     const getCat = (nameStr: string, type: 'INCOME' | 'EXPENSE') => {
       const cat = categories.find(c => c.name.toLowerCase().includes(nameStr.toLowerCase()) && c.type === type);
-      return cat ? cat.id : categories.find(c => c.type === type)?.id!;
+      return cat ? cat.id : (categories.find(c => c.type === type)?.id || '');
     };
 
     const salaryCatId = getCat('salary', 'INCOME');
     const rentCatId = getCat('housing', 'EXPENSE') || getCat('home', 'EXPENSE');
     const foodCatId = getCat('food', 'EXPENSE');
-    const transportCatId = getCat('transport', 'EXPENSE');
     const utilCatId = getCat('utilit', 'EXPENSE');
     const entCatId = getCat('entertainment', 'EXPENSE');
     const shopCatId = getCat('shopping', 'EXPENSE');
 
     // 3. Generate Transactions (last 6 months)
-    const txToCreate: any[] = [];
+    const txToCreate: Record<string, unknown>[] = [];
     const now = new Date();
     
     for (let monthOffset = 5; monthOffset >= 0; monthOffset--) {

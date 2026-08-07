@@ -4,7 +4,7 @@ import { demoService } from './demo.service.js';
 export class DemoController {
   async seedWorkspace(req: Request, res: Response, next: NextFunction) {
     try {
-      const userId = (req.user as any).id || (req as any).userId;
+      const userId = (req.user as { id?: string })?.id || (req as { userId?: string })?.userId;
       if (!userId) {
         res.status(401).json({ error: { message: 'Unauthorized', code: 'UNAUTHORIZED' } });
         return;
