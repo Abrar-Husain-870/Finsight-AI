@@ -1,7 +1,8 @@
 
 import React, { useState } from 'react';
 import { useGoalSummary } from '../features/goals/hooks/useGoals.js';
-import { GoalResponse, formatMoney } from '@finsight/shared';
+import { GoalResponse } from '@finsight/shared';
+import { useCurrency } from '../lib/hooks/useCurrency.js';
 import { GoalCard } from '../features/goals/components/GoalCard.js';
 import { GoalPlanner } from '../features/goals/components/GoalPlanner.js';
 import { MetricCard } from '../components/ui/MetricCard.js';
@@ -13,6 +14,7 @@ import { EmptyState } from '../components/ui/EmptyState.js';
 export default function GoalsPage() {
   const { data, isLoading, isError, error, refetch } = useGoalSummary();
   const [plannerOpen, setPlannerOpen] = useState(false);
+  const { formatMoney } = useCurrency();
   const [editingGoal, setEditingGoal] = useState<GoalResponse | undefined>(undefined);
 
   if (isLoading || (!data && !isError)) {

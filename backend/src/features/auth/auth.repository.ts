@@ -24,6 +24,13 @@ export class AuthRepository {
       data: { refreshToken },
     });
   }
+
+  async update(userId: string, data: Prisma.UserUpdateInput) {
+    return prisma.user.update({
+      where: { id: userId },
+      data,
+    });
+  }
 }
 
 export const authRepository = new AuthRepository();

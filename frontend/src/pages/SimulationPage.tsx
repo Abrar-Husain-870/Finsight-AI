@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useRunSimulation } from '../features/simulation/hooks/useSimulation.js';
-import { formatMoney } from '@finsight/shared';
+import { useCurrency } from '../lib/hooks/useCurrency.js';
 import { WidgetContainer } from '../components/ui/WidgetContainer.js';
 import { Calculator, ArrowRight, Target, Activity, DollarSign } from 'lucide-react';
 import { cn } from '../lib/utils.js';
 
 export default function SimulationPage() {
   const simulation = useRunSimulation();
+  const { formatMoney } = useCurrency();
   
   // Raw inputs (minor units visually managed as decimals by user)
   const [incomeAdjStr, setIncomeAdjStr] = useState('0');

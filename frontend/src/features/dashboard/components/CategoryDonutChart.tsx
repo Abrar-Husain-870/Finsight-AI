@@ -1,6 +1,7 @@
 import React from 'react';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
-import { CategoryBreakdown, fromMinor, formatMoney } from '@finsight/shared';
+import { CategoryBreakdown, fromMinor } from '@finsight/shared';
+import { useCurrency } from '../../../lib/hooks/useCurrency.js';
 import { motion } from 'framer-motion';
 import { useTheme } from '../../../providers/ThemeProvider.js';
 
@@ -22,6 +23,7 @@ const colorMap: Record<string, string> = {
 export function CategoryDonutChart({ data }: { data: CategoryBreakdown[] }) {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
+  const { formatMoney } = useCurrency();
 
   const chartData = React.useMemo(() => {
     return data.map(d => ({

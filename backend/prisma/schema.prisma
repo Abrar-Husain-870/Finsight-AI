@@ -13,6 +13,7 @@ model User {
   passwordHash   String?
   name           String
   picture        String?
+  currency       String            @default("USD")
   provider       String            @default("local") // local or google
   providerId     String?           @unique
   refreshToken   String?

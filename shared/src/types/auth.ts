@@ -4,6 +4,7 @@ export interface UserResponse {
   name: string;
   picture: string | null;
   provider: string;
+  currency: string;
 }
 
 export interface AuthResponse {

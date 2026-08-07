@@ -81,6 +81,17 @@ export class AuthController {
     }
   }
 
+  async updateProfile(req: Request, res: Response, next: NextFunction) {
+    try {
+      const userId = (req as import("../../core/middleware/auth.middleware.js").AuthenticatedRequest).user?.id;
+      if (!userId) throw new AuthenticationError();
+      const user = await authService.updateProfile(userId, req.body);
+      return sendSuccess(res, user);
+    } catch (error) {
+      return next(error);
+    }
+  }
+
   async googleCallback(req: Request, res: Response, next: NextFunction) {
     try {
       // Passport attaches the result to req.user in our custom strategy handling

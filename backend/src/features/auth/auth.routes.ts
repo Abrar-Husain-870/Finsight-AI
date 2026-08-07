@@ -5,7 +5,7 @@ import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import { authController } from './auth.controller.js';
 import { requireAuth } from '../../core/middleware/auth.middleware.js';
 import { validateRequest } from '../../core/middleware/validate.middleware.js';
-import { loginSchema, registerSchema } from '@finsight/shared';
+import { loginSchema, registerSchema, updateProfileSchema } from '@finsight/shared';
 import { env } from '../../core/config/env.js';
 import { authService } from './auth.service.js';
 
@@ -33,6 +33,7 @@ router.post('/demo', authController.demoLogin);
 router.post('/refresh', authController.refresh);
 router.post('/logout', requireAuth, authController.logout);
 router.get('/me', requireAuth, authController.getMe);
+router.patch('/me', requireAuth, validateRequest(updateProfileSchema), authController.updateProfile);
 
 router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'], session: false }));
 router.get('/google/callback', passport.authenticate('google', { session: false, failureRedirect: '/login' }), authController.googleCallback);

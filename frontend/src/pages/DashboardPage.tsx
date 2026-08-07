@@ -5,7 +5,7 @@ import { WidgetContainer } from '../components/ui/WidgetContainer.js';
 import { MonthlyTrendChart } from '../features/dashboard/components/MonthlyTrendChart.js';
 import { CategoryDonutChart } from '../features/dashboard/components/CategoryDonutChart.js';
 import { RecentTransactionsWidget } from '../features/dashboard/components/RecentTransactionsWidget.js';
-import { formatMoney } from '@finsight/shared';
+import { useCurrency } from '../lib/hooks/useCurrency.js';
 import { Wallet, TrendingUp, TrendingDown, Target, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { ErrorState } from '../components/ui/ErrorState.js';
@@ -18,6 +18,7 @@ import { DashboardOnboarding } from '../features/dashboard/components/DashboardO
 export default function DashboardPage() {
   const { data: summary, isLoading, isError, error, refetch } = useDashboardSummary();
   const queryClient = useQueryClient();
+  const { formatMoney } = useCurrency();
 
   useEffect(() => {
     if (summary) {

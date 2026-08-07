@@ -5,11 +5,43 @@ import { User, Moon, Sun, Monitor, ShieldAlert, Trash2 } from 'lucide-react';
 import { Button } from '../components/ui/Button.js';
 import { Card } from '../components/ui/Card.js';
 import { emitSystemAlert } from '../lib/errors.js';
+import { authApi } from '../features/auth/api/auth.api.js';
+
+const CURRENCIES = [
+  { value: 'USD', label: 'USD ($)' },
+  { value: 'EUR', label: 'EUR (€)' },
+  { value: 'GBP', label: 'GBP (£)' },
+  { value: 'INR', label: 'INR (₹)' },
+  { value: 'JPY', label: 'JPY (¥)' },
+  { value: 'CAD', label: 'CAD ($)' },
+  { value: 'AUD', label: 'AUD ($)' }
+];
 
 export default function SettingsPage() {
-  const user = useAuthStore(s => s.user);
+  const { user, accessToken, setAuth } = useAuthStore(s => ({ 
+    user: s.user, 
+    accessToken: s.accessToken,
+    setAuth: s.setAuth 
+  }));
   const { theme, setTheme } = useTheme();
   const [isClearing, setIsClearing] = useState(false);
+  const [isUpdatingCurrency, setIsUpdatingCurrency] = useState(false);
+
+  const handleCurrencyChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const newCurrency = e.target.value;
+    if (!user || !accessToken) return;
+    
+    setIsUpdatingCurrency(true);
+    try {
+      const updatedUser = await authApi.updateProfile({ currency: newCurrency });
+      setAuth(updatedUser, accessToken);
+    } catch (err) {
+      console.error(err);
+      emitSystemAlert("Failed to update currency", "error");
+    } finally {
+      setIsUpdatingCurrency(false);
+    }
+  };
 
   const handleClearData = async () => {
     if (!window.confirm("Are you absolutely sure? This will delete all your transactions, goals, and AI configurations. This action cannot be undone.")) return;
@@ -57,6 +89,23 @@ export default function SettingsPage() {
               <div className="px-2 py-1 text-xs font-medium rounded-full bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400">
                 Verified
               </div>
+            </div>
+
+            <div className="flex items-center justify-between p-4 rounded-lg bg-[var(--color-bg-secondary)] border border-[var(--color-border-primary)]">
+              <div>
+                <p className="text-sm font-medium text-[var(--color-text-primary)]">Preferred Currency</p>
+                <p className="text-sm text-[var(--color-text-secondary)]">Used across all charts and metrics</p>
+              </div>
+              <select 
+                value={user?.currency || 'USD'} 
+                onChange={handleCurrencyChange}
+                disabled={isUpdatingCurrency}
+                className="p-2 bg-[var(--color-bg-primary)] border border-[var(--color-border-primary)] rounded-md text-sm text-[var(--color-text-primary)] focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
+              >
+                {CURRENCIES.map(c => (
+                  <option key={c.value} value={c.value}>{c.label}</option>
+                ))}
+              </select>
             </div>
           </div>
         </Card>

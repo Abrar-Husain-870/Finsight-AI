@@ -1,6 +1,7 @@
 
 import React from 'react';
-import { GoalResponse, formatMoney } from '@finsight/shared';
+import { GoalResponse } from '@finsight/shared';
+import { useCurrency } from '../../../lib/hooks/useCurrency.js';
 import { GoalProgressRing } from './GoalProgressRing.js';
 import { cn } from '../../../lib/utils.js';
 import { Target, Calendar, AlertCircle, Trophy } from 'lucide-react';
@@ -13,6 +14,7 @@ interface Props {
 
 export function GoalCard({ goal, onClick }: Props) {
   const isUnrealistic = goal.feasibility === 'UNREALISTIC';
+  const { formatMoney } = useCurrency();
   
   return (
     <motion.div 

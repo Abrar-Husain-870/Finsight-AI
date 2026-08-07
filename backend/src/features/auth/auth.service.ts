@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken';
 import { env } from '../../core/config/env.js';
 import { authRepository } from './auth.repository.js';
 import { AuthenticationError, ConflictError } from '../../core/errors/app-error.js';
-import { LoginInput, RegisterInput, UserResponse } from '@finsight/shared';
+import { LoginInput, RegisterInput, UserResponse, UpdateProfileInput } from '@finsight/shared';
 import { User } from '@prisma/client';
 import { Profile } from 'passport-google-oauth20';
 
@@ -24,6 +24,7 @@ export class AuthService {
       name: user.name,
       picture: user.picture,
       provider: user.provider,
+      currency: user.currency,
     };
   }
 
@@ -109,6 +110,19 @@ export class AuthService {
       throw new AuthenticationError('User not found');
     }
     return this.mapToUserResponse(user);
+  }
+
+  async updateProfile(userId: string, data: UpdateProfileInput) {
+    const user = await authRepository.findById(userId);
+    if (!user) {
+      throw new AuthenticationError('User not found');
+    }
+    
+    const updateData: any = {};
+    if (data.currency !== undefined) updateData.currency = data.currency;
+
+    const updated = await authRepository.update(userId, updateData);
+    return this.mapToUserResponse(updated);
   }
 
   async handleGoogleOAuth(profile: Profile) {

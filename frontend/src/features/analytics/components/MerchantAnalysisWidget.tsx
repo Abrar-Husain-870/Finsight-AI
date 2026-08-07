@@ -1,7 +1,8 @@
 import React from 'react';
-import { formatMoney } from '@finsight/shared';
+import { useCurrency } from '../../../lib/hooks/useCurrency.js';
 
 export function MerchantAnalysisWidget({ data }: { data: { merchant: string; amount: number; count: number }[] }) {
+  const { formatMoney } = useCurrency();
   if (data.length === 0) {
     return <div className="text-sm text-[var(--color-text-secondary)]">No merchant data available.</div>;
   }

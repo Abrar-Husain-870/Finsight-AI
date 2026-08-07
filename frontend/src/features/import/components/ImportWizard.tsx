@@ -5,7 +5,7 @@ import { UploadCloud, CheckCircle2, AlertCircle, ChevronRight, Check } from 'luc
 import { ColumnMapping, ImportPreviewResponse } from '@finsight/shared';
 import { useImportPreview, useImportCommit } from '../hooks/useImport.js';
 import { CategoryPicker } from '../../categories/components/CategoryPicker.js';
-import { formatMoney } from '@finsight/shared';
+import { useCurrency } from '../../../lib/hooks/useCurrency.js';
 import { toast } from 'sonner';
 
 type Step = 'UPLOAD' | 'MAP_COLUMNS' | 'PREVIEW' | 'SUMMARY';
@@ -13,6 +13,7 @@ type Step = 'UPLOAD' | 'MAP_COLUMNS' | 'PREVIEW' | 'SUMMARY';
 export function ImportWizard() {
   const [step, setStep] = useState<Step>('UPLOAD');
   const [file, setFile] = useState<File | null>(null);
+  const { formatMoney } = useCurrency();
   const [headers, setHeaders] = useState<string[]>([]);
   
   const [mapping, setMapping] = useState<Partial<ColumnMapping>>({});

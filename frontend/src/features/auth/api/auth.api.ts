@@ -1,5 +1,5 @@
 import { apiClient } from '../../../lib/axios.js';
-import { LoginInput, RegisterInput, AuthResponse, UserResponse } from '@finsight/shared';
+import { LoginInput, RegisterInput, AuthResponse, UserResponse, UpdateProfileInput } from '@finsight/shared';
 
 export const authApi = {
   login: async (data: LoginInput): Promise<AuthResponse> => {
@@ -23,6 +23,11 @@ export const authApi = {
 
   getMe: async (): Promise<UserResponse> => {
     const response = await apiClient.get<{ data: UserResponse }>('/auth/me');
+    return response.data.data;
+  },
+
+  updateProfile: async (data: UpdateProfileInput): Promise<UserResponse> => {
+    const response = await apiClient.patch<{ data: UserResponse }>('/auth/me', data);
     return response.data.data;
   },
   

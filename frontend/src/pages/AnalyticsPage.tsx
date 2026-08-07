@@ -7,11 +7,12 @@ import { CategoryDonutChart } from '../features/dashboard/components/CategoryDon
 import { InsightCardWidget } from '../features/analytics/components/InsightCardWidget.js';
 import { MerchantAnalysisWidget } from '../features/analytics/components/MerchantAnalysisWidget.js';
 import { TransactionRow } from '../features/transactions/components/TransactionRow.js';
-import { formatMoney } from '@finsight/shared';
+import { useCurrency } from '../lib/hooks/useCurrency.js';
 import { TrendingUp, TrendingDown, DollarSign } from 'lucide-react';
 
 export default function AnalyticsPage() {
   const { data, isLoading } = useAnalyticsSummary();
+  const { formatMoney } = useCurrency();
 
   if (isLoading || !data) {
     return (

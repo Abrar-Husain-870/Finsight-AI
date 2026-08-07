@@ -5,6 +5,7 @@ export * from './types/category.js';
 export * from './utils/category.js';
 export * from './types/transaction.js';
 export * from './schemas/transaction.schema.js';
+export * from './schemas/user.schema.js';
 export * from './utils/money.js';
 export * from './types/dashboard.js';
 export * from './types/import.js';
