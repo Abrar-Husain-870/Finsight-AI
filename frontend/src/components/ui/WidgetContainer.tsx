@@ -12,11 +12,11 @@ interface WidgetContainerProps {
 export function WidgetContainer({ title, children, className, action }: WidgetContainerProps) {
   return (
     <Card noPadding className={cn("flex flex-col overflow-hidden", className)}>
-      <div className="flex items-center justify-between border-b border-[var(--color-border-primary)] px-6 py-4 bg-[var(--color-bg-primary)]">
-        <h3 className="text-base font-semibold tracking-tight text-[var(--color-text-primary)]">{title}</h3>
+      <div className="flex items-center justify-between px-8 pt-8 pb-2 bg-transparent">
+        <h3 className="text-lg font-medium tracking-tight text-[var(--color-text-primary)]">{title}</h3>
         {action && <div>{action}</div>}
       </div>
-      <div className="flex-1 p-6">
+      <div className="flex-1 px-8 pb-8 pt-2">
         {children}
       </div>
     </Card>

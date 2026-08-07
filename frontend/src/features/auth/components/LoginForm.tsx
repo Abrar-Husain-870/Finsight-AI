@@ -6,8 +6,8 @@ import { PasswordField } from './PasswordField.js';
 import { useAuthStore } from '../store/auth.store.js';
 import { authApi } from '../api/auth.api.js';
 import { toast } from 'sonner';
-import { Loader2 } from 'lucide-react';
-import { cn } from '../../../lib/utils.js';
+import { Input } from '../../../components/ui/Input.js';
+import { Button } from '../../../components/ui/Button.js';
 import { mapHttpError } from '../../../lib/errors.js';
 import { useUnsavedChanges } from '../../../hooks/useUnsavedChanges.js';
 
@@ -30,8 +30,6 @@ export function LoginForm() {
     } catch (error: unknown) {
       const appError = mapHttpError(error);
       setSubmitError(appError.message);
-      
-      // Focus error summary
       setTimeout(() => document.getElementById('login-error')?.focus(), 0);
     }
   };
@@ -43,35 +41,29 @@ export function LoginForm() {
           id="login-error"
           tabIndex={-1} 
           role="alert" 
-          className="rounded-md bg-[var(--color-danger)]/10 p-3 text-sm font-medium text-[var(--color-danger)] outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-danger)]"
+          className="rounded-md bg-red-50 dark:bg-red-900/10 p-3 text-sm font-medium text-[var(--color-danger)] outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-danger)]"
         >
           {submitError}
         </div>
       )}
-      <div className="space-y-2">
-        <label htmlFor="email" className="text-sm font-medium text-[var(--color-text-primary)]">
+      <div className="space-y-1">
+        <label htmlFor="email" className="text-sm font-medium text-[var(--color-text-primary)] pl-1">
           Email address
         </label>
-        <input
+        <Input
           id="email"
           type="email"
           autoComplete="email"
           {...register('email')}
-          className={cn(
-            "flex h-10 w-full rounded-md border border-[var(--color-border-primary)] bg-[var(--color-bg-primary)] px-3 py-2 text-sm placeholder:text-[var(--color-text-secondary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-accent-primary)] focus:border-transparent transition-colors",
-            errors.email && "border-[var(--color-danger)] focus:ring-[var(--color-danger)]"
-          )}
+          error={errors.email?.message}
           placeholder="name@example.com"
         />
-        {errors.email && <p className="text-xs text-[var(--color-danger)]">{errors.email.message}</p>}
       </div>
 
-      <div className="space-y-2">
-        <div className="flex items-center justify-between">
-          <label htmlFor="password" className="text-sm font-medium text-[var(--color-text-primary)]">
-            Password
-          </label>
-        </div>
+      <div className="space-y-1">
+        <label htmlFor="password" className="text-sm font-medium text-[var(--color-text-primary)] pl-1">
+          Password
+        </label>
         <PasswordField
           id="password"
           autoComplete="current-password"
@@ -79,16 +71,17 @@ export function LoginForm() {
           error={errors.password?.message}
           placeholder="••••••••"
         />
-        {errors.password && <p className="text-xs text-[var(--color-danger)]">{errors.password.message}</p>}
       </div>
 
-      <button
+      <Button
         type="submit"
         disabled={isSubmitting}
-        className="flex w-full items-center justify-center rounded-md bg-[var(--color-accent-primary)] px-4 py-2.5 text-sm font-semibold text-[var(--color-bg-primary)] hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-[var(--color-accent-primary)] focus:ring-offset-1 disabled:opacity-70 transition-all"
+        isLoading={isSubmitting}
+        className="w-full mt-2"
+        size="lg"
       >
-        {isSubmitting ? <Loader2 className="h-5 w-5 animate-spin" /> : 'Sign in'}
-      </button>
+        Sign In
+      </Button>
     </form>
   );
 }

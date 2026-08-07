@@ -12,11 +12,12 @@ export const Card = React.forwardRef<HTMLDivElement, CardProps>(
     return (
       <motion.div
         ref={ref}
-        {...(hoverable ? { whileHover: { y: -2 } } : {})}
+        {...(hoverable ? { whileHover: { y: -2, scale: 0.995 } } : {})}
+        transition={{ type: "spring", stiffness: 500, damping: 40 }}
         className={cn(
-          "rounded-[var(--radius-xl)] border border-[var(--color-border-primary)] bg-[var(--color-bg-primary)] shadow-[var(--shadow-card)] transition-shadow duration-300",
-          hoverable && "hover:shadow-[var(--shadow-card-hover)]",
-          !noPadding && "p-6",
+          "rounded-[var(--radius-xl)] bg-[var(--color-bg-primary)] shadow-[var(--shadow-card)] transition-shadow duration-300",
+          hoverable && "hover:shadow-[var(--shadow-card-hover)] cursor-pointer",
+          !noPadding && "p-8",
           className
         )}
         {...props}

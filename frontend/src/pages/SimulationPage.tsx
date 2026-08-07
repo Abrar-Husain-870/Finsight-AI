@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRunSimulation } from '../features/simulation/hooks/useSimulation.js';
 import { useCurrency } from '../lib/hooks/useCurrency.js';
-import { WidgetContainer } from '../components/ui/WidgetContainer.js';
-import { Calculator, ArrowRight, Target, Activity, DollarSign } from 'lucide-react';
+import { Calculator, ArrowRight, Target, Activity, DollarSign, RefreshCw } from 'lucide-react';
 import { cn } from '../lib/utils.js';
 
 export default function SimulationPage() {
@@ -26,145 +25,214 @@ export default function SimulationPage() {
   const data = simulation.data;
 
   return (
-    <div className="flex h-full flex-col p-6 max-w-5xl mx-auto w-full gap-6">
+    <div className="flex h-full flex-col p-6 sm:p-10 max-w-[1200px] mx-auto w-full gap-10">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight text-[var(--color-text-primary)]">Financial Simulation</h1>
-        <p className="text-sm text-[var(--color-text-secondary)]">Adjust your income or expenses to see deterministic projections on your health and goals.</p>
+        <h1 className="text-3xl font-bold tracking-tight text-[var(--color-text-primary)]">Financial Simulation</h1>
+        <p className="text-sm text-[var(--color-text-secondary)] mt-1">Adjust your income or expenses to see deterministic projections on your health and goals.</p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="md:col-span-1 flex flex-col gap-4">
-          <WidgetContainer title="Scenario Controls">
-            <div className="flex flex-col gap-6">
-              <div className="flex flex-col gap-2">
-                <label className="text-sm font-medium text-[var(--color-text-primary)] flex justify-between">
-                  Monthly Income Shift
-                  <span className={parseFloat(incomeAdjStr) >= 0 ? "text-green-500" : "text-red-500"}>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-10 lg:gap-16">
+        <div className="md:col-span-1 flex flex-col gap-8">
+          <div className="flex flex-col gap-6 p-6 rounded-[var(--radius-lg)] bg-[var(--color-bg-secondary)]/30 border border-[var(--color-border-primary)]/30 backdrop-blur-sm">
+            <h3 className="text-sm font-semibold text-[var(--color-text-primary)] uppercase tracking-wider">Scenario Controls</h3>
+            
+            <div className="flex flex-col gap-8">
+              <div className="flex flex-col gap-3 group">
+                <label className="text-sm font-medium text-[var(--color-text-primary)] flex justify-between items-end">
+                  <span>Income Shift</span>
+                  <span className={cn("text-lg font-bold tabular-nums tracking-tight transition-colors", 
+                    parseFloat(incomeAdjStr) > 0 ? "text-[var(--color-success)]" : 
+                    parseFloat(incomeAdjStr) < 0 ? "text-[var(--color-danger)]" : 
+                    "text-[var(--color-text-secondary)]"
+                  )}>
                     {parseFloat(incomeAdjStr) >= 0 ? '+' : ''}{formatMoney((parseFloat(incomeAdjStr) || 0) * 100)}
                   </span>
                 </label>
-                <input 
-                  type="range" 
-                  min="-5000" max="5000" step="50"
-                  value={parseFloat(incomeAdjStr) || 0}
-                  onChange={(e) => setIncomeAdjStr(e.target.value)}
-                  className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700"
-                />
-                <div className="flex justify-between text-xs text-[var(--color-text-secondary)]">
+                <div className="relative">
+                  <input 
+                    type="range" 
+                    min="-5000" max="5000" step="50"
+                    value={parseFloat(incomeAdjStr) || 0}
+                    onChange={(e) => setIncomeAdjStr(e.target.value)}
+                    className="w-full h-1.5 bg-[var(--color-border-primary)] rounded-full appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-[var(--color-accent-primary)]/50 focus:ring-offset-2 focus:ring-offset-[var(--color-bg-primary)] [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[var(--color-accent-primary)] [&::-webkit-slider-thumb]:shadow-md [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:border-none [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-[var(--color-accent-primary)] [&::-moz-range-thumb]:shadow-md transition-all group-hover:[&::-webkit-slider-thumb]:scale-110"
+                  />
+                </div>
+                <div className="flex justify-between text-xs font-medium text-[var(--color-text-secondary)]/50">
                   <span>-{formatMoney(500000).replace(/\.\d{2}$/, '')}</span>
                   <span>+{formatMoney(500000).replace(/\.\d{2}$/, '')}</span>
                 </div>
               </div>
 
-              <div className="flex flex-col gap-2">
-                <label className="text-sm font-medium text-[var(--color-text-primary)] flex justify-between">
-                  Monthly Expense Shift
-                  <span className={parseFloat(expenseAdjStr) > 0 ? "text-red-500" : parseFloat(expenseAdjStr) < 0 ? "text-green-500" : "text-gray-500"}>
+              <div className="flex flex-col gap-3 group">
+                <label className="text-sm font-medium text-[var(--color-text-primary)] flex justify-between items-end">
+                  <span>Expense Shift</span>
+                  <span className={cn("text-lg font-bold tabular-nums tracking-tight transition-colors", 
+                    parseFloat(expenseAdjStr) > 0 ? "text-[var(--color-danger)]" : 
+                    parseFloat(expenseAdjStr) < 0 ? "text-[var(--color-success)]" : 
+                    "text-[var(--color-text-secondary)]"
+                  )}>
                     {parseFloat(expenseAdjStr) > 0 ? '+' : ''}{formatMoney((parseFloat(expenseAdjStr) || 0) * 100)}
                   </span>
                 </label>
-                <input 
-                  type="range" 
-                  min="-5000" max="5000" step="50"
-                  value={parseFloat(expenseAdjStr) || 0}
-                  onChange={(e) => setExpenseAdjStr(e.target.value)}
-                  className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700"
-                />
-                <div className="flex justify-between text-xs text-[var(--color-text-secondary)]">
-                  <span>-{formatMoney(500000).replace(/\.\d{2}$/, '')} (Save more)</span>
-                  <span>+{formatMoney(500000).replace(/\.\d{2}$/, '')} (Spend more)</span>
+                <div className="relative">
+                  <input 
+                    type="range" 
+                    min="-5000" max="5000" step="50"
+                    value={parseFloat(expenseAdjStr) || 0}
+                    onChange={(e) => setExpenseAdjStr(e.target.value)}
+                    className="w-full h-1.5 bg-[var(--color-border-primary)] rounded-full appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-[var(--color-accent-primary)]/50 focus:ring-offset-2 focus:ring-offset-[var(--color-bg-primary)] [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[var(--color-accent-primary)] [&::-webkit-slider-thumb]:shadow-md [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:border-none [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-[var(--color-accent-primary)] [&::-moz-range-thumb]:shadow-md transition-all group-hover:[&::-webkit-slider-thumb]:scale-110"
+                  />
+                </div>
+                <div className="flex justify-between text-xs font-medium text-[var(--color-text-secondary)]/50">
+                  <span>-{formatMoney(500000).replace(/\.\d{2}$/, '')} (Save)</span>
+                  <span>+{formatMoney(500000).replace(/\.\d{2}$/, '')} (Spend)</span>
                 </div>
               </div>
               
               <button 
                 onClick={() => { setIncomeAdjStr('0'); setExpenseAdjStr('0'); }}
-                className="w-full py-2 text-sm font-medium rounded-lg border border-[var(--color-border-primary)] hover:bg-[var(--color-bg-secondary)] text-[var(--color-text-primary)]"
+                className="w-full py-2.5 mt-2 flex items-center justify-center gap-2 text-sm font-medium rounded-[var(--radius-md)] bg-[var(--color-bg-secondary)] hover:bg-[var(--color-bg-secondary-hover)] text-[var(--color-text-primary)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-border-focus)]"
               >
-                Reset Scenario
+                <RefreshCw className="h-4 w-4" /> Reset Scenario
               </button>
             </div>
-          </WidgetContainer>
+          </div>
         </div>
 
-        <div className="md:col-span-2 flex flex-col gap-4">
+        <div className="md:col-span-2 flex flex-col gap-6">
           {!data ? (
-             <div className="flex-1 rounded-xl border border-[var(--color-border-primary)] bg-[var(--color-bg-primary)] shadow-sm flex items-center justify-center p-12">
+             <div className="flex-1 rounded-[var(--radius-lg)] bg-[var(--color-bg-secondary)]/20 flex items-center justify-center p-12 min-h-[400px]">
                <div className="flex flex-col items-center gap-4 text-[var(--color-text-secondary)]">
-                 <Calculator className="h-10 w-10 opacity-50 animate-pulse" />
-                 <p className="text-sm">Calculating deterministic projections...</p>
+                 <Calculator className="h-10 w-10 opacity-50 animate-pulse text-[var(--color-accent-primary)]" />
+                 <p className="text-sm font-medium">Calculating deterministic projections...</p>
                </div>
              </div>
           ) : (
-            <>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="rounded-xl border border-[var(--color-border-primary)] bg-[var(--color-bg-primary)] p-5 shadow-sm flex flex-col gap-4">
-                  <div className="flex items-center gap-2 text-[var(--color-text-secondary)] font-medium text-sm">
-                    <DollarSign className="h-4 w-4" /> Cash Flow Impact
+            <div className="flex flex-col gap-6">
+              <h3 className="text-lg font-semibold text-[var(--color-text-primary)]">Projection Impact</h3>
+              
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div className="relative overflow-hidden rounded-[var(--radius-lg)] bg-[var(--color-bg-secondary)]/40 p-6 flex flex-col gap-6 group">
+                  <div className="absolute inset-0 bg-gradient-to-br from-[var(--color-accent-primary)]/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                  
+                  <div className="flex items-center gap-2 text-[var(--color-text-primary)] font-semibold text-sm relative z-10">
+                    <DollarSign className="h-5 w-5 text-[var(--color-accent-primary)]" /> Cash Flow Impact
                   </div>
-                  <div className="flex justify-between items-center">
+                  
+                  <div className="flex justify-between items-center relative z-10">
                     <div className="flex flex-col">
-                      <span className="text-xs text-[var(--color-text-secondary)]">Baseline</span>
-                      <span className="font-semibold text-lg text-[var(--color-text-primary)]">{formatMoney(data.baseline.cashFlow)}</span>
+                      <span className="text-xs font-medium text-[var(--color-text-secondary)] uppercase tracking-wider">Baseline</span>
+                      <span className="font-semibold text-xl text-[var(--color-text-primary)] tabular-nums">{formatMoney(data.baseline.cashFlow)}</span>
                     </div>
-                    <ArrowRight className="h-5 w-5 text-[var(--color-text-secondary)] opacity-50" />
+                    
+                    <div className="flex flex-col items-center">
+                      <ArrowRight className={cn("h-5 w-5 transition-colors", 
+                        data.diff.cashFlow > 0 ? "text-[var(--color-success)]" : 
+                        data.diff.cashFlow < 0 ? "text-[var(--color-danger)]" : 
+                        "text-[var(--color-text-secondary)]/30"
+                      )} />
+                    </div>
+                    
                     <div className="flex flex-col items-end">
-                      <span className="text-xs text-[var(--color-text-secondary)]">Projected</span>
-                      <span className={cn("font-bold text-xl", data.projected.cashFlow > data.baseline.cashFlow ? "text-green-500" : data.projected.cashFlow < data.baseline.cashFlow ? "text-red-500" : "text-[var(--color-text-primary)]")}>
+                      <span className="text-xs font-medium text-[var(--color-text-secondary)] uppercase tracking-wider">Projected</span>
+                      <span className={cn("font-bold text-2xl tabular-nums tracking-tight", 
+                        data.projected.cashFlow > data.baseline.cashFlow ? "text-[var(--color-success)]" : 
+                        data.projected.cashFlow < data.baseline.cashFlow ? "text-[var(--color-danger)]" : 
+                        "text-[var(--color-text-primary)]"
+                      )}>
                         {formatMoney(data.projected.cashFlow)}
                       </span>
                     </div>
                   </div>
-                  {data.diff.cashFlow !== 0 && (
-                    <div className={cn("text-xs font-medium px-2 py-1 rounded-full self-start", data.diff.cashFlow > 0 ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700")}>
-                      {data.diff.cashFlow > 0 ? '+' : ''}{formatMoney(data.diff.cashFlow)}
-                    </div>
-                  )}
+                  
+                  <div className="min-h-[28px] relative z-10">
+                    {data.diff.cashFlow !== 0 && (
+                      <div className={cn("text-xs font-bold px-3 py-1.5 rounded-full inline-flex", 
+                        data.diff.cashFlow > 0 ? "bg-[var(--color-success)]/10 text-[var(--color-success)]" : 
+                        "bg-[var(--color-danger)]/10 text-[var(--color-danger)]"
+                      )}>
+                        {data.diff.cashFlow > 0 ? '+' : ''}{formatMoney(data.diff.cashFlow)}
+                      </div>
+                    )}
+                  </div>
                 </div>
 
-                <div className="rounded-xl border border-[var(--color-border-primary)] bg-[var(--color-bg-primary)] p-5 shadow-sm flex flex-col gap-4">
-                  <div className="flex items-center gap-2 text-[var(--color-text-secondary)] font-medium text-sm">
-                    <Activity className="h-4 w-4" /> Health Score Impact
+                <div className="relative overflow-hidden rounded-[var(--radius-lg)] bg-[var(--color-bg-secondary)]/40 p-6 flex flex-col gap-6 group">
+                  <div className="absolute inset-0 bg-gradient-to-br from-[var(--color-accent-primary)]/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                  
+                  <div className="flex items-center gap-2 text-[var(--color-text-primary)] font-semibold text-sm relative z-10">
+                    <Activity className="h-5 w-5 text-[var(--color-accent-primary)]" /> Health Score Impact
                   </div>
-                  <div className="flex justify-between items-center">
+                  
+                  <div className="flex justify-between items-center relative z-10">
                     <div className="flex flex-col">
-                      <span className="text-xs text-[var(--color-text-secondary)]">Baseline</span>
-                      <span className="font-semibold text-lg text-[var(--color-text-primary)]">{data.baseline.healthScore}</span>
+                      <span className="text-xs font-medium text-[var(--color-text-secondary)] uppercase tracking-wider">Baseline</span>
+                      <span className="font-semibold text-xl text-[var(--color-text-primary)] tabular-nums">{data.baseline.healthScore}</span>
                     </div>
-                    <ArrowRight className="h-5 w-5 text-[var(--color-text-secondary)] opacity-50" />
+                    
+                    <div className="flex flex-col items-center">
+                      <ArrowRight className={cn("h-5 w-5 transition-colors", 
+                        data.diff.healthScore > 0 ? "text-[var(--color-success)]" : 
+                        data.diff.healthScore < 0 ? "text-[var(--color-danger)]" : 
+                        "text-[var(--color-text-secondary)]/30"
+                      )} />
+                    </div>
+                    
                     <div className="flex flex-col items-end">
-                      <span className="text-xs text-[var(--color-text-secondary)]">Projected</span>
-                      <span className={cn("font-bold text-xl", data.projected.healthScore > data.baseline.healthScore ? "text-green-500" : data.projected.healthScore < data.baseline.healthScore ? "text-red-500" : "text-[var(--color-text-primary)]")}>
+                      <span className="text-xs font-medium text-[var(--color-text-secondary)] uppercase tracking-wider">Projected</span>
+                      <span className={cn("font-bold text-2xl tabular-nums tracking-tight", 
+                        data.projected.healthScore > data.baseline.healthScore ? "text-[var(--color-success)]" : 
+                        data.projected.healthScore < data.baseline.healthScore ? "text-[var(--color-danger)]" : 
+                        "text-[var(--color-text-primary)]"
+                      )}>
                         {data.projected.healthScore}
                       </span>
                     </div>
                   </div>
-                  {data.diff.healthScore !== 0 && (
-                    <div className={cn("text-xs font-medium px-2 py-1 rounded-full self-start", data.diff.healthScore > 0 ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700")}>
-                      {data.diff.healthScore > 0 ? '+' : ''}{data.diff.healthScore} pts
-                    </div>
-                  )}
+                  
+                  <div className="min-h-[28px] relative z-10">
+                    {data.diff.healthScore !== 0 && (
+                      <div className={cn("text-xs font-bold px-3 py-1.5 rounded-full inline-flex", 
+                        data.diff.healthScore > 0 ? "bg-[var(--color-success)]/10 text-[var(--color-success)]" : 
+                        "bg-[var(--color-danger)]/10 text-[var(--color-danger)]"
+                      )}>
+                        {data.diff.healthScore > 0 ? '+' : ''}{data.diff.healthScore} pts
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
 
-              <div className="rounded-xl border border-[var(--color-border-primary)] bg-[var(--color-bg-primary)] p-5 shadow-sm flex flex-col gap-4">
-                <div className="flex items-center gap-2 text-[var(--color-text-secondary)] font-medium text-sm">
-                  <Target className="h-4 w-4" /> Goal Feasibility Shift
+              <div className="relative overflow-hidden rounded-[var(--radius-lg)] bg-[var(--color-bg-secondary)]/40 p-8 flex flex-col gap-6 group">
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[var(--color-accent-primary)]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 -skew-x-12 translate-x-[-100%] group-hover:translate-x-[100%]"></div>
+                
+                <div className="flex items-center gap-2 text-[var(--color-text-primary)] font-semibold text-sm relative z-10">
+                  <Target className="h-5 w-5 text-[var(--color-accent-primary)]" /> Goal Feasibility Shift
                 </div>
-                <div className="flex justify-between items-center px-4 py-6 bg-[var(--color-bg-secondary)] rounded-lg">
-                  <span className={cn("font-bold text-lg", 
-                    data.baseline.overallFeasibility === 'UNREALISTIC' ? "text-red-500" :
-                    data.baseline.overallFeasibility === 'STRETCH' ? "text-yellow-500" : "text-green-500"
-                  )}>{data.baseline.overallFeasibility}</span>
+                
+                <div className="flex justify-between items-center py-4 relative z-10">
+                  <div className="flex flex-col items-start w-1/3">
+                    <span className="text-xs font-medium text-[var(--color-text-secondary)] uppercase tracking-wider mb-2">Baseline Feasibility</span>
+                    <span className={cn("font-bold text-xl", 
+                      data.baseline.overallFeasibility === 'UNREALISTIC' ? "text-[var(--color-danger)]" :
+                      data.baseline.overallFeasibility === 'STRETCH' ? "text-amber-500" : "text-[var(--color-success)]"
+                    )}>{data.baseline.overallFeasibility}</span>
+                  </div>
                   
-                  <ArrowRight className="h-6 w-6 text-[var(--color-text-secondary)] opacity-50" />
+                  <div className="flex justify-center w-1/3">
+                    <ArrowRight className="h-8 w-8 text-[var(--color-text-secondary)] opacity-30" />
+                  </div>
                   
-                  <span className={cn("font-bold text-lg", 
-                    data.projected.overallFeasibility === 'UNREALISTIC' ? "text-red-500" :
-                    data.projected.overallFeasibility === 'STRETCH' ? "text-yellow-500" : "text-green-500"
-                  )}>{data.projected.overallFeasibility}</span>
+                  <div className="flex flex-col items-end w-1/3">
+                    <span className="text-xs font-medium text-[var(--color-text-secondary)] uppercase tracking-wider mb-2">Projected Feasibility</span>
+                    <span className={cn("font-bold text-xl", 
+                      data.projected.overallFeasibility === 'UNREALISTIC' ? "text-[var(--color-danger)]" :
+                      data.projected.overallFeasibility === 'STRETCH' ? "text-amber-500" : "text-[var(--color-success)]"
+                    )}>{data.projected.overallFeasibility}</span>
+                  </div>
                 </div>
               </div>
-            </>
+            </div>
           )}
         </div>
       </div>

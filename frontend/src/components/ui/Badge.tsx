@@ -7,17 +7,17 @@ export interface BadgeProps extends React.HTMLAttributes<HTMLDivElement> {
 
 export function Badge({ className, variant = 'default', ...props }: BadgeProps) {
   const variants = {
-    default: 'bg-[var(--color-bg-secondary)] text-[var(--color-text-secondary)]',
-    success: 'bg-[var(--color-success)]/10 text-[var(--color-success)]',
-    warning: 'bg-[var(--color-warning)]/10 text-[var(--color-warning)]',
-    danger: 'bg-[var(--color-danger)]/10 text-[var(--color-danger)]',
+    default: 'bg-[var(--color-bg-secondary)] text-[var(--color-text-primary)] border border-transparent',
+    success: 'bg-[var(--color-success)]/10 text-[var(--color-success)] border border-[var(--color-success)]/20',
+    warning: 'bg-[var(--color-warning)]/10 text-[var(--color-warning)] border border-[var(--color-warning)]/20',
+    danger: 'bg-[var(--color-danger)]/10 text-[var(--color-danger)] border border-[var(--color-danger)]/20',
     outline: 'border border-[var(--color-border-primary)] text-[var(--color-text-secondary)] bg-transparent',
   };
 
   return (
     <div
       className={cn(
-        "inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--color-border-focus)] focus:ring-offset-2",
+        "inline-flex items-center justify-center rounded-full px-2.5 py-0.5 text-xs font-medium tracking-wide transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--color-border-focus)] focus:ring-offset-2",
         variants[variant],
         className
       )}

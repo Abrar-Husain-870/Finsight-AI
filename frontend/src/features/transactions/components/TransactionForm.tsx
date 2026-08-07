@@ -7,6 +7,8 @@ import { AmountInput } from '../../../components/ui/AmountInput.js';
 import { useCreateTransaction, useUpdateTransaction } from '../hooks/useTransactions.js';
 import { toast } from 'sonner';
 import { useUnsavedChanges } from '../../../hooks/useUnsavedChanges.js';
+import { Input } from '../../../components/ui/Input.js';
+import { Button } from '../../../components/ui/Button.js';
 
 interface TransactionFormProps {
   initialData?: TransactionResponse | null | undefined;
@@ -75,19 +77,20 @@ export function TransactionForm({ initialData, onSuccess, onDirtyChange }: Trans
   };
 
   return (
-    <form id="transaction-form" onSubmit={handleSubmit(onSubmit, onError)} className="flex flex-col gap-5">
+    <form id="transaction-form" onSubmit={handleSubmit(onSubmit, onError)} className="flex flex-col gap-6 pt-4">
       {Object.keys(errors).length > 0 && (
         <div 
           id="validation-summary" 
           tabIndex={-1} 
           role="alert" 
-          className="rounded-md bg-[var(--color-danger)]/10 p-3 text-sm font-medium text-[var(--color-danger)] outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-danger)]"
+          className="rounded-md bg-red-50 dark:bg-red-900/10 p-3 text-sm font-medium text-[var(--color-danger)] outline-none"
         >
           Please correct the errors below.
         </div>
       )}
-      <div className="space-y-1">
-        <label htmlFor="amount" className="text-sm font-medium text-[var(--color-text-primary)]">Amount <span className="text-[var(--color-danger)]">*</span></label>
+      
+      <div className="space-y-1.5">
+        <label htmlFor="amount" className="text-xs font-semibold uppercase tracking-wider text-[var(--color-text-secondary)] pl-1">Amount <span className="text-[var(--color-danger)]">*</span></label>
         <Controller
           name="amount"
           control={control}
@@ -103,8 +106,8 @@ export function TransactionForm({ initialData, onSuccess, onDirtyChange }: Trans
         {errors.amount && <p className="text-xs text-[var(--color-danger)]">{errors.amount.message as string}</p>}
       </div>
 
-      <div className="space-y-1">
-        <label id="category-label" className="text-sm font-medium text-[var(--color-text-primary)]">Category <span className="text-[var(--color-danger)]">*</span></label>
+      <div className="space-y-1.5">
+        <label id="category-label" className="text-xs font-semibold uppercase tracking-wider text-[var(--color-text-secondary)] pl-1">Category <span className="text-[var(--color-danger)]">*</span></label>
         <Controller
           name="categoryId"
           control={control}
@@ -119,15 +122,13 @@ export function TransactionForm({ initialData, onSuccess, onDirtyChange }: Trans
         {errors.categoryId && <p className="text-xs text-[var(--color-danger)]">{errors.categoryId.message as string}</p>}
       </div>
 
-      <div className="space-y-1">
-        <label htmlFor="date" className="text-sm font-medium text-[var(--color-text-primary)]">Date <span className="text-[var(--color-danger)]">*</span></label>
-        <input
+      <div className="space-y-1.5">
+        <label htmlFor="date" className="text-xs font-semibold uppercase tracking-wider text-[var(--color-text-secondary)] pl-1">Date <span className="text-[var(--color-danger)]">*</span></label>
+        <Input
           id="date"
           type="date"
           {...register('date')}
-          className="flex h-10 w-full rounded-md border border-[var(--color-border-primary)] bg-[var(--color-bg-primary)] px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-accent-primary)] focus:border-transparent transition-colors"
           onChange={(e) => {
-            // Need to append time to make it valid ISO string for zod if we use date string
             register('date').onChange({
               target: {
                 name: 'date',
@@ -136,50 +137,52 @@ export function TransactionForm({ initialData, onSuccess, onDirtyChange }: Trans
             });
           }}
           value={(control._formValues.date as string)?.split('T')[0] || ''}
+          error={errors.date?.message as string}
         />
-        {errors.date && <p className="text-xs text-[var(--color-danger)]">{errors.date.message as string}</p>}
       </div>
 
-      <div className="space-y-1">
-        <label htmlFor="merchant" className="text-sm font-medium text-[var(--color-text-primary)]">Merchant</label>
-        <input
+      <div className="space-y-1.5">
+        <label htmlFor="merchant" className="text-xs font-semibold uppercase tracking-wider text-[var(--color-text-secondary)] pl-1">Merchant</label>
+        <Input
           id="merchant"
           type="text"
           {...register('merchant')}
           placeholder="e.g. Starbucks"
-          className="flex h-10 w-full rounded-md border border-[var(--color-border-primary)] bg-[var(--color-bg-primary)] px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-accent-primary)] focus:border-transparent transition-colors"
+          error={errors.merchant?.message as string}
         />
       </div>
 
-      <div className="space-y-1">
-        <label htmlFor="description" className="text-sm font-medium text-[var(--color-text-primary)]">Description</label>
-        <input
+      <div className="space-y-1.5">
+        <label htmlFor="description" className="text-xs font-semibold uppercase tracking-wider text-[var(--color-text-secondary)] pl-1">Description</label>
+        <Input
           id="description"
           type="text"
           {...register('description')}
           placeholder="Optional description"
-          className="flex h-10 w-full rounded-md border border-[var(--color-border-primary)] bg-[var(--color-bg-primary)] px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-accent-primary)] focus:border-transparent transition-colors"
+          error={errors.description?.message as string}
         />
       </div>
 
-      <div className="space-y-1">
-        <label htmlFor="notes" className="text-sm font-medium text-[var(--color-text-primary)]">Notes</label>
+      <div className="space-y-1.5">
+        <label htmlFor="notes" className="text-xs font-semibold uppercase tracking-wider text-[var(--color-text-secondary)] pl-1">Notes</label>
         <textarea
           id="notes"
           {...register('notes')}
           placeholder="Any additional notes..."
           rows={3}
-          className="flex w-full rounded-md border border-[var(--color-border-primary)] bg-[var(--color-bg-primary)] px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-accent-primary)] focus:border-transparent transition-colors resize-none"
+          className="flex w-full rounded-[var(--radius-lg)] border border-[var(--color-border-primary)] bg-[var(--color-bg-primary)] px-4 py-2 text-[15px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-border-focus)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-bg-primary)] focus-visible:border-transparent transition-all duration-200 resize-none shadow-sm"
         />
       </div>
 
-      <button
+      <Button
         type="submit"
         disabled={isSubmitting}
-        className="mt-4 flex w-full justify-center rounded-md bg-[var(--color-accent-primary)] py-2.5 text-sm font-semibold text-white hover:bg-[var(--color-accent-hover)] transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 disabled:opacity-50"
+        isLoading={isSubmitting}
+        className="w-full mt-4"
+        size="lg"
       >
-        {isSubmitting ? 'Saving...' : initialData ? 'Save Changes' : 'Create Transaction'}
-      </button>
+        {initialData ? 'Save Changes' : 'Create Transaction'}
+      </Button>
     </form>
   );
 }

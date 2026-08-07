@@ -8,9 +8,12 @@ import { KeyboardShortcutsDialog } from '../ui/KeyboardShortcutsDialog.js';
 import { AboutModal } from '../ui/AboutModal.js';
 import { useUiStore } from '../../store/uiStore.js';
 
+import { useAuthStore } from '../../features/auth/store/auth.store.js';
+
 export function AppShell() {
   const location = useLocation();
   const { presentationMode } = useUiStore();
+  const currency = useAuthStore(s => s.user?.currency || 'USD');
 
   return (
     <div className="min-h-screen bg-[var(--color-bg-primary)]" data-presentation={presentationMode ? 'true' : 'false'}>
@@ -27,7 +30,7 @@ export function AppShell() {
           <div className="px-4 py-8 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
             <AnimatePresence mode="wait">
               <motion.div
-                key={location.pathname}
+                key={`${location.pathname}-${currency}`}
                 variants={pageTransitionVariants}
                 initial="initial"
                 animate="animate"

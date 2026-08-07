@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { useAuthStore } from '../features/auth/store/auth.store.js';
 import { useTheme } from '../providers/ThemeProvider.js';
-import { User, Moon, Sun, Monitor, ShieldAlert, Trash2 } from 'lucide-react';
+import { User, Moon, Sun, ShieldAlert, Trash2, CheckCircle2 } from 'lucide-react';
 import { Button } from '../components/ui/Button.js';
-import { Card } from '../components/ui/Card.js';
 import { emitSystemAlert } from '../lib/errors.js';
 import { authApi } from '../features/auth/api/auth.api.js';
+import { motion } from 'framer-motion';
 
 const CURRENCIES = [
   { value: 'USD', label: 'USD ($)' },
@@ -53,119 +53,132 @@ export default function SettingsPage() {
   };
 
   return (
-    <div className="h-full flex flex-col p-6 max-w-4xl mx-auto w-full animate-in fade-in duration-500">
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold tracking-tight text-[var(--color-text-primary)]">Settings</h1>
-        <p className="text-[var(--color-text-secondary)] mt-1">Manage your account preferences and application settings.</p>
+    <div className="flex flex-col p-6 sm:p-10 max-w-3xl mx-auto w-full animate-in fade-in duration-500">
+      <div className="mb-12">
+        <h1 className="text-3xl font-bold tracking-tight text-[var(--color-text-primary)]">Settings</h1>
+        <p className="text-[var(--color-text-secondary)] mt-2">Manage your account preferences and application settings.</p>
       </div>
 
-      <div className="flex flex-col gap-8">
+      <div className="flex flex-col gap-16">
         {/* Profile Section */}
-        <Card className="p-6">
-          <div className="flex items-start gap-4 mb-6">
-            <div className="p-3 rounded-lg bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400">
-              <User className="h-6 w-6" />
+        <section>
+          <div className="flex items-center gap-3 mb-6">
+            <div className="flex items-center justify-center h-8 w-8 rounded-full bg-[var(--color-bg-secondary)] text-[var(--color-text-primary)]">
+              <User className="h-4 w-4" />
             </div>
-            <div>
-              <h2 className="text-lg font-semibold text-[var(--color-text-primary)]">Account Information</h2>
-              <p className="text-sm text-[var(--color-text-secondary)]">Your personal profile details</p>
-            </div>
+            <h2 className="text-lg font-semibold text-[var(--color-text-primary)]">Account Information</h2>
           </div>
           
-          <div className="space-y-4">
-            <div className="flex items-center justify-between p-4 rounded-lg bg-[var(--color-bg-secondary)] border border-[var(--color-border-primary)]">
-              <div>
-                <p className="text-sm font-medium text-[var(--color-text-primary)]">Full Name</p>
-                <p className="text-sm text-[var(--color-text-secondary)]">{user?.name}</p>
-              </div>
+          <div className="flex flex-col rounded-[var(--radius-xl)] bg-[var(--color-bg-secondary)]/30 border border-[var(--color-border-primary)]/50 overflow-hidden backdrop-blur-sm shadow-sm">
+            <div className="flex items-center justify-between p-5 border-b border-[var(--color-border-primary)]/50">
+              <span className="text-sm font-medium text-[var(--color-text-primary)]">Full Name</span>
+              <span className="text-sm text-[var(--color-text-secondary)]">{user?.name}</span>
             </div>
-            <div className="flex items-center justify-between p-4 rounded-lg bg-[var(--color-bg-secondary)] border border-[var(--color-border-primary)]">
-              <div>
-                <p className="text-sm font-medium text-[var(--color-text-primary)]">Email Address</p>
-                <p className="text-sm text-[var(--color-text-secondary)]">{user?.email}</p>
-              </div>
-              <div className="px-2 py-1 text-xs font-medium rounded-full bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400">
-                Verified
+            
+            <div className="flex items-center justify-between p-5 border-b border-[var(--color-border-primary)]/50">
+              <span className="text-sm font-medium text-[var(--color-text-primary)]">Email Address</span>
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-[var(--color-text-secondary)]">{user?.email}</span>
+                <CheckCircle2 className="h-4 w-4 text-emerald-500" />
               </div>
             </div>
 
-            <div className="flex items-center justify-between p-4 rounded-lg bg-[var(--color-bg-secondary)] border border-[var(--color-border-primary)]">
-              <div>
-                <p className="text-sm font-medium text-[var(--color-text-primary)]">Preferred Currency</p>
-                <p className="text-sm text-[var(--color-text-secondary)]">Used across all charts and metrics</p>
+            <div className="flex items-center justify-between p-5">
+              <div className="flex flex-col">
+                <span className="text-sm font-medium text-[var(--color-text-primary)]">Preferred Currency</span>
+                <span className="text-xs text-[var(--color-text-secondary)] mt-0.5">Used across all charts and metrics</span>
               </div>
               <select 
                 value={user?.currency || 'USD'} 
                 onChange={handleCurrencyChange}
                 disabled={isUpdatingCurrency}
-                className="p-2 bg-[var(--color-bg-primary)] border border-[var(--color-border-primary)] rounded-md text-sm text-[var(--color-text-primary)] focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
+                className="bg-transparent border-none text-right text-sm text-[var(--color-text-primary)] font-medium focus:outline-none cursor-pointer hover:text-[var(--color-accent-primary)] transition-colors disabled:opacity-50"
               >
                 {CURRENCIES.map(c => (
-                  <option key={c.value} value={c.value}>{c.label}</option>
+                  <option key={c.value} value={c.value} className="bg-[var(--color-bg-primary)]">
+                    {c.label}
+                  </option>
                 ))}
               </select>
             </div>
           </div>
-        </Card>
+        </section>
 
         {/* Preferences Section */}
-        <Card className="p-6">
-          <div className="flex items-start gap-4 mb-6">
-            <div className="p-3 rounded-lg bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400">
-              <Monitor className="h-6 w-6" />
+        <section>
+          <div className="flex items-center gap-3 mb-6">
+            <div className="flex items-center justify-center h-8 w-8 rounded-full bg-[var(--color-bg-secondary)] text-[var(--color-text-primary)]">
+              <Sun className="h-4 w-4" />
             </div>
-            <div>
-              <h2 className="text-lg font-semibold text-[var(--color-text-primary)]">Appearance</h2>
-              <p className="text-sm text-[var(--color-text-secondary)]">Customize how FinSight looks on your device</p>
-            </div>
+            <h2 className="text-lg font-semibold text-[var(--color-text-primary)]">Appearance</h2>
           </div>
           
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <button
               onClick={() => setTheme('light')}
-              className={`flex items-center gap-3 p-4 rounded-lg border-2 text-left transition-all ${theme === 'light' ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/10' : 'border-[var(--color-border-primary)] bg-[var(--color-bg-secondary)] hover:border-[var(--color-border-focus)]'}`}
+              className={`relative flex items-start gap-4 p-5 rounded-[var(--radius-xl)] transition-all overflow-hidden ${
+                theme === 'light' 
+                  ? 'bg-[var(--color-bg-secondary)] border-transparent shadow-sm' 
+                  : 'bg-transparent border border-[var(--color-border-primary)] hover:bg-[var(--color-bg-secondary)]/50'
+              }`}
             >
-              <Sun className={`h-5 w-5 ${theme === 'light' ? 'text-blue-500' : 'text-[var(--color-text-secondary)]'}`} />
-              <div>
-                <p className={`font-medium ${theme === 'light' ? 'text-blue-700 dark:text-blue-400' : 'text-[var(--color-text-primary)]'}`}>Light Mode</p>
-                <p className="text-xs text-[var(--color-text-secondary)]">Clean and bright</p>
+              {theme === 'light' && (
+                <motion.div layoutId="theme-active" className="absolute inset-0 border-2 border-[var(--color-text-primary)] rounded-[var(--radius-xl)] pointer-events-none" />
+              )}
+              <Sun className={`h-5 w-5 mt-0.5 ${theme === 'light' ? 'text-[var(--color-text-primary)]' : 'text-[var(--color-text-secondary)]'}`} />
+              <div className="flex flex-col text-left">
+                <span className={`font-medium ${theme === 'light' ? 'text-[var(--color-text-primary)]' : 'text-[var(--color-text-primary)]'}`}>Light</span>
+                <span className="text-xs text-[var(--color-text-secondary)] mt-1">Clean and bright aesthetics</span>
               </div>
             </button>
+
             <button
               onClick={() => setTheme('dark')}
-              className={`flex items-center gap-3 p-4 rounded-lg border-2 text-left transition-all ${theme === 'dark' ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/10' : 'border-[var(--color-border-primary)] bg-[var(--color-bg-secondary)] hover:border-[var(--color-border-focus)]'}`}
+              className={`relative flex items-start gap-4 p-5 rounded-[var(--radius-xl)] transition-all overflow-hidden ${
+                theme === 'dark' 
+                  ? 'bg-[var(--color-bg-secondary)] border-transparent shadow-sm' 
+                  : 'bg-transparent border border-[var(--color-border-primary)] hover:bg-[var(--color-bg-secondary)]/50'
+              }`}
             >
-              <Moon className={`h-5 w-5 ${theme === 'dark' ? 'text-blue-500' : 'text-[var(--color-text-secondary)]'}`} />
-              <div>
-                <p className={`font-medium ${theme === 'dark' ? 'text-blue-700 dark:text-blue-400' : 'text-[var(--color-text-primary)]'}`}>Dark Mode</p>
-                <p className="text-xs text-[var(--color-text-secondary)]">Easy on the eyes</p>
+              {theme === 'dark' && (
+                <motion.div layoutId="theme-active" className="absolute inset-0 border-2 border-[var(--color-text-primary)] rounded-[var(--radius-xl)] pointer-events-none" />
+              )}
+              <Moon className={`h-5 w-5 mt-0.5 ${theme === 'dark' ? 'text-[var(--color-text-primary)]' : 'text-[var(--color-text-secondary)]'}`} />
+              <div className="flex flex-col text-left">
+                <span className={`font-medium ${theme === 'dark' ? 'text-[var(--color-text-primary)]' : 'text-[var(--color-text-primary)]'}`}>Dark</span>
+                <span className="text-xs text-[var(--color-text-secondary)] mt-1">Easy on the eyes, cinematic feel</span>
               </div>
             </button>
           </div>
-        </Card>
+        </section>
 
         {/* Danger Zone */}
-        <Card className="p-6 border-red-200 dark:border-red-900/30">
-          <div className="flex items-start gap-4 mb-6">
-            <div className="p-3 rounded-lg bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400">
-              <ShieldAlert className="h-6 w-6" />
+        <section>
+          <div className="flex items-center gap-3 mb-6">
+            <div className="flex items-center justify-center h-8 w-8 rounded-full bg-[var(--color-danger)]/10 text-[var(--color-danger)]">
+              <ShieldAlert className="h-4 w-4" />
             </div>
-            <div>
-              <h2 className="text-lg font-semibold text-red-600 dark:text-red-400">Danger Zone</h2>
-              <p className="text-sm text-[var(--color-text-secondary)]">Irreversible and destructive actions</p>
-            </div>
+            <h2 className="text-lg font-semibold text-[var(--color-danger)]">Danger Zone</h2>
           </div>
           
-          <div className="flex items-center justify-between p-4 rounded-lg bg-red-50 dark:bg-red-900/10 border border-red-100 dark:border-red-900/50">
-            <div>
-              <p className="text-sm font-medium text-red-800 dark:text-red-300">Clear Workspace Data</p>
-              <p className="text-xs text-red-600 dark:text-red-400/70 mt-1">Permanently delete all transactions and goals.</p>
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-6 rounded-[var(--radius-xl)] bg-[var(--color-danger)]/5 border border-[var(--color-danger)]/20 shadow-sm gap-4">
+            <div className="flex flex-col">
+              <span className="text-sm font-medium text-[var(--color-text-primary)]">Clear Workspace Data</span>
+              <span className="text-xs text-[var(--color-text-secondary)] mt-1 max-w-md leading-relaxed">
+                Permanently delete all your transactions, goals, and AI configurations. This action cannot be undone and will reset your entire financial workspace.
+              </span>
             </div>
-            <Button variant="danger" size="sm" onClick={handleClearData} isLoading={isClearing}>
-              <Trash2 className="h-4 w-4 mr-2" /> Clear Data
+            <Button 
+              variant="danger" 
+              onClick={handleClearData} 
+              isLoading={isClearing}
+              className="shrink-0 rounded-full"
+            >
+              <Trash2 className="h-4 w-4 mr-2" /> 
+              Clear Workspace
             </Button>
           </div>
-        </Card>
+        </section>
       </div>
     </div>
   );

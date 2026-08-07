@@ -1,16 +1,21 @@
-
 import React from 'react';
-import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip, CartesianGrid } from 'recharts';
-import { useTheme } from '../../../providers/ThemeProvider.js';
+import { LineChart, Line, Grid, XAxis, ChartTooltip } from '../../../components/ui/charts/index.js';
 
 interface Props {
   data: { date: string; score: number }[];
 }
 
 export function HealthTrendChart({ data }: Props) {
-  const { theme } = useTheme();
-  const isDark = theme === 'dark';
-  const margin = React.useMemo(() => ({ top: 10, right: 10, left: -20, bottom: 0 }), []);
+  // Add a small offset to the data to prevent exact 100/0 cropping on Y axis if needed,
+  // but LineChart auto calculates domain with 10% padding anyway.
+  
+  // Format the date properly for parsing
+  const chartData = React.useMemo(() => {
+    return data.map(d => ({
+      date: new Date(d.date).toISOString(),
+      score: d.score
+    }));
+  }, [data]);
 
   return (
     <div 
@@ -21,28 +26,34 @@ export function HealthTrendChart({ data }: Props) {
       <div className="sr-only">
         Line chart displaying health score over time. The most recent score is {data[data.length - 1]?.score || 0}.
       </div>
-      <ResponsiveContainer width="100%" height="100%">
-        <AreaChart data={data} margin={margin}>
-          <defs>
-            <linearGradient id="colorScore" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3}/>
-              <stop offset="95%" stopColor="#3b82f6" stopOpacity={0}/>
-            </linearGradient>
-          </defs>
-          <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={isDark ? '#374151' : '#e5e7eb'} />
-          <XAxis dataKey="date" stroke={isDark ? '#9ca3af' : '#6b7280'} fontSize={12} tickLine={false} axisLine={false} />
-          <YAxis stroke={isDark ? '#9ca3af' : '#6b7280'} fontSize={12} tickLine={false} axisLine={false} domain={[0, 100]} />
-          <Tooltip 
-            contentStyle={{ 
-              backgroundColor: isDark ? '#1f2937' : '#ffffff',
-              borderColor: isDark ? '#374151' : '#e5e7eb',
-              borderRadius: '8px',
-              color: isDark ? '#f3f4f6' : '#111827'
-            }}
-          />
-          <Area type="monotone" dataKey="score" stroke="#3b82f6" strokeWidth={3} fillOpacity={1} fill="url(#colorScore)" />
-        </AreaChart>
-      </ResponsiveContainer>
+      <LineChart data={chartData} xDataKey="date" margin={{ top: 20, right: 10, bottom: 30, left: 10 }}>
+        <Grid horizontal numTicksRows={5} vertical={false} />
+        <XAxis 
+          numTicks={5} 
+          tickFormat={(v) => new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric' }).format(new Date(v))} 
+        />
+        <Line 
+          dataKey="score" 
+          stroke="var(--color-primary, #3b82f6)" 
+          strokeWidth={3} 
+        />
+        <ChartTooltip 
+          content={({ activeData }) => (
+            <div className="flex flex-col gap-1 min-w-[120px]">
+              <div className="text-xs font-medium text-[var(--color-text-secondary)] mb-1">
+                {new Intl.DateTimeFormat('en-US', { month: 'long', day: 'numeric', year: 'numeric' }).format(new Date(activeData.date))}
+              </div>
+              <div className="flex justify-between items-center gap-4 text-sm font-medium">
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 rounded-full bg-[#3b82f6]" />
+                  <span className="text-[var(--color-text-primary)]">Score</span>
+                </div>
+                <span className="tabular-nums text-[var(--color-text-primary)]">{activeData.score}</span>
+              </div>
+            </div>
+          )}
+        />
+      </LineChart>
     </div>
   );
 }

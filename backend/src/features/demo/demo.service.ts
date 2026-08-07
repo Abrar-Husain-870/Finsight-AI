@@ -28,11 +28,11 @@ export class DemoService {
     for (let monthOffset = 5; monthOffset >= 0; monthOffset--) {
       const monthDate = new Date(now.getFullYear(), now.getMonth() - monthOffset, 1);
       
-      // Salary (1st of month)
+      // Salary / Freelance (1st of month) - Massive volatility
       const salaryDate = new Date(monthDate);
       salaryDate.setDate(1);
       txToCreate.push({
-        userId, categoryId: salaryCatId, amount: 7500000, currency: 'USD', date: salaryDate, merchant: 'TechCorp Inc', description: 'Monthly Salary'
+        userId, categoryId: salaryCatId, amount: 5000000 + (Math.random() * 6000000), currency: 'USD', date: salaryDate, merchant: 'TechCorp Inc', description: 'Income / Freelance'
       });
 
       // Rent (2nd of month)
@@ -46,7 +46,7 @@ export class DemoService {
       const utilDate = new Date(monthDate);
       utilDate.setDate(5);
       txToCreate.push({
-        userId, categoryId: utilCatId, amount: -400000 + (Math.random() * 50000 - 25000), currency: 'USD', date: utilDate, merchant: 'City Power & Water', description: 'Utilities'
+        userId, categoryId: utilCatId, amount: -400000 + (Math.random() * 150000 - 75000), currency: 'USD', date: utilDate, merchant: 'City Power & Water', description: 'Utilities'
       });
 
       // Food (multiple times a month)
@@ -54,7 +54,7 @@ export class DemoService {
         const foodDate = new Date(monthDate);
         foodDate.setDate(Math.floor(Math.random() * 28) + 1);
         txToCreate.push({
-          userId, categoryId: foodCatId, amount: -60000 - (Math.random() * 20000), currency: 'USD', date: foodDate, merchant: ['Whole Foods', 'Trader Joes', 'Sweetgreen', 'Local Cafe'][Math.floor(Math.random() * 4)], description: 'Groceries / Dining'
+          userId, categoryId: foodCatId, amount: -40000 - (Math.random() * 120000), currency: 'USD', date: foodDate, merchant: ['Whole Foods', 'Trader Joes', 'Sweetgreen', 'Local Cafe'][Math.floor(Math.random() * 4)], description: 'Groceries / Dining'
         });
       }
 
@@ -63,16 +63,16 @@ export class DemoService {
         const entDate = new Date(monthDate);
         entDate.setDate(Math.floor(Math.random() * 28) + 1);
         txToCreate.push({
-          userId, categoryId: entCatId, amount: -100000 - (Math.random() * 30000), currency: 'USD', date: entDate, merchant: ['Netflix', 'Spotify', 'AMC Theaters', 'Steam'][Math.floor(Math.random() * 4)], description: 'Entertainment'
+          userId, categoryId: entCatId, amount: -50000 - (Math.random() * 250000), currency: 'USD', date: entDate, merchant: ['Netflix', 'Spotify', 'AMC Theaters', 'Steam'][Math.floor(Math.random() * 4)], description: 'Entertainment'
         });
       }
 
       // Shopping (Random)
-      for (let i = 0; i < 2; i++) {
+      for (let i = 0; i < 3; i++) {
         const shopDate = new Date(monthDate);
         shopDate.setDate(Math.floor(Math.random() * 28) + 1);
         txToCreate.push({
-          userId, categoryId: shopCatId, amount: -200000 - (Math.random() * 50000), currency: 'USD', date: shopDate, merchant: 'Amazon', description: 'Shopping'
+          userId, categoryId: shopCatId, amount: -100000 - (Math.random() * 800000), currency: 'USD', date: shopDate, merchant: 'Amazon', description: 'Shopping'
         });
       }
     }

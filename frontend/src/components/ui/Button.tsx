@@ -2,6 +2,7 @@ import React from 'react';
 import { cn } from '../../lib/utils.js';
 import { Loader2 } from 'lucide-react';
 import { motion, HTMLMotionProps } from 'framer-motion';
+import { springConfig } from '../../lib/motion.js';
 
 export interface ButtonProps extends HTMLMotionProps<"button"> {
   variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger';
@@ -13,26 +14,28 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant = 'primary', size = 'md', isLoading, children, disabled, ...props }, ref) => {
     
     const variants = {
-      primary: 'bg-[var(--color-accent-primary)] text-[var(--color-bg-primary)] hover:bg-[var(--color-accent-secondary)] shadow-sm',
-      secondary: 'bg-[var(--color-bg-secondary)] text-[var(--color-text-primary)] hover:bg-[var(--color-border-primary)] shadow-sm',
+      primary: 'bg-[var(--color-accent-primary)] text-[var(--color-bg-primary)] hover:bg-[var(--color-accent-secondary)] shadow-sm border border-transparent',
+      secondary: 'bg-[var(--color-bg-secondary)] text-[var(--color-text-primary)] hover:bg-[var(--color-border-primary)] border border-transparent',
       outline: 'border border-[var(--color-border-primary)] bg-transparent hover:bg-[var(--color-bg-secondary)] text-[var(--color-text-primary)]',
-      ghost: 'bg-transparent hover:bg-[var(--color-bg-secondary)] text-[var(--color-text-primary)]',
-      danger: 'bg-[var(--color-danger)] text-white hover:opacity-90 shadow-sm',
+      ghost: 'bg-transparent hover:bg-[var(--color-bg-secondary)] text-[var(--color-text-primary)] border border-transparent',
+      danger: 'bg-[var(--color-danger)] text-white hover:opacity-90 shadow-sm border border-transparent',
     };
 
     const sizes = {
-      sm: 'h-8 px-3 text-xs',
-      md: 'h-10 px-4 py-2 text-sm',
-      lg: 'h-12 px-8 text-base',
+      sm: 'h-8 px-4 text-xs tracking-wide',
+      md: 'h-10 px-6 py-2 text-sm tracking-tight',
+      lg: 'h-12 px-10 text-base tracking-tight',
       icon: 'h-10 w-10 justify-center',
     };
 
     return (
       <motion.button
         ref={ref}
-        whileTap={{ scale: disabled || isLoading ? 1 : 0.98 }}
+        whileHover={{ scale: disabled || isLoading ? 1 : 1.015 }}
+        whileTap={{ scale: disabled || isLoading ? 1 : 0.97 }}
+        transition={springConfig}
         className={cn(
-          'inline-flex items-center justify-center rounded-md font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-border-focus)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-bg-primary)] disabled:pointer-events-none disabled:opacity-50',
+          'inline-flex items-center justify-center rounded-[var(--radius-lg)] font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-border-focus)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-bg-primary)] disabled:pointer-events-none disabled:opacity-40',
           variants[variant],
           sizes[size],
           className
