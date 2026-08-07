@@ -18,11 +18,9 @@ const CURRENCIES = [
 ];
 
 export default function SettingsPage() {
-  const { user, accessToken, setAuth } = useAuthStore(s => ({ 
-    user: s.user, 
-    accessToken: s.accessToken,
-    setAuth: s.setAuth 
-  }));
+  const user = useAuthStore(s => s.user);
+  const accessToken = useAuthStore(s => s.accessToken);
+  const setAuth = useAuthStore(s => s.setAuth);
   const { theme, setTheme } = useTheme();
   const [isClearing, setIsClearing] = useState(false);
   const [isUpdatingCurrency, setIsUpdatingCurrency] = useState(false);
