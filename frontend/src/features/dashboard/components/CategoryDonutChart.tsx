@@ -26,7 +26,7 @@ export function CategoryDonutChart({ data }: { data: CategoryBreakdown[] }) {
   const chartData = React.useMemo(() => {
     return data.map(d => ({
       name: d.categoryName,
-      value: fromMinor(d.amount),
+      value: Math.abs(fromMinor(d.amount)),
       color: colorMap[d.categoryColor] || colorMap['gray-500'],
       icon: d.categoryIcon,
       rawColor: d.categoryColor

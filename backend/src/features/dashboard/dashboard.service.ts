@@ -75,7 +75,7 @@ export class DashboardService {
         amount: data.amount,
         percentage: currentMonthExpenseTotal > 0 ? (data.amount / currentMonthExpenseTotal) * 100 : 0
       }))
-      .sort((a, b) => b.amount - a.amount)
+      .sort((a, b) => a.amount - b.amount)
       .slice(0, 5); // Top 5
 
     const recentTransactions = recentRaw.map(tx => ({
