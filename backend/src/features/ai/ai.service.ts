@@ -73,13 +73,13 @@ Provide short, actionable, and structured advice formatted in markdown.
       activeSessionId = session.id;
     }
 
-    await aiRepository.addMessage(activeSessionId, 'user', content);
-    const session = await aiRepository.getSession(activeSessionId, userId);
+    await aiRepository.addMessage(activeSessionId as string, 'user', content);
+    const session = await aiRepository.getSession(activeSessionId as string, userId);
     
     const systemPrompt = await this.buildSystemContext(userId);
     const messages = [
       { role: 'system', content: systemPrompt },
-      ...session!.messages.map(m => ({ role: m.role as 'user' | 'assistant', content: m.content }))
+      ...session!.messages.map((m: { role: string; content: string }) => ({ role: m.role as 'user' | 'assistant', content: m.content }))
     ];
 
     res.setHeader('Content-Type', 'text/event-stream');
@@ -103,7 +103,7 @@ Provide short, actionable, and structured advice formatted in markdown.
         }
       }
 
-      await aiRepository.addMessage(activeSessionId, 'assistant', fullResponse);
+      await aiRepository.addMessage(activeSessionId as string, 'assistant', fullResponse);
       res.write(`data: ${JSON.stringify({ type: 'done' })}\n\n`);
       res.end();
     } catch (error: unknown) {

@@ -77,7 +77,8 @@ export class DemoService {
       }
     }
 
-    await prisma.transaction.createMany({ data: txToCreate.map(tx => ({...tx, amount: Math.round(tx.amount), merchant: tx.merchant || null})) });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    await prisma.transaction.createMany({ data: txToCreate.map(tx => ({...tx, amount: Math.round(tx.amount as number), merchant: (tx.merchant as string) || null})) as any });
 
     // 4. Generate Goals
     const targetDate1 = new Date();
