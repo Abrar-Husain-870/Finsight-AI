@@ -1,7 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from 'react';
 import { motion } from 'framer-motion';
 import { usePieChart } from './PieChartContext.js';
-import { PieData } from './PieChartContext.js';
+import { } from './PieChartContext.js';
 
 export interface PieSliceProps {
   index: number;

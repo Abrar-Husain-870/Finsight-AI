@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useCallback } from 'react';
 import { createPortal } from 'react-dom';
-import { useTooltip, TooltipWithBounds, defaultStyles } from '@visx/tooltip';
+import { TooltipWithBounds, defaultStyles } from '@visx/tooltip';
 import { localPoint } from '@visx/event';
 import { bisector } from 'd3-array';
 import { useLineChart } from './LineChartContext.js';

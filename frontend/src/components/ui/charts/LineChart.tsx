@@ -1,10 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useMemo } from 'react';
 import useMeasure from 'react-use-measure';
 import { scaleTime, scaleLinear } from '@visx/scale';
-import { extent, max } from 'd3-array';
+import { extent } from 'd3-array';
 import { LineChartProvider } from './LineChartContext.js';
-import { localPoint } from '@visx/event';
-import { bisector } from 'd3-array';
 import { cn } from '../../../lib/utils.js';
 
 export interface LineChartProps {

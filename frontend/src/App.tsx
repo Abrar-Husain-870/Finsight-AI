@@ -26,12 +26,6 @@ const AiCoachPage = React.lazy(() => import('./pages/AiCoachPage.js'));
 const SettingsPage = React.lazy(() => import('./pages/SettingsPage.js'));
 
 // Placeholder components
-const PlaceholderPage = ({ title }: { title: string }) => (
-  <div className="space-y-8 animate-in fade-in duration-500">
-    <h1 className="text-2xl font-bold tracking-tight text-[var(--color-text-primary)]">{title}</h1>
-    <p className="text-[var(--color-text-secondary)]">This page is under construction.</p>
-  </div>
-);
 
 export function App() {
   return (

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from 'react';
 import { AxisBottom } from '@visx/axis';
 import { useLineChart } from './LineChartContext.js';

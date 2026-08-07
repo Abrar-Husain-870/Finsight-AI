@@ -1,4 +1,5 @@
-import React, { useId } from 'react';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import React from 'react';
 import { AreaClosed, LinePath } from '@visx/shape';
 import { curveMonotoneX } from '@visx/curve';
 import { motion } from 'framer-motion';

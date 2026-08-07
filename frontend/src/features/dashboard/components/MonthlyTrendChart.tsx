@@ -15,15 +15,15 @@ import {
 
 export function MonthlyTrendChart({ data = [] }: { data?: MonthlyTrend[] }) {
   const chartData = useMemo(() => {
-    return data.map((d, i) => {
+    return data.map(d => {
       const parts = d.month.split('-');
       const year = parts[0] || '2000';
       const month = parts[1] || '1';
       const date = new Date(parseInt(year), parseInt(month) - 1, 1);
       
-      let income = fromMinor(d.income);
+      const income = fromMinor(d.income);
       // Expenses are stored as negative transaction amounts, so we use Math.abs to plot them positively
-      let expense = Math.abs(fromMinor(d.expense));
+      const expense = Math.abs(fromMinor(d.expense));
       
       return {
         date: date.toISOString(),

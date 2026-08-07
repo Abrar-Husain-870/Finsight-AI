@@ -118,7 +118,7 @@ export class AuthService {
       throw new AuthenticationError('User not found');
     }
     
-    const updateData: any = {};
+    const updateData: Record<string, unknown> = {};
     if (data.currency !== undefined) updateData.currency = data.currency;
 
     const updated = await authRepository.update(userId, updateData);

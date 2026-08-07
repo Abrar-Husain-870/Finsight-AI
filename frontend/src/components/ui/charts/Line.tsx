@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useId } from 'react';
 import { LinePath } from '@visx/shape';
 import { curveMonotoneX } from '@visx/curve';

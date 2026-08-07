@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useMemo } from 'react';
 import { Brush } from '@visx/brush';
 import { scaleTime, scaleLinear } from '@visx/scale';

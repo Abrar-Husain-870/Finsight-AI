@@ -1,4 +1,5 @@
-import React, { useMemo } from 'react';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import React from 'react';
 import { ParentSize } from '@visx/responsive';
 import { Group } from '@visx/group';
 import { PieChartProvider, PieData } from './PieChartContext.js';
