@@ -1,0 +1,15 @@
+@import 'tailwindcss';
+@plugin "@tailwindcss/typography";
+@import './tokens/variables.css';
+
+@theme {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+}
+
+@layer base {
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: var(--font-sans);
+  }
+}
