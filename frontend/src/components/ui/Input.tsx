@@ -26,7 +26,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
               "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-border-focus)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-bg-primary)] focus-visible:border-transparent",
               "disabled:cursor-not-allowed disabled:opacity-50 shadow-sm",
               icon && "pl-11",
-              error && "border-[var(--color-danger)] focus-visible:ring-[var(--color-danger)] bg-red-50 dark:bg-red-900/10",
+              error && "border-[var(--color-danger)] focus-visible:ring-[var(--color-danger)] bg-[var(--color-danger-muted)]",
               className
             )}
             ref={ref}

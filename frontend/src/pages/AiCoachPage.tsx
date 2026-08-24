@@ -10,23 +10,39 @@ import { useKeyboardShortcuts } from '../hooks/useKeyboardShortcuts.js';
 import { Button } from '../components/ui/Button.js';
 import { Input as CustomInput } from '../components/ui/Input.js';
 
-const AiMessageRow = React.memo(({ message }: { message: { role: string; content: string } }) => (
-  <motion.div 
-    initial={{ opacity: 0, y: 10, scale: 0.95 }}
-    animate={{ opacity: 1, y: 0, scale: 1 }}
-    transition={{ duration: 0.3, ease: "easeOut" }}
-    className={cn("flex gap-4 w-full", message.role === 'user' ? "flex-row-reverse" : "flex-row")}
-  >
-    <div className={cn("flex items-center justify-center h-8 w-8 rounded-full shrink-0", message.role === 'user' ? "bg-[var(--color-accent-primary)] text-[var(--color-bg-primary)] shadow-sm" : "bg-[var(--color-bg-secondary)] text-[var(--color-text-primary)] shadow-sm")}>
-      {message.role === 'user' ? <User className="h-5 w-5" /> : <Bot className="h-5 w-5" />}
-    </div>
-    <div className={cn("px-5 py-3.5 max-w-[85%] shadow-sm", message.role === 'user' ? "bg-[var(--color-accent-primary)] text-[var(--color-bg-primary)] rounded-2xl rounded-tr-sm" : "bg-[var(--color-bg-primary)] text-[var(--color-text-primary)] rounded-2xl rounded-tl-sm border border-[var(--color-border-primary)]/50")}>
-      <div className="text-sm prose prose-sm dark:prose-invert max-w-none leading-relaxed">
-        <ReactMarkdown>{message.content}</ReactMarkdown>
+import { useAuthStore } from '../features/auth/store/auth.store.js';
+
+const AiMessageRow = React.memo(({ message }: { message: { role: string; content: string } }) => {
+  const isUser = message.role === 'user';
+  const proseStyle = {
+    '--tw-prose-body': isUser ? 'var(--color-accent-primary-foreground)' : 'var(--color-text-primary)',
+    '--tw-prose-headings': isUser ? 'var(--color-accent-primary-foreground)' : 'var(--color-text-primary)',
+    '--tw-prose-bold': isUser ? 'var(--color-accent-primary-foreground)' : 'var(--color-text-primary)',
+    '--tw-prose-code': isUser ? 'var(--color-accent-primary-foreground)' : 'var(--color-text-primary)',
+    '--tw-prose-bullets': isUser ? 'var(--color-accent-primary-foreground)' : 'var(--color-text-primary)',
+    '--tw-prose-invert-body': isUser ? 'var(--color-accent-primary-foreground)' : 'var(--color-text-primary)',
+    '--tw-prose-invert-headings': isUser ? 'var(--color-accent-primary-foreground)' : 'var(--color-text-primary)',
+    '--tw-prose-invert-bold': isUser ? 'var(--color-accent-primary-foreground)' : 'var(--color-text-primary)',
+  } as React.CSSProperties;
+
+  return (
+    <motion.div 
+      initial={{ opacity: 0, y: 10, scale: 0.95 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      transition={{ duration: 0.3, ease: "easeOut" }}
+      className={cn("flex gap-4 w-full", isUser ? "flex-row-reverse" : "flex-row")}
+    >
+      <div className={cn("flex items-center justify-center h-8 w-8 rounded-full shrink-0", isUser ? "bg-[var(--color-accent-primary)] text-[var(--color-accent-primary-foreground)] shadow-sm" : "bg-[var(--color-bg-secondary)] text-[var(--color-text-primary)] shadow-sm")}>
+        {isUser ? <User className="h-4 w-4" /> : <Bot className="h-4 w-4 text-[var(--color-ai-accent)]" />}
       </div>
-    </div>
-  </motion.div>
-));
+      <div className={cn("px-5 py-3.5 max-w-[85%] shadow-sm", isUser ? "bg-[var(--color-accent-primary)] text-[var(--color-accent-primary-foreground)] rounded-2xl rounded-tr-sm" : "bg-[var(--color-bg-primary)] text-[var(--color-text-primary)] rounded-2xl rounded-tl-sm border border-[var(--color-border-primary)]/50")}>
+        <div className="text-sm prose prose-sm max-w-none leading-relaxed" style={proseStyle}>
+          <ReactMarkdown>{message.content}</ReactMarkdown>
+        </div>
+      </div>
+    </motion.div>
+  );
+});
 
 export default function AiCoachPage() {
   const queryClient = useQueryClient();
@@ -55,6 +71,12 @@ export default function AiCoachPage() {
       if (configOpen) setConfigOpen(false);
     }
   });
+
+  useEffect(() => {
+    if (sessions && sessions.length > 0 && sessions[0]?.id && !activeSessionId) {
+      setActiveSessionId(sessions[0].id);
+    }
+  }, [sessions, activeSessionId]);
 
   useEffect(() => {
     if (activeSession) {
@@ -93,12 +115,16 @@ export default function AiCoachPage() {
     setStreamContent('');
 
     try {
-      const response = await fetch('http://localhost:3000/api/ai/chat', { // using absolute for bypass in testing
+      const token = useAuthStore.getState().accessToken;
+      const baseURL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
+
+      const response = await fetch(`${baseURL}/ai/chat`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
+          'Authorization': `Bearer ${token}`
         },
+        credentials: 'include',
         body: JSON.stringify({ content: userMessage, sessionId: activeSessionId })
       });
 
@@ -210,7 +236,7 @@ export default function AiCoachPage() {
             onClick={() => setActiveSessionId(undefined)}
             className="w-full flex items-center gap-3 py-2.5 px-4 rounded-[var(--radius-md)] bg-[var(--color-bg-secondary)] text-[var(--color-text-primary)] text-sm font-medium hover:bg-[var(--color-bg-secondary-hover)] transition-colors border border-transparent hover:border-[var(--color-border-primary)]/50"
           >
-            <div className="bg-[var(--color-accent-primary)] text-white rounded-full p-1">
+            <div className="bg-[var(--color-accent-primary)] text-[var(--color-accent-primary-foreground)] rounded-full p-1">
               <Plus className="h-3 w-3" />
             </div>
             New Chat
@@ -288,7 +314,19 @@ export default function AiCoachPage() {
                   <Bot className="h-5 w-5" />
                 </div>
                 <div className="px-5 py-3.5 max-w-[85%] bg-[var(--color-bg-primary)] text-[var(--color-text-primary)] rounded-2xl rounded-tl-sm border border-[var(--color-border-primary)]/50 shadow-sm">
-                  <div className="text-sm prose prose-sm dark:prose-invert max-w-none leading-relaxed">
+                  <div 
+                    className="text-sm prose prose-sm max-w-none leading-relaxed"
+                    style={{
+                      '--tw-prose-body': 'var(--color-text-primary)',
+                      '--tw-prose-headings': 'var(--color-text-primary)',
+                      '--tw-prose-bold': 'var(--color-text-primary)',
+                      '--tw-prose-code': 'var(--color-text-primary)',
+                      '--tw-prose-bullets': 'var(--color-text-primary)',
+                      '--tw-prose-invert-body': 'var(--color-text-primary)',
+                      '--tw-prose-invert-headings': 'var(--color-text-primary)',
+                      '--tw-prose-invert-bold': 'var(--color-text-primary)',
+                    } as React.CSSProperties}
+                  >
                     <ReactMarkdown>{streamContent}</ReactMarkdown>
                   </div>
                 </div>
@@ -332,7 +370,7 @@ export default function AiCoachPage() {
                 whileTap={{ scale: 0.95 }}
                 type="submit" 
                 disabled={!input.trim() || !config?.hasApiKey || isStreaming}
-                className="p-2.5 rounded-[var(--radius-md)] bg-[var(--color-accent-primary)] text-[var(--color-bg-primary)] hover:bg-[var(--color-accent-secondary)] disabled:opacity-50 transition-colors shadow-sm flex items-center justify-center"
+                className="p-2.5 rounded-[var(--radius-md)] bg-[var(--color-accent-primary)] text-[var(--color-accent-primary-foreground)] hover:bg-[var(--color-accent-secondary)] disabled:opacity-50 transition-colors shadow-sm flex items-center justify-center"
               >
                 <Send className="h-4 w-4 ml-0.5" />
               </motion.button>
@@ -342,7 +380,7 @@ export default function AiCoachPage() {
       </div>
 
       {configOpen && (
-        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4 backdrop-blur-md">
+        <div className="fixed inset-0 bg-[var(--color-overlay)] flex items-center justify-center z-50 p-4 backdrop-blur-md">
           <div 
             ref={configModalRef}
             role="dialog"

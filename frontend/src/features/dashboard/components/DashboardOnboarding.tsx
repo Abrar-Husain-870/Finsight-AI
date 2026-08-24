@@ -28,8 +28,8 @@ export function DashboardOnboarding() {
         animate={{ opacity: 1, y: 0 }}
         className="text-center max-w-2xl mb-12"
       >
-        <div className="mx-auto w-16 h-16 bg-blue-100 dark:bg-blue-900/30 rounded-2xl flex items-center justify-center mb-6">
-          <Sparkles className="h-8 w-8 text-blue-600 dark:text-blue-400" />
+        <div className="mx-auto w-16 h-16 bg-[var(--color-ai-bg)] border border-[var(--color-ai-muted)] rounded-2xl flex items-center justify-center mb-6">
+          <Sparkles className="h-8 w-8 text-[var(--color-ai-accent)]" />
         </div>
         <h2 className="text-3xl font-bold tracking-tight text-[var(--color-text-primary)] mb-4">Welcome to FinSight</h2>
         <p className="text-lg text-[var(--color-text-secondary)]">
@@ -40,9 +40,9 @@ export function DashboardOnboarding() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-4xl">
         <Link 
           to="/import" 
-          className="group flex flex-col p-6 rounded-2xl border border-[var(--color-border-primary)] bg-[var(--color-bg-secondary)] hover:border-blue-500 hover:shadow-md transition-all"
+          className="group flex flex-col p-6 rounded-2xl border border-[var(--color-border-primary)] bg-[var(--color-bg-secondary)] hover:border-[var(--color-border-strong)] hover:shadow-md transition-all"
         >
-          <div className="w-12 h-12 bg-emerald-100 dark:bg-emerald-900/30 rounded-xl flex items-center justify-center mb-4 text-emerald-600 dark:text-emerald-400">
+          <div className="w-12 h-12 bg-[var(--color-success-muted)] rounded-xl flex items-center justify-center mb-4 text-[var(--color-success)]">
             <Upload className="h-6 w-6" />
           </div>
           <h3 className="text-lg font-semibold text-[var(--color-text-primary)] mb-2 flex items-center">
@@ -53,9 +53,9 @@ export function DashboardOnboarding() {
 
         <Link 
           to="/goals" 
-          className="group flex flex-col p-6 rounded-2xl border border-[var(--color-border-primary)] bg-[var(--color-bg-secondary)] hover:border-purple-500 hover:shadow-md transition-all"
+          className="group flex flex-col p-6 rounded-2xl border border-[var(--color-border-primary)] bg-[var(--color-bg-secondary)] hover:border-[var(--color-border-strong)] hover:shadow-md transition-all"
         >
-          <div className="w-12 h-12 bg-purple-100 dark:bg-purple-900/30 rounded-xl flex items-center justify-center mb-4 text-purple-600 dark:text-purple-400">
+          <div className="w-12 h-12 bg-[var(--color-ai-bg)] rounded-xl flex items-center justify-center mb-4 text-[var(--color-ai-accent)]">
             <Target className="h-6 w-6" />
           </div>
           <h3 className="text-lg font-semibold text-[var(--color-text-primary)] mb-2 flex items-center">
@@ -66,9 +66,9 @@ export function DashboardOnboarding() {
 
         <Link 
           to="/ai-coach" 
-          className="group flex flex-col p-6 rounded-2xl border border-[var(--color-border-primary)] bg-[var(--color-bg-secondary)] hover:border-blue-500 hover:shadow-md transition-all"
+          className="group flex flex-col p-6 rounded-2xl border border-[var(--color-border-primary)] bg-[var(--color-bg-secondary)] hover:border-[var(--color-border-strong)] hover:shadow-md transition-all"
         >
-          <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-xl flex items-center justify-center mb-4 text-blue-600 dark:text-blue-400">
+          <div className="w-12 h-12 bg-[var(--color-ai-bg)] rounded-xl flex items-center justify-center mb-4 text-[var(--color-ai-accent)]">
             <Bot className="h-6 w-6" />
           </div>
           <h3 className="text-lg font-semibold text-[var(--color-text-primary)] mb-2 flex items-center">
@@ -80,9 +80,9 @@ export function DashboardOnboarding() {
         <button 
           onClick={handleLoadDemo}
           disabled={isLoading}
-          className="group flex flex-col p-6 rounded-2xl border border-[var(--color-border-primary)] bg-[var(--color-bg-secondary)] hover:border-amber-500 hover:shadow-md transition-all text-left disabled:opacity-50"
+          className="group flex flex-col p-6 rounded-2xl border border-[var(--color-border-primary)] bg-[var(--color-bg-secondary)] hover:border-[var(--color-border-strong)] hover:shadow-md transition-all text-left disabled:opacity-50"
         >
-          <div className="w-12 h-12 bg-amber-100 dark:bg-amber-900/30 rounded-xl flex items-center justify-center mb-4 text-amber-600 dark:text-amber-400">
+          <div className="w-12 h-12 bg-[var(--color-warning-muted)] rounded-xl flex items-center justify-center mb-4 text-[var(--color-warning)]">
             <Database className="h-6 w-6" />
           </div>
           <h3 className="text-lg font-semibold text-[var(--color-text-primary)] mb-2 flex items-center">

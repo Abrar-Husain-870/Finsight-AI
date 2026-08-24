@@ -27,6 +27,11 @@ export default function AnalyticsPage() {
     );
   }
 
+  const formatPercent = (val: number) => {
+    if (val === undefined || val === null || isNaN(val) || !isFinite(val)) return '0.0';
+    return Math.abs(val).toFixed(1);
+  };
+
   return (
     <div className="flex h-full flex-col p-6 sm:p-10 max-w-[1400px] mx-auto w-full gap-10">
       <div>
@@ -52,7 +57,7 @@ export default function AnalyticsPage() {
             {formatMoney(data.cashFlow.total)}
           </div>
           <div className={cn("text-xs font-medium mt-1", data.cashFlow.trend >= 0 ? "text-[var(--color-success)]" : "text-[var(--color-danger)]")}>
-            {data.cashFlow.trend >= 0 ? '+' : '-'}{Math.abs(data.cashFlow.trend)}% <span className="text-[var(--color-text-secondary)] font-normal">vs last 30d</span>
+            {data.cashFlow.trend >= 0 ? '+' : '-'}{formatPercent(data.cashFlow.trend)}% <span className="text-[var(--color-text-secondary)] font-normal">vs last 30d</span>
           </div>
         </div>
 
@@ -64,7 +69,7 @@ export default function AnalyticsPage() {
             {formatMoney(data.income.total)}
           </div>
           <div className={cn("text-xs font-medium mt-1", data.income.trend >= 0 ? "text-[var(--color-success)]" : "text-[var(--color-danger)]")}>
-            {data.income.trend >= 0 ? '+' : '-'}{Math.abs(data.income.trend)}% <span className="text-[var(--color-text-secondary)] font-normal">vs last 30d</span>
+            {data.income.trend >= 0 ? '+' : '-'}{formatPercent(data.income.trend)}% <span className="text-[var(--color-text-secondary)] font-normal">vs last 30d</span>
           </div>
         </div>
 
@@ -76,7 +81,7 @@ export default function AnalyticsPage() {
             {formatMoney(data.expense.total)}
           </div>
           <div className={cn("text-xs font-medium mt-1", data.expense.trend <= 0 ? "text-[var(--color-success)]" : "text-[var(--color-danger)]")}>
-            {data.expense.trend >= 0 ? '+' : '-'}{Math.abs(data.expense.trend)}% <span className="text-[var(--color-text-secondary)] font-normal">vs last 30d</span>
+            {data.expense.trend >= 0 ? '+' : '-'}{formatPercent(data.expense.trend)}% <span className="text-[var(--color-text-secondary)] font-normal">vs last 30d</span>
           </div>
         </div>
 

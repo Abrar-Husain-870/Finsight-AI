@@ -41,7 +41,7 @@ export function LoginForm() {
           id="login-error"
           tabIndex={-1} 
           role="alert" 
-          className="rounded-md bg-red-50 dark:bg-red-900/10 p-3 text-sm font-medium text-[var(--color-danger)] outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-danger)]"
+          className="rounded-md bg-[var(--color-danger-muted)] border border-[var(--color-danger)]/20 p-3 text-sm font-medium text-[var(--color-danger)] outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-danger)]"
         >
           {submitError}
         </div>

@@ -216,7 +216,7 @@ export function ImportWizard() {
   if (step === 'SUMMARY' && summaryData) {
     return (
       <div className="flex flex-col items-center justify-center p-12 text-center rounded-xl border border-[var(--color-border-primary)] bg-[var(--color-bg-primary)] shadow-sm">
-        <div className="rounded-full bg-green-100 p-4 mb-4 dark:bg-green-900/20 text-green-600 dark:text-green-500">
+        <div className="rounded-full bg-[var(--color-success-muted)] p-4 mb-4 text-[var(--color-success)] border border-[var(--color-success)]/20">
           <CheckCircle2 className="h-12 w-12" />
         </div>
         <h3 className="text-2xl font-bold text-[var(--color-text-primary)]">Import Successful</h3>

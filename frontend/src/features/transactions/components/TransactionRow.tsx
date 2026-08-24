@@ -83,7 +83,7 @@ export const TransactionRow = React.memo(function TransactionRow({ transaction, 
           <button onClick={() => onEdit(transaction)} aria-label={`Edit transaction ${transaction.merchant}`} className="text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-bg-primary)] p-1.5 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-border-focus)] transition-all">
             <Edit2 className="h-3.5 w-3.5" aria-hidden="true" />
           </button>
-          <button onClick={() => onDelete(transaction)} aria-label={`Delete transaction ${transaction.merchant}`} className="text-[var(--color-text-secondary)] hover:text-[var(--color-danger)] hover:bg-red-50 dark:hover:bg-red-900/20 p-1.5 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-danger)] transition-all">
+          <button onClick={() => onDelete(transaction)} aria-label={`Delete transaction ${transaction.merchant}`} className="text-[var(--color-text-secondary)] hover:text-[var(--color-danger)] hover:bg-[var(--color-danger-muted)] p-1.5 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-danger)] transition-all">
             <Trash2 className="h-3.5 w-3.5" aria-hidden="true" />
           </button>
         </div>

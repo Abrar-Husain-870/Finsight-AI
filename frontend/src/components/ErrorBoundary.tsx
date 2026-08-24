@@ -44,7 +44,7 @@ export class ErrorBoundary extends Component<Props, State> {
             action={
               <button
                 onClick={() => window.location.assign('/')}
-                className="rounded-md bg-[var(--color-accent-primary)] px-4 py-2 text-sm font-medium text-[var(--color-bg-primary)] transition-colors hover:opacity-90"
+                className="rounded-md bg-[var(--color-accent-primary)] px-4 py-2 text-sm font-medium text-[var(--color-accent-primary-foreground)] transition-colors hover:opacity-90"
               >
                 Return to Dashboard
               </button>

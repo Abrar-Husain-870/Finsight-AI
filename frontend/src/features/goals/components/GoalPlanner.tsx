@@ -38,7 +38,7 @@ export function GoalPlanner({ goal, onClose }: Props) {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+    <div className="fixed inset-0 bg-[var(--color-overlay)] flex items-center justify-center z-50 p-4">
       <div className="bg-[var(--color-bg-primary)] border border-[var(--color-border-primary)] rounded-xl shadow-xl w-full max-w-md p-6 flex flex-col gap-4">
         <h2 className="text-xl font-bold text-[var(--color-text-primary)]">{goal ? 'Edit Goal' : 'Create Goal'}</h2>
         
@@ -72,12 +72,12 @@ export function GoalPlanner({ goal, onClose }: Props) {
 
           <div className="flex justify-end gap-3 mt-4">
             {goal && (
-              <button type="button" className="px-4 py-2 text-sm font-medium rounded-lg text-red-500 border border-red-200 hover:bg-red-50 mr-auto" onClick={() => deleteMutation.mutate(goal.id, { onSuccess: onClose })}>
+              <button type="button" className="px-4 py-2 text-sm font-medium rounded-lg text-[var(--color-danger)] border border-[var(--color-danger)]/30 hover:bg-[var(--color-danger-muted)] mr-auto" onClick={() => deleteMutation.mutate(goal.id, { onSuccess: onClose })}>
                 Delete
               </button>
             )}
             <button type="button" className="px-4 py-2 text-sm font-medium rounded-lg border border-[var(--color-border-primary)] bg-[var(--color-bg-secondary)] hover:bg-[var(--color-border-primary)]" onClick={onClose}>Cancel</button>
-            <button type="submit" className="px-4 py-2 text-sm font-medium rounded-lg bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50" disabled={createMutation.isPending || updateMutation.isPending}>
+            <button type="submit" className="px-4 py-2 text-sm font-medium rounded-lg bg-[var(--color-accent-primary)] text-[var(--color-accent-primary-foreground)] hover:bg-[var(--color-accent-secondary)] disabled:opacity-50" disabled={createMutation.isPending || updateMutation.isPending}>
               {goal ? 'Save Changes' : 'Create Goal'}
             </button>
           </div>

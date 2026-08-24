@@ -13,7 +13,7 @@ export default function NotFoundPage() {
         action={
           <button
             onClick={() => navigate('/')}
-            className="rounded-md bg-[var(--color-accent-primary)] px-4 py-2 text-sm font-medium text-[var(--color-bg-primary)] transition-colors hover:opacity-90"
+            className="rounded-md bg-[var(--color-accent-primary)] px-4 py-2 text-sm font-medium text-[var(--color-accent-primary-foreground)] transition-colors hover:opacity-90"
           >
             Go to Dashboard
           </button>

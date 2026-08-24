@@ -87,7 +87,7 @@ export default function TransactionsPage() {
               setSelectedTx(null);
               setIsDrawerOpen(true);
             }}
-            className="inline-flex items-center gap-2 rounded-md bg-[var(--color-accent-primary)] px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-[var(--color-accent-hover)] transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+            className="inline-flex items-center gap-2 rounded-md bg-[var(--color-accent-primary)] px-4 py-2 text-sm font-semibold text-[var(--color-accent-primary-foreground)] shadow-sm hover:bg-[var(--color-accent-secondary)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-border-focus)]"
           >
             <Plus className="-ml-0.5 h-4 w-4" aria-hidden="true" />
             New

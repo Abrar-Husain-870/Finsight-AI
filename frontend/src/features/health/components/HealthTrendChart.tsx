@@ -34,7 +34,7 @@ export function HealthTrendChart({ data }: Props) {
         />
         <Line 
           dataKey="score" 
-          stroke="var(--color-primary, #3b82f6)" 
+          stroke="var(--chart-1)" 
           strokeWidth={3} 
         />
         <ChartTooltip 
@@ -45,7 +45,7 @@ export function HealthTrendChart({ data }: Props) {
               </div>
               <div className="flex justify-between items-center gap-4 text-sm font-medium">
                 <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-full bg-[#3b82f6]" />
+                  <div className="w-2 h-2 rounded-full bg-[var(--chart-1)]" />
                   <span className="text-[var(--color-text-primary)]">Score</span>
                 </div>
                 <span className="tabular-nums text-[var(--color-text-primary)]">{activeData.score}</span>

@@ -11,9 +11,9 @@ export function RecommendationCard({ recommendation }: { recommendation: HealthR
   return (
     <div className="flex gap-4 p-4 rounded-xl border border-[var(--color-border-primary)] bg-[var(--color-bg-primary)] shadow-sm items-start">
       <div className={cn("p-2 rounded-lg", 
-        isHigh ? "bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400" :
-        isMedium ? "bg-yellow-100 text-yellow-600 dark:bg-yellow-900/30 dark:text-yellow-400" :
-        "bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400"
+        isHigh ? "bg-[var(--color-danger-muted)] text-[var(--color-danger)]" :
+        isMedium ? "bg-[var(--color-warning-muted)] text-[var(--color-warning)]" :
+        "bg-[var(--color-ai-bg)] text-[var(--color-ai-accent)]"
       )}>
         <Target className="h-5 w-5" />
       </div>
@@ -21,9 +21,9 @@ export function RecommendationCard({ recommendation }: { recommendation: HealthR
         <div className="flex items-center gap-2">
           <h4 className="font-semibold text-[var(--color-text-primary)]">{recommendation.title}</h4>
           <span className={cn("text-[10px] px-2 py-0.5 rounded-full font-bold uppercase", 
-            isHigh ? "bg-red-100 text-red-700 dark:bg-red-900/50 dark:text-red-300" :
-            isMedium ? "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/50 dark:text-yellow-300" :
-            "bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-300"
+            isHigh ? "bg-[var(--color-danger-muted)] text-[var(--color-danger)] border border-[var(--color-danger)]/20" :
+            isMedium ? "bg-[var(--color-warning-muted)] text-[var(--color-warning)] border border-[var(--color-warning)]/20" :
+            "bg-[var(--color-ai-bg)] text-[var(--color-ai-accent)] border border-[var(--color-ai-muted)]"
           )}>
             {recommendation.impact} IMPACT
           </span>

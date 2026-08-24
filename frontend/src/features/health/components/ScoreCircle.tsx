@@ -7,9 +7,9 @@ export function ScoreCircle({ score, trend }: { score: number; trend: number }) 
   const circumference = 2 * Math.PI * radius;
   const offset = circumference - (score / 100) * circumference;
   
-  let color = 'text-green-500';
-  if (score < 40) color = 'text-red-500';
-  else if (score < 70) color = 'text-yellow-500';
+  let color = 'text-[var(--color-success)]';
+  if (score < 40) color = 'text-[var(--color-danger)]';
+  else if (score < 70) color = 'text-[var(--color-warning)]';
 
   return (
     <div className="relative flex flex-col items-center justify-center">
@@ -32,9 +32,9 @@ export function ScoreCircle({ score, trend }: { score: number; trend: number }) 
       </div>
       <div className="mt-4 flex items-center gap-1 text-sm font-medium">
         {trend > 0 ? (
-          <span className="text-green-500">+{trend} pts</span>
+          <span className="text-[var(--color-success)]">+{trend} pts</span>
         ) : trend < 0 ? (
-          <span className="text-red-500">{trend} pts</span>
+          <span className="text-[var(--color-danger)]">{trend} pts</span>
         ) : (
           <span className="text-[var(--color-text-secondary)]">No change</span>
         )}

@@ -79,7 +79,7 @@ export default function SettingsPage() {
               <span className="text-sm font-medium text-[var(--color-text-primary)]">Email Address</span>
               <div className="flex items-center gap-2">
                 <span className="text-sm text-[var(--color-text-secondary)]">{user?.email}</span>
-                <CheckCircle2 className="h-4 w-4 text-emerald-500" />
+                <CheckCircle2 className="h-4 w-4 text-[var(--color-success)]" />
               </div>
             </div>
 

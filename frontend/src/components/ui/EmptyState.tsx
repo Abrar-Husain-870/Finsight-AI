@@ -24,8 +24,8 @@ export function EmptyState({ icon: Icon, title, description, action, secondaryAc
       )}
       {...props}
     >
-      <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-blue-50 dark:bg-blue-900/20 mb-6 shadow-sm ring-1 ring-blue-100 dark:ring-blue-800">
-        <Icon className="h-10 w-10 text-blue-600 dark:text-blue-400" />
+      <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-[var(--color-ai-bg)] mb-6 shadow-sm ring-1 ring-[var(--color-ai-muted)]">
+        <Icon className="h-10 w-10 text-[var(--color-ai-accent)]" />
       </div>
       <h3 className="mb-3 text-2xl font-bold tracking-tight text-[var(--color-text-primary)]">{title}</h3>
       <p className="mb-8 max-w-md text-base text-[var(--color-text-secondary)] leading-relaxed">{description}</p>

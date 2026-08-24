@@ -64,7 +64,7 @@ export default function HealthPage() {
 
             <div className="flex flex-col gap-6">
               <h3 className="text-lg font-semibold text-[var(--color-text-primary)] flex items-center gap-2">
-                <Sparkles className="h-5 w-5 text-amber-500" /> Recommendations
+                <Sparkles className="h-5 w-5 text-[var(--color-warning)]" /> Recommendations
               </h3>
               <div className="flex flex-col gap-4">
                 {data.recommendations.length > 0 ? data.recommendations.map(r => (

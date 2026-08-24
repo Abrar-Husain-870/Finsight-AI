@@ -48,8 +48,8 @@ export function MonthlyTrendChart({ data = [] }: { data?: MonthlyTrend[] }) {
       <div className="pt-12 w-full">
         <AreaChart aspectRatio="4 / 1" data={chartData}>
           <Grid horizontal />
-          <Area curve={curveMonotoneX} dataKey="revenue" fill="var(--chart-line-primary, #3b82f6)" fillOpacity={0.3} strokeWidth={2} />
-          <Area curve={curveMonotoneX} dataKey="costs" fill="var(--chart-line-secondary, #ef4444)" fillOpacity={0.2} strokeWidth={1.5} />
+          <Area curve={curveMonotoneX} dataKey="revenue" fill="var(--chart-1)" fillOpacity={0.3} strokeWidth={2} />
+          <Area curve={curveMonotoneX} dataKey="costs" fill="var(--color-danger)" fillOpacity={0.2} strokeWidth={1.5} />
           <SegmentBackground />
           <SegmentLineFrom />
           <SegmentLineTo />

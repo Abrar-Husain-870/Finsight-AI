@@ -215,7 +215,7 @@ export default function SimulationPage() {
                     <span className="text-xs font-medium text-[var(--color-text-secondary)] uppercase tracking-wider mb-2">Baseline Feasibility</span>
                     <span className={cn("font-bold text-xl", 
                       data.baseline.overallFeasibility === 'UNREALISTIC' ? "text-[var(--color-danger)]" :
-                      data.baseline.overallFeasibility === 'STRETCH' ? "text-amber-500" : "text-[var(--color-success)]"
+                      data.baseline.overallFeasibility === 'STRETCH' ? "text-[var(--color-warning)]" : "text-[var(--color-success)]"
                     )}>{data.baseline.overallFeasibility}</span>
                   </div>
                   
@@ -227,7 +227,7 @@ export default function SimulationPage() {
                     <span className="text-xs font-medium text-[var(--color-text-secondary)] uppercase tracking-wider mb-2">Projected Feasibility</span>
                     <span className={cn("font-bold text-xl", 
                       data.projected.overallFeasibility === 'UNREALISTIC' ? "text-[var(--color-danger)]" :
-                      data.projected.overallFeasibility === 'STRETCH' ? "text-amber-500" : "text-[var(--color-success)]"
+                      data.projected.overallFeasibility === 'STRETCH' ? "text-[var(--color-warning)]" : "text-[var(--color-success)]"
                     )}>{data.projected.overallFeasibility}</span>
                   </div>
                 </div>

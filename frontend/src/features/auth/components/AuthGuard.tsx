@@ -27,7 +27,7 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
                 clearAuth(); // Clear the expired flag
                 navigate('/login', { state: { from: location } });
               }}
-              className="rounded-md bg-[var(--color-accent-primary)] px-4 py-2 text-sm font-medium text-[var(--color-bg-primary)] transition-colors hover:opacity-90"
+              className="rounded-md bg-[var(--color-accent-primary)] px-4 py-2 text-sm font-medium text-[var(--color-accent-primary-foreground)] transition-colors hover:opacity-90"
             >
               Log In Again
             </button>

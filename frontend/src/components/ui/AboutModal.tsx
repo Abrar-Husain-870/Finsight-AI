@@ -12,7 +12,7 @@ export function AboutModal() {
   if (!isAboutModalOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-[100] p-4 backdrop-blur-sm">
+    <div className="fixed inset-0 bg-[var(--color-overlay)] flex items-center justify-center z-[100] p-4 backdrop-blur-sm">
       <div 
         ref={modalRef}
         role="dialog"
@@ -41,7 +41,7 @@ export function AboutModal() {
           
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="p-4 rounded-xl border border-[var(--color-border-primary)] bg-[var(--color-bg-secondary)]">
-              <div className="flex items-center gap-2 mb-2 text-blue-600 dark:text-blue-400">
+              <div className="flex items-center gap-2 mb-2 text-[var(--color-ai-accent)]">
                 <Shield className="h-5 w-5" />
                 <h3 className="font-semibold text-[var(--color-text-primary)]">Privacy First</h3>
               </div>
@@ -51,7 +51,7 @@ export function AboutModal() {
             </div>
             
             <div className="p-4 rounded-xl border border-[var(--color-border-primary)] bg-[var(--color-bg-secondary)]">
-              <div className="flex items-center gap-2 mb-2 text-emerald-600 dark:text-emerald-400">
+              <div className="flex items-center gap-2 mb-2 text-[var(--color-success)]">
                 <Cpu className="h-5 w-5" />
                 <h3 className="font-semibold text-[var(--color-text-primary)]">Deterministic AI</h3>
               </div>
@@ -61,7 +61,7 @@ export function AboutModal() {
             </div>
             
             <div className="p-4 rounded-xl border border-[var(--color-border-primary)] bg-[var(--color-bg-secondary)]">
-              <div className="flex items-center gap-2 mb-2 text-purple-600 dark:text-purple-400">
+              <div className="flex items-center gap-2 mb-2 text-[var(--color-ai-accent)]">
                 <Code2 className="h-5 w-5" />
                 <h3 className="font-semibold text-[var(--color-text-primary)]">Architecture</h3>
               </div>
@@ -71,7 +71,7 @@ export function AboutModal() {
             </div>
             
             <div className="p-4 rounded-xl border border-[var(--color-border-primary)] bg-[var(--color-bg-secondary)]">
-              <div className="flex items-center gap-2 mb-2 text-amber-600 dark:text-amber-400">
+              <div className="flex items-center gap-2 mb-2 text-[var(--color-warning)]">
                 <Zap className="h-5 w-5" />
                 <h3 className="font-semibold text-[var(--color-text-primary)]">Performance</h3>
               </div>
@@ -81,9 +81,9 @@ export function AboutModal() {
             </div>
           </div>
           
-          <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg mt-2">
-            <h4 className="text-sm font-semibold text-blue-900 dark:text-blue-200 mb-1">Presentation Features</h4>
-            <ul className="text-sm text-blue-800 dark:text-blue-300 space-y-1 list-disc list-inside mb-4">
+          <div className="bg-[var(--color-ai-bg)] p-4 rounded-lg mt-2 border border-[var(--color-ai-muted)]">
+            <h4 className="text-sm font-semibold text-[var(--color-ai-accent)] mb-1">Presentation Features</h4>
+            <ul className="text-sm text-[var(--color-text-secondary)] space-y-1 list-disc list-inside mb-4">
               <li>Load Demo Workspace dynamically populates realistic 6-month historical data.</li>
               <li>Presentation Mode optimizes visual density for projecting.</li>
               <li>Guided product tour highlights core architecture.</li>
@@ -93,7 +93,7 @@ export function AboutModal() {
                 setAboutModalOpen(false);
                 startTour();
               }}
-              className="flex items-center justify-center w-full gap-2 py-2 px-4 rounded-lg bg-blue-600 text-white font-medium hover:bg-blue-700 transition-colors"
+              className="flex items-center justify-center w-full gap-2 py-2 px-4 rounded-lg bg-[var(--color-accent-primary)] text-[var(--color-accent-primary-foreground)] font-medium hover:bg-[var(--color-accent-secondary)] transition-colors"
             >
               <Compass className="h-4 w-4" /> Start Interactive Tour
             </button>

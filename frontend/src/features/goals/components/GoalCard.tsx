@@ -21,16 +21,16 @@ export function GoalCard({ goal, onClick }: Props) {
       whileHover={{ scale: 1.01 }}
       onClick={onClick}
       className={cn(
-        "relative flex flex-col gap-4 p-5 rounded-xl border bg-[var(--color-bg-primary)] shadow-sm cursor-pointer hover:border-blue-500 transition-colors overflow-hidden",
-        isUnrealistic ? "border-red-200 dark:border-red-900/50" : "border-[var(--color-border-primary)]",
-        goal.progress >= 100 ? "border-emerald-500/50 shadow-[0_0_15px_rgba(16,185,129,0.15)] ring-1 ring-emerald-500/20" : ""
+        "relative flex flex-col gap-4 p-5 rounded-xl border bg-[var(--color-bg-primary)] shadow-sm cursor-pointer hover:border-[var(--color-border-strong)] transition-colors overflow-hidden",
+        isUnrealistic ? "border-[var(--color-danger)]/30" : "border-[var(--color-border-primary)]",
+        goal.progress >= 100 ? "border-[var(--color-success)]/50 shadow-[0_0_15px_rgba(21,128,61,0.15)] ring-1 ring-[var(--color-success)]/20" : ""
       )}
     >
       {goal.progress >= 100 && (
         <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="absolute -right-6 -top-6 w-24 h-24 bg-emerald-500/10 rounded-full blur-2xl"
+          className="absolute -right-6 -top-6 w-24 h-24 bg-[var(--color-success)]/10 rounded-full blur-2xl"
         />
       )}
       <div className="flex justify-between items-start">
@@ -45,7 +45,7 @@ export function GoalCard({ goal, onClick }: Props) {
                   animate={{ scale: 1, rotate: 0 }}
                   transition={{ type: "spring", stiffness: 200, damping: 10 }}
                 >
-                  <Trophy className="h-5 w-5 text-emerald-500" />
+                  <Trophy className="h-5 w-5 text-[var(--color-success)]" />
                 </motion.div>
               )}
             </h4>
@@ -67,14 +67,14 @@ export function GoalCard({ goal, onClick }: Props) {
         </div>
         <div className="flex flex-col gap-1 p-3 rounded-lg bg-[var(--color-bg-secondary)]">
           <span className="text-xs text-[var(--color-text-secondary)] flex items-center gap-1"><Target className="h-3 w-3"/> Required/Mo</span>
-          <span className={cn("font-medium text-sm", isUnrealistic ? "text-red-500" : "text-[var(--color-text-primary)]")}>
+          <span className={cn("font-medium text-sm", isUnrealistic ? "text-[var(--color-danger)]" : "text-[var(--color-text-primary)]")}>
             {formatMoney(goal.requiredMonthlySavings)}
           </span>
         </div>
       </div>
 
       {isUnrealistic && goal.progress < 100 && (
-        <div className="flex items-center gap-2 text-xs text-red-600 dark:text-red-400 mt-1">
+        <div className="flex items-center gap-2 text-xs text-[var(--color-danger)] mt-1">
           <AlertCircle className="h-4 w-4" />
           Goal may be unrealistic given current cash flow.
         </div>

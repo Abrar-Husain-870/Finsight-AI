@@ -82,8 +82,8 @@ export default function GoalsPage() {
                 <div className="text-sm font-medium text-[var(--color-text-secondary)]">Feasibility Indicator</div>
                 <div className={cn("text-xs font-semibold px-2.5 py-1 rounded-full", 
                   isUnrealistic ? "bg-[var(--color-danger)]/10 text-[var(--color-danger)]" :
-                  isStretch ? "bg-amber-500/10 text-amber-600 dark:text-amber-400" :
-                  "bg-[var(--color-success)]/10 text-[var(--color-success)]"
+                  isStretch ? "bg-[var(--color-warning-muted)] text-[var(--color-warning)]" :
+                  "bg-[var(--color-success-muted)] text-[var(--color-success)]"
                 )}>
                   {data.overallFeasibility}
                 </div>
@@ -123,7 +123,7 @@ export default function GoalsPage() {
                     {r.text.includes('exceed') || r.text.includes('unrealistic') ? (
                       <AlertCircle className="h-5 w-5 text-[var(--color-danger)] shrink-0 mt-0.5" />
                     ) : r.text.includes('aggressive') ? (
-                      <AlertCircle className="h-5 w-5 text-amber-500 shrink-0 mt-0.5" />
+                      <AlertCircle className="h-5 w-5 text-[var(--color-warning)] shrink-0 mt-0.5" />
                     ) : (
                       <CheckCircle2 className="h-5 w-5 text-[var(--color-success)] shrink-0 mt-0.5" />
                     )}

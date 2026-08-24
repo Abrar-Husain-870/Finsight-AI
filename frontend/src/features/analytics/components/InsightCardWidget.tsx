@@ -10,20 +10,20 @@ export function InsightCardWidget({ insight }: { insight: InsightCard }) {
   
   return (
     <div className={cn("p-4 rounded-xl border shadow-sm flex flex-col gap-2", 
-      isPositive ? "bg-green-50/50 border-green-200 dark:bg-green-900/10 dark:border-green-900/50" : 
-      isWarning ? "bg-yellow-50/50 border-yellow-200 dark:bg-yellow-900/10 dark:border-yellow-900/50" :
-      isNegative ? "bg-red-50/50 border-red-200 dark:bg-red-900/10 dark:border-red-900/50" :
+      isPositive ? "bg-[var(--color-success-muted)] border-[var(--color-success)]/30" : 
+      isWarning ? "bg-[var(--color-warning-muted)] border-[var(--color-warning)]/30" :
+      isNegative ? "bg-[var(--color-danger-muted)] border-[var(--color-danger)]/30" :
       "bg-[var(--color-bg-primary)] border-[var(--color-border-primary)]"
     )}>
       <div className="flex items-center gap-2">
-        {isPositive && <TrendingUp className="h-5 w-5 text-green-600 dark:text-green-500" />}
-        {isNegative && <TrendingDown className="h-5 w-5 text-red-600 dark:text-red-500" />}
-        {isWarning && <AlertTriangle className="h-5 w-5 text-yellow-600 dark:text-yellow-500" />}
-        {!isPositive && !isNegative && !isWarning && <Lightbulb className="h-5 w-5 text-blue-600 dark:text-blue-500" />}
+        {isPositive && <TrendingUp className="h-5 w-5 text-[var(--color-success)]" />}
+        {isNegative && <TrendingDown className="h-5 w-5 text-[var(--color-danger)]" />}
+        {isWarning && <AlertTriangle className="h-5 w-5 text-[var(--color-warning)]" />}
+        {!isPositive && !isNegative && !isWarning && <Lightbulb className="h-5 w-5 text-[var(--color-ai-accent)]" />}
         <h4 className={cn("font-semibold", 
-          isPositive ? "text-green-900 dark:text-green-400" :
-          isWarning ? "text-yellow-900 dark:text-yellow-400" :
-          isNegative ? "text-red-900 dark:text-red-400" :
+          isPositive ? "text-[var(--color-success)]" :
+          isWarning ? "text-[var(--color-warning)]" :
+          isNegative ? "text-[var(--color-danger)]" :
           "text-[var(--color-text-primary)]"
         )}>{insight.title}</h4>
       </div>

@@ -4,29 +4,39 @@ import { useCurrency } from '../../../lib/hooks/useCurrency.js';
 import { motion } from 'framer-motion';
 import { PieChart, PieSlice, PieCenter } from '../../../components/ui/charts/index.js';
 
-// Tailwind color maps for pie chart
+// Theme-aligned chart color palette fallbacks
+const fallbackPalette = [
+  'var(--chart-1)',
+  'var(--chart-2)',
+  'var(--chart-3)',
+  'var(--chart-4)',
+  'var(--chart-5)',
+];
+
 const colorMap: Record<string, string> = {
-  'red-500': '#ef4444',
-  'blue-500': '#3b82f6',
-  'green-500': '#22c55e',
-  'emerald-500': '#10b981',
-  'orange-500': '#f97316',
-  'purple-500': '#a855f7',
-  'indigo-500': '#6366f1',
-  'amber-500': '#f59e0b',
-  'cyan-500': '#06b6d4',
-  'pink-500': '#ec4899',
-  'gray-500': '#6b7280'
+  'blue-500': 'var(--chart-1)',
+  'green-500': 'var(--chart-2)',
+  'emerald-500': 'var(--chart-2)',
+  'amber-500': 'var(--chart-3)',
+  'orange-500': 'var(--chart-5)',
+  'purple-500': 'var(--chart-4)',
+  'indigo-500': 'var(--chart-4)',
+  'red-500': 'var(--color-danger)',
+  'cyan-500': 'var(--chart-1)',
+  'pink-500': 'var(--chart-4)',
+  'gray-500': 'var(--color-text-muted)'
 };
 
 export function CategoryDonutChart({ data }: { data: CategoryBreakdown[] }) {
   const { formatMoney } = useCurrency();
 
   const chartData = React.useMemo(() => {
-    return data.map(d => ({
+    return data.map((d, idx) => ({
       label: d.categoryName,
       value: Math.abs(fromMinor(d.amount)),
-      color: colorMap[d.categoryColor] || colorMap['gray-500'],
+      color: d.categoryColor?.startsWith('#') 
+        ? d.categoryColor 
+        : (colorMap[d.categoryColor] || fallbackPalette[idx % fallbackPalette.length]),
       icon: d.categoryIcon,
       rawColor: d.categoryColor
     }));
