@@ -312,16 +312,16 @@ export function SidebarNav({
   const handleSelect = onSelect || handleDefaultSelect;
 
   return (
-    <div className={`flex flex-col h-full bg-[var(--color-bg-primary)] p-3 font-sans transition-all duration-300 ${collapsed ? 'w-16 items-center px-1.5' : 'w-[260px]'} ${className}`}>
+    <div className={`flex flex-col h-full bg-[var(--color-bg-primary)] p-2 font-sans transition-all duration-300 ${collapsed ? 'w-[72px] items-center px-1' : 'w-[260px]'} ${className}`}>
       <WorkspaceSwitcher 
         {...(activeWorkspace !== undefined ? { selected: activeWorkspace } : {})} 
         {...(onWorkspaceSelect !== undefined ? { onSelect: onWorkspaceSelect } : {})} 
         collapsed={collapsed}
       />
 
-      <div className="flex-1 overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] flex flex-col gap-4 mt-1 w-full">
+      <div className="flex-1 overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] flex flex-col gap-3 mt-1 w-full items-center">
         {finsightNavGroups.map((group, idx) => (
-          <div key={idx} className="flex flex-col gap-1 w-full">
+          <div key={idx} className="flex flex-col gap-1 w-full items-center">
             {!collapsed && group.heading && (
               <span className="px-2.5 mb-1 text-[10px] font-bold tracking-wider text-[var(--color-text-secondary)] uppercase opacity-70">
                 {group.heading}
@@ -340,7 +340,7 @@ export function SidebarNav({
         ))}
       </div>
 
-      <div className="mt-auto pt-3 border-t border-[var(--color-border-primary)] flex flex-col gap-1 w-full">
+      <div className="mt-auto pt-3 border-t border-[var(--color-border-primary)] flex flex-col gap-1 w-full items-center">
         {finsightBottomItems.map(item => (
           <NavItem 
             key={item.id} 

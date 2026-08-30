@@ -27,7 +27,7 @@ export function AppShell() {
       <div 
         className={cn(
           "flex flex-col min-h-screen transition-[padding] duration-300 ease-in-out",
-          sidebarCollapsed ? "lg:pl-16" : "lg:pl-72"
+          sidebarCollapsed ? "lg:pl-[72px]" : "lg:pl-72"
         )}
       >
         <Header />

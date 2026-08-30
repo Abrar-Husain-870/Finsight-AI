@@ -18,11 +18,11 @@ export function Sidebar() {
       <aside 
         className={cn(
           "hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:flex-col transition-[width] duration-300 ease-in-out border-r border-[var(--color-border-primary)] bg-[var(--color-bg-primary)] overflow-hidden",
-          sidebarCollapsed ? "lg:w-16" : "lg:w-72"
+          sidebarCollapsed ? "lg:w-[72px]" : "lg:w-72"
         )} 
         aria-label="Sidebar"
       >
-        <div className="flex grow flex-col gap-y-3 overflow-y-auto px-3 pb-4">
+        <div className="flex grow flex-col gap-y-3 overflow-y-auto overflow-x-hidden px-1 pb-4">
           <div className="pt-2">
             <SidebarNav
               className="w-full border-none bg-transparent p-0"

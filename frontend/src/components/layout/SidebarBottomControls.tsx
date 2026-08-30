@@ -60,14 +60,6 @@ export function SidebarBottomControls({ collapsed = false }: { collapsed?: boole
         >
           <Info className="h-5 w-5" />
         </button>
-
-        <button
-          onClick={toggleSidebar}
-          title="Expand Sidebar"
-          className="mt-2 p-2.5 rounded-xl bg-black/5 dark:bg-white/5 text-[var(--color-text-primary)] hover:bg-black/10 dark:hover:bg-white/10 transition-colors border border-[var(--color-border-primary)]"
-        >
-          <PanelLeftOpen className="h-5 w-5" />
-        </button>
       </div>
     );
   }
@@ -126,18 +118,6 @@ export function SidebarBottomControls({ collapsed = false }: { collapsed?: boole
       >
         <Info className="h-5 w-5 shrink-0" />
         About FinSight
-      </button>
-
-      {/* Collapse Toggle Button */}
-      <button
-        onClick={toggleSidebar}
-        className="flex items-center justify-between gap-x-3 rounded-md p-2 text-sm font-medium text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-bg-secondary)] transition-colors w-full text-left cursor-pointer mt-1 border-t border-[var(--color-border-primary)]/50 pt-2"
-      >
-        <span className="flex items-center gap-x-3">
-          <PanelLeftClose className="h-5 w-5 shrink-0" />
-          Collapse Sidebar
-        </span>
-        <kbd className="text-[10px] font-mono font-bold bg-[var(--color-bg-secondary)] px-1.5 py-0.5 rounded border border-[var(--color-border-primary)]">⌘[</kbd>
       </button>
     </div>
   );
