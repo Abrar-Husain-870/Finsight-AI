@@ -49,8 +49,9 @@ export function App() {
               </GuestGuard>
             } />
 
+            <Route path="/login" element={<GuestGuard><LoginPage /></GuestGuard>} />
+
             <Route element={<GuestGuard><AuthLayout /></GuestGuard>}>
-              <Route path="/login" element={<LoginPage />} />
               <Route path="/register" element={<RegisterPage />} />
             </Route>
             

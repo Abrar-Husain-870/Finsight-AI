@@ -20,7 +20,7 @@ import {
   Settings,
   Bell
 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '../../lib/utils.js';
 
 export function FinSightDashboardShowcase({ className }: { className?: string }) {
   return (

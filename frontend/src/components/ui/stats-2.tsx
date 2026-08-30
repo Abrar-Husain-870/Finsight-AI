@@ -1,7 +1,7 @@
 import React from "react";
 import { ArrowRight, Star } from "lucide-react";
-import { Button } from "@/components/ui/Button";
-import { cn } from "@/lib/utils";
+import { Button } from "./Button.js";
+import { cn } from "../../lib/utils.js";
 
 export interface Stats2Props {
   onPrimaryAction?: () => void;

@@ -1,7 +1,7 @@
 import React from "react";
 import { ArrowRight } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { FinSightDashboardShowcase } from "./FinSightDashboardShowcase";
+import { cn } from "../../lib/utils.js";
+import { FinSightDashboardShowcase } from "./FinSightDashboardShowcase.js";
 
 interface SaasTemplateProps {
   badgeText?: string;

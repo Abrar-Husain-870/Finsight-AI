@@ -1,11 +1,11 @@
 'use client'
 
 import * as React from 'react'
-import { motion, useReducedMotion, type Variants } from 'framer-motion'
+import { motion, useReducedMotion } from 'framer-motion'
 import Balancer from 'react-wrap-balancer'
 
-import { cn } from '@/lib/utils'
-import { Cta, type CtaProps } from '@/components/ui/hero-10-utils/cta'
+import { cn } from '../../lib/utils.js'
+import { Cta, type CtaProps } from './hero-10-utils/cta.js'
 
 export interface Hero10Props {
   title: string
@@ -49,12 +49,11 @@ const fanSlots = [
   { width: 'w-[38%]', layout: '-ml-8 z-10', rotate: 6, x: -48, ty: 24 },
 ]
 
-const fanContainer: Variants = {
-  hidden: { opacity: 0, y: 12, filter: 'blur(6px)' },
+const fanContainer = {
+  hidden: { opacity: 0, y: 12 },
   visible: {
     opacity: 1,
     y: 0,
-    filter: 'blur(0px)',
     transition: {
       duration: 0.5,
       ease: [0.22, 1, 0.36, 1],
@@ -65,7 +64,7 @@ const fanContainer: Variants = {
   },
 }
 
-const fanCard: Variants = {
+const fanCard = {
   hidden: (slot: (typeof fanSlots)[number]) => ({
     x: slot.x,
     rotate: slot.rotate,
@@ -79,17 +78,16 @@ const fanCard: Variants = {
   }),
 }
 
-const container: Variants = {
+const container = {
   hidden: {},
   visible: { transition: { staggerChildren: 0.1, delayChildren: 0.05 } },
 }
 
-const item: Variants = {
-  hidden: { opacity: 0, y: 12, filter: 'blur(6px)' },
+const item = {
+  hidden: { opacity: 0, y: 12 },
   visible: {
     opacity: 1,
     y: 0,
-    filter: 'blur(0px)',
     transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] },
   },
 }
@@ -101,14 +99,16 @@ function Reveal({
   children,
 }: Readonly<{
   active: boolean
-  variants?: Variants
+  variants?: any
   className?: string
   children: React.ReactNode
 }>) {
   if (!active) return <div className={className}>{children}</div>
 
+  const revealProps = variants ? { variants } : { variants: item };
+
   return (
-    <motion.div variants={variants ?? item} className={className}>
+    <motion.div {...revealProps} className={className}>
       {children}
     </motion.div>
   )
@@ -125,17 +125,19 @@ function ImageFan({
   cardAspect: string
   animate: boolean
 }>) {
+  const fanMotionProps = animate 
+    ? { initial: 'hidden', whileInView: 'visible' } 
+    : { animate: 'visible' };
+
   return (
     <motion.div
       className="relative flex w-full items-center justify-center py-4"
       variants={fanContainer}
-      initial={animate ? 'hidden' : false}
-      whileInView={animate ? 'visible' : undefined}
-      animate={animate ? undefined : 'visible'}
+      {...fanMotionProps}
       viewport={{ once: true, margin: '-80px' }}
     >
       {images.slice(0, 3).map((src, i) => {
-        const slot = fanSlots[i] ?? fanSlots[1]
+        const slot = (fanSlots[i] || fanSlots[0])!;
         return (
           <motion.div
             key={src}
@@ -224,14 +226,15 @@ export function Hero10({
     </p>
   )
 
+  const imageFanProps = imageAlts ? { images, imageAlts, cardAspect: vs.fanCard, animate } : { images, cardAspect: vs.fanCard, animate };
+
   const mediaElement = images?.length ? (
-    <ImageFan
-      images={images}
-      imageAlts={imageAlts}
-      cardAspect={vs.fanCard}
-      animate={animate}
-    />
+    <ImageFan {...imageFanProps} />
   ) : null
+
+  const containerMotionProps = animate 
+    ? { variants: container, initial: 'hidden', whileInView: 'visible' }
+    : {};
 
   return (
     <section className={cn("relative isolate w-full overflow-hidden bg-[var(--color-bg-primary)] text-[var(--color-text-primary)]", className)}>
@@ -241,9 +244,7 @@ export function Hero10({
           vs.section,
           vs.content,
         )}
-        variants={animate ? container : undefined}
-        initial={animate ? 'hidden' : false}
-        whileInView={animate ? 'visible' : undefined}
+        {...containerMotionProps}
         viewport={{ once: true, margin: '-80px' }}
       >
         <Reveal

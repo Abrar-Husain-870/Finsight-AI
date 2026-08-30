@@ -3,7 +3,11 @@ import { Link, useNavigate } from 'react-router-dom';
 import { FeatureShowcase, type TabMedia, type ShowcaseStep } from '../components/ui/feature-showcase.js';
 import { SaasTemplateSection } from '../components/ui/saa-s-template.js';
 import Hero10 from '../components/ui/hero-10.js';
+import { FeaturedCrmDemoSection } from '../components/ui/featured-crm-demo-section.js';
 import { Stats2 } from '../components/ui/stats-2.js';
+import { Compare2 } from '../components/ui/compare-2.js';
+import { TestimonialsSection } from '../components/ui/testimonials-3.js';
+import FAQs from '../components/ui/text-reveal-faqs.js';
 import { authApi } from '../features/auth/api/auth.api.js';
 import { useAuthStore } from '../features/auth/store/auth.store.js';
 import { useTheme } from '../providers/ThemeProvider.js';
@@ -189,8 +193,20 @@ export default function LandingPage() {
           variant="standard"
         />
 
-        {/* Hero Section 4: Stats2 Capability & Trust Showcase */}
+        {/* Hero Section 4: Video Demo & Feature Showcase Section */}
+        <FeaturedCrmDemoSection />
+
+        {/* Hero Section 5: Feature Comparison Section ("Why Us") */}
+        <Compare2 />
+
+        {/* Hero Section 6: Testimonials Section */}
+        <TestimonialsSection />
+
+        {/* Hero Section 7: Stats2 Capability & Trust Showcase */}
         <Stats2 onPrimaryAction={() => navigate('/register')} />
+
+        {/* Hero Section 6: FAQs Section */}
+        <FAQs />
       </main>
 
       {/* Footer */}

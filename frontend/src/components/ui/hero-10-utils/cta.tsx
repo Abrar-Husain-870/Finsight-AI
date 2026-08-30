@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Button } from "@/components/ui/Button";
+import { Button } from "../Button.js";
 
 export interface CtaProps {
   ctaEnabled?: boolean;
