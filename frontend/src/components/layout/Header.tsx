@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useTheme } from '../../providers/ThemeProvider.js';
-import { Moon, Sun, LogOut, Settings, User, ChevronDown, Menu } from 'lucide-react';
+import { Moon, Sun, LogOut, Settings, User, ChevronDown, Menu, PanelLeftClose, PanelLeftOpen } from 'lucide-react';
 import { authApi } from '../../features/auth/api/auth.api.js';
 import { useAuthStore } from '../../features/auth/store/auth.store.js';
 import { useUiStore } from '../../store/uiStore.js';
@@ -12,6 +12,7 @@ export function Header() {
   const user = useAuthStore(s => s.user);
   const { theme, setTheme } = useTheme();
   const setMobileMenuOpen = useUiStore(s => s.setMobileMenuOpen);
+  const { sidebarCollapsed, toggleSidebar } = useUiStore();
   
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -22,9 +23,21 @@ export function Header() {
         setDropdownOpen(false);
       }
     }
+
+    function handleKeyDown(event: KeyboardEvent) {
+      if ((event.metaKey || event.ctrlKey) && event.key === '[') {
+        event.preventDefault();
+        toggleSidebar();
+      }
+    }
+
     document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [toggleSidebar]);
 
   const handleLogout = async () => {
     try {
@@ -35,7 +48,7 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-10 flex h-16 shrink-0 items-center justify-between border-b border-[var(--color-border-primary)] bg-[var(--color-bg-primary)]/80 px-4 backdrop-blur-md sm:px-6 lg:px-8">
-      <div className="flex items-center gap-x-4">
+      <div className="flex items-center gap-x-3">
         <button
           type="button"
           onClick={() => setMobileMenuOpen(true)}
@@ -45,6 +58,21 @@ export function Header() {
           <span className="sr-only">Open sidebar</span>
           <Menu className="h-6 w-6" aria-hidden="true" />
         </button>
+
+        {/* Desktop Sidebar Collapse Toggle */}
+        <button
+          type="button"
+          onClick={toggleSidebar}
+          className="hidden lg:flex -ml-2.5 sm:-ml-4 p-2 rounded-lg text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-bg-secondary)] transition-colors cursor-pointer"
+          title={sidebarCollapsed ? "Expand Sidebar (⌘[)" : "Collapse Sidebar (⌘[)"}
+        >
+          {sidebarCollapsed ? (
+            <PanelLeftOpen className="h-5 w-5" />
+          ) : (
+            <PanelLeftClose className="h-5 w-5" />
+          )}
+        </button>
+
         <span className="text-lg font-bold tracking-tight text-[var(--color-text-primary)] lg:hidden">FinSight</span>
       </div>
 

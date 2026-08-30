@@ -7,12 +7,12 @@ import { pageTransitionVariants } from '../../lib/motion.js';
 import { KeyboardShortcutsDialog } from '../ui/KeyboardShortcutsDialog.js';
 import { AboutModal } from '../ui/AboutModal.js';
 import { useUiStore } from '../../store/uiStore.js';
-
+import { cn } from '../../lib/utils.js';
 import { useAuthStore } from '../../features/auth/store/auth.store.js';
 
 export function AppShell() {
   const location = useLocation();
-  const { presentationMode } = useUiStore();
+  const { presentationMode, sidebarCollapsed } = useUiStore();
   const currency = useAuthStore(s => s.user?.currency || 'USD');
 
   return (
@@ -24,7 +24,12 @@ export function AppShell() {
         Skip to main content
       </a>
       <Sidebar />
-      <div className="lg:pl-72 flex flex-col min-h-screen">
+      <div 
+        className={cn(
+          "flex flex-col min-h-screen transition-[padding] duration-300 ease-in-out",
+          sidebarCollapsed ? "lg:pl-16" : "lg:pl-72"
+        )}
+      >
         <Header />
         <main id="main-content" className="flex-1" tabIndex={-1}>
           <div className="px-4 py-8 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">

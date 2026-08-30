@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { FeatureShowcase, type TabMedia, type ShowcaseStep } from '../components/ui/feature-showcase.js';
 import { SaasTemplateSection } from '../components/ui/saa-s-template.js';
 import Hero10 from '../components/ui/hero-10.js';
+import { FeatureSections } from '../components/ui/feature-sections.js';
 import { FeaturedCrmDemoSection } from '../components/ui/featured-crm-demo-section.js';
 import { Stats2 } from '../components/ui/stats-2.js';
 import { Compare2 } from '../components/ui/compare-2.js';
@@ -192,6 +193,9 @@ export default function LandingPage() {
           }}
           variant="standard"
         />
+
+        {/* Hero Section 3.5: FeatureSections (Powerful Features & Showcase) */}
+        <FeatureSections />
 
         {/* Hero Section 4: Video Demo & Feature Showcase Section */}
         <FeaturedCrmDemoSection />

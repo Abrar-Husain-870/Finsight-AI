@@ -1,16 +1,73 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useUiStore } from '../../store/uiStore.js';
 import { useFocusTrap } from '../../hooks/useFocusTrap.js';
-import { X, Shield, Cpu, Code2, Zap, Compass } from 'lucide-react';
+import { X, Compass } from 'lucide-react';
 import { useProductTour } from '../../features/tour/useProductTour.js';
-import { Button } from './Button.js';
+import { GradientCard } from './gradient-card.js';
 
 export function AboutModal() {
   const { isAboutModalOpen, setAboutModalOpen } = useUiStore();
   const modalRef = useFocusTrap(isAboutModalOpen);
   const { startTour } = useProductTour();
+  const navigate = useNavigate();
 
   if (!isAboutModalOpen) return null;
+
+  const cardData = [
+    {
+      badgeText: "Local-First / Encrypted",
+      badgeColor: "#F59E0B",
+      title: "Privacy First Engine",
+      description: "All financial processing runs locally. Your raw transaction data is never continuously ingested by external proprietary LLMs.",
+      ctaText: "Learn about Privacy",
+      ctaHref: "#",
+      imageUrl: "https://www.thiings.co/_next/image?url=https%3A%2F%2Flftz25oez4aqbxpq.public.blob.vercel-storage.com%2Fimage-CVv0qK2DYZbOAQP2LboVFgQGt0UMfB.png&w=320&q=75",
+      gradient: "orange" as const,
+    },
+    {
+      badgeText: "Grounded Analytics",
+      badgeColor: "#8B5CF6",
+      title: "Deterministic AI",
+      description: "Grounded on pre-calculated aggregations to eliminate hallucinations and give exact, trustworthy financial insights.",
+      ctaText: "Try AI Coach",
+      ctaHref: "/ai-coach",
+      imageUrl: "https://www.thiings.co/_next/image?url=https%3A%2F%2Flftz25oez4aqbxpq.public.blob.vercel-storage.com%2Fimage-5i9EDsbgEZk9k7NBeKt3ImNXkx0F66.png&w=320&q=75",
+      gradient: "purple" as const,
+      onCtaClick: () => {
+        setAboutModalOpen(false);
+        navigate('/ai-coach');
+      }
+    },
+    {
+      badgeText: "Zero Floating Loss",
+      badgeColor: "#10B981",
+      title: "Precision Ledger",
+      description: "Built with minor integer unit calculations to prevent rounding drift across multi-currency accounts and transactions.",
+      ctaText: "View Ledgers",
+      ctaHref: "/transactions",
+      imageUrl: "https://www.thiings.co/_next/image?url=https%3A%2F%2Flftz25oez4aqbxpq.public.blob.vercel-storage.com%2Fimage-Q24CTBwBqnBrGujxuykBW9GfOYTdeE.png&w=320&q=75",
+      gradient: "green" as const,
+      onCtaClick: () => {
+        setAboutModalOpen(false);
+        navigate('/transactions');
+      }
+    },
+    {
+      badgeText: "Guided Experience",
+      badgeColor: "#6B7280",
+      title: "Interactive Product Tour",
+      description: "Step-by-step walkthrough highlighting FinSight's real-time analytics, budgeting goals, and intelligent coach.",
+      ctaText: "Start Interactive Tour",
+      ctaHref: "#",
+      imageUrl: "https://www.thiings.co/_next/image?url=https%3A%2F%2Flftz25oez4aqbxpq.public.blob.vercel-storage.com%2Fimage-5WJZLkaCfLUnCYpgNz89tPx5C4KYgJ.png&w=320&q=75",
+      gradient: "gray" as const,
+      onCtaClick: () => {
+        setAboutModalOpen(false);
+        startTour();
+      }
+    },
+  ];
 
   return (
     <div className="fixed inset-0 bg-[var(--color-overlay)] flex items-center justify-center z-[100] p-4 backdrop-blur-sm">
@@ -20,89 +77,48 @@ export function AboutModal() {
         aria-modal="true"
         aria-labelledby="about-modal-title"
         tabIndex={-1}
-        className="bg-[var(--color-bg-primary)] border border-[var(--color-border-primary)] rounded-xl shadow-[var(--shadow-drawer)] w-full max-w-2xl p-0 flex flex-col overflow-hidden outline-none"
+        className="bg-[var(--color-bg-primary)] border border-[var(--color-border-primary)] rounded-3xl shadow-2xl w-full max-w-4xl p-0 flex flex-col overflow-hidden outline-none max-h-[92vh]"
       >
-        <div className="flex items-center justify-between p-6 border-b border-[var(--color-border-primary)]">
+        {/* Modal Header */}
+        <div className="flex items-center justify-between px-6 py-4 border-b border-[var(--color-border-primary)] shrink-0">
           <div>
-            <h2 id="about-modal-title" className="text-xl font-bold text-[var(--color-text-primary)] tracking-tight">FinSight</h2>
-            <p className="text-sm text-[var(--color-text-secondary)] mt-1">Intelligent Financial Analytics</p>
+            <h2 id="about-modal-title" className="text-xl font-bold text-[var(--color-text-primary)] tracking-tight">About FinSight</h2>
+            <p className="text-xs text-[var(--color-text-secondary)] mt-0.5">Intelligent Financial Analytics & Architecture Pillars</p>
           </div>
           <button 
             onClick={() => setAboutModalOpen(false)}
-            className="p-2 rounded-full hover:bg-[var(--color-bg-secondary)] text-[var(--color-text-secondary)] transition-colors"
+            className="p-1.5 rounded-full hover:bg-[var(--color-bg-secondary)] text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] transition-colors cursor-pointer"
           >
             <X className="h-5 w-5" />
           </button>
         </div>
         
-        <div className="p-6 overflow-y-auto max-h-[70vh] flex flex-col gap-6">
-          <p className="text-sm text-[var(--color-text-primary)] leading-relaxed">
-            FinSight is an advanced personal finance platform designed for deterministic analytics, strict privacy, and explainable AI insights. Built as a comprehensive final year engineering project.
+        {/* Modal Body with GradientCard Grid */}
+        <div className="p-5 sm:p-6 overflow-y-auto space-y-3.5 scrollbar-none">
+          <p className="text-xs sm:text-sm text-[var(--color-text-primary)] leading-relaxed font-medium">
+            FinSight is an advanced personal finance platform built for deterministic analytics, strict privacy, and explainable AI insights. Explore our core architectural pillars below:
           </p>
-          
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="p-4 rounded-xl border border-[var(--color-border-primary)] bg-[var(--color-bg-secondary)]">
-              <div className="flex items-center gap-2 mb-2 text-[var(--color-ai-accent)]">
-                <Shield className="h-5 w-5" />
-                <h3 className="font-semibold text-[var(--color-text-primary)]">Privacy First</h3>
-              </div>
-              <p className="text-sm text-[var(--color-text-secondary)]">
-                All AI interactions are locally configured. Your raw transaction data is never continuously ingested by proprietary LLMs.
-              </p>
-            </div>
-            
-            <div className="p-4 rounded-xl border border-[var(--color-border-primary)] bg-[var(--color-bg-secondary)]">
-              <div className="flex items-center gap-2 mb-2 text-[var(--color-success)]">
-                <Cpu className="h-5 w-5" />
-                <h3 className="font-semibold text-[var(--color-text-primary)]">Deterministic AI</h3>
-              </div>
-              <p className="text-sm text-[var(--color-text-secondary)]">
-                AI insights are strictly grounded. The AI engine only sees pre-calculated deterministic aggregations, preventing hallucinations.
-              </p>
-            </div>
-            
-            <div className="p-4 rounded-xl border border-[var(--color-border-primary)] bg-[var(--color-bg-secondary)]">
-              <div className="flex items-center gap-2 mb-2 text-[var(--color-ai-accent)]">
-                <Code2 className="h-5 w-5" />
-                <h3 className="font-semibold text-[var(--color-text-primary)]">Architecture</h3>
-              </div>
-              <p className="text-sm text-[var(--color-text-secondary)]">
-                Built with React, Express, Prisma, and Tailwind. Implements precision math via minor integer units to avoid floating-point loss.
-              </p>
-            </div>
-            
-            <div className="p-4 rounded-xl border border-[var(--color-border-primary)] bg-[var(--color-bg-secondary)]">
-              <div className="flex items-center gap-2 mb-2 text-[var(--color-warning)]">
-                <Zap className="h-5 w-5" />
-                <h3 className="font-semibold text-[var(--color-text-primary)]">Performance</h3>
-              </div>
-              <p className="text-sm text-[var(--color-text-secondary)]">
-                Optimized React Query caching, paginated data tables, debounced search, and highly normalized SQL schemas.
-              </p>
-            </div>
-          </div>
-          
-          <div className="bg-[var(--color-ai-bg)] p-4 rounded-lg mt-2 border border-[var(--color-ai-muted)]">
-            <h4 className="text-sm font-semibold text-[var(--color-ai-accent)] mb-1">Presentation Features</h4>
-            <ul className="text-sm text-[var(--color-text-secondary)] space-y-1 list-disc list-inside mb-4">
-              <li>Load Demo Workspace dynamically populates realistic 6-month historical data.</li>
-              <li>Presentation Mode optimizes visual density for projecting.</li>
-              <li>Guided product tour highlights core architecture.</li>
-            </ul>
-            <Button
-              onClick={() => {
-                setAboutModalOpen(false);
-                startTour();
-              }}
-              variant="primary"
-              size="md"
-              className="w-full"
-            >
-              <Compass className="mr-2 h-4 w-4" /> Start Interactive Tour
-            </Button>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-1">
+            {cardData.map((card, index) => (
+              <GradientCard
+                key={index}
+                badgeText={card.badgeText}
+                badgeColor={card.badgeColor}
+                title={card.title}
+                description={card.description}
+                ctaText={card.ctaText}
+                ctaHref={card.ctaHref}
+                imageUrl={card.imageUrl}
+                gradient={card.gradient}
+                {...(card.onCtaClick ? { onCtaClick: card.onCtaClick } : {})}
+              />
+            ))}
           </div>
         </div>
       </div>
     </div>
   );
 }
+
+export default AboutModal;

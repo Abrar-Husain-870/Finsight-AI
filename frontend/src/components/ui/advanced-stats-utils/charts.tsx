@@ -1,8 +1,6 @@
 "use client";
 
-import React, { useMemo } from 'react';
-import { MonthlyTrend, fromMinor } from '@finsight/shared';
-import { motion } from 'framer-motion';
+import React from "react";
 import {
   AreaChart,
   Area,
@@ -11,71 +9,53 @@ import {
   Tooltip,
   ResponsiveContainer,
   CartesianGrid,
-} from 'recharts';
-import { useCurrency } from '../../../lib/hooks/useCurrency.js';
+} from "recharts";
+import { useCurrency } from "../../../lib/hooks/useCurrency.js";
+import { TrendingUp } from "lucide-react";
 
-export function MonthlyTrendChart({ data = [] }: { data?: MonthlyTrend[] }) {
+const data = [
+  { month: "Jan", income: 45000, expenses: 32000, netWorth: 185000 },
+  { month: "Feb", income: 52000, expenses: 34000, netWorth: 203000 },
+  { month: "Mar", income: 49000, expenses: 31000, netWorth: 221000 },
+  { month: "Apr", income: 58000, expenses: 36000, netWorth: 243000 },
+  { month: "May", income: 63000, expenses: 38000, netWorth: 268000 },
+  { month: "Jun", income: 68328, expenses: 42000, netWorth: 294328 },
+];
+
+export function ClippedAreaChart() {
   const { formatMoney } = useCurrency();
 
-  const chartData = useMemo(() => {
-    if (!data || data.length === 0) {
-      return [
-        { month: "Jan", income: 45000, expenses: 32000 },
-        { month: "Feb", income: 52000, expenses: 34000 },
-        { month: "Mar", income: 49000, expenses: 31000 },
-        { month: "Apr", income: 58000, expenses: 36000 },
-        { month: "May", income: 63000, expenses: 38000 },
-        { month: "Jun", income: 68328, expenses: 42000 },
-      ];
-    }
-
-    return data.map(d => {
-      const parts = d.month.split('-');
-      const year = parts[0] || '2000';
-      const monthNum = parts[1] || '1';
-      const dateObj = new Date(parseInt(year), parseInt(monthNum) - 1, 1);
-      const monthLabel = dateObj.toLocaleDateString('en-US', { month: 'short' });
-
-      return {
-        month: monthLabel,
-        income: fromMinor(d.income),
-        expenses: Math.abs(fromMinor(d.expense)),
-      };
-    });
-  }, [data]);
-
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4 }}
-      className="w-full flex flex-col justify-between h-full space-y-4"
-    >
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-1">
-        <span className="text-xs font-semibold uppercase tracking-wider text-[var(--color-text-secondary)]">
-          Monthly Income vs Expenses
-        </span>
-        <div className="flex items-center gap-4 text-xs font-medium text-[var(--color-text-secondary)]">
-          <div className="flex items-center gap-1.5">
-            <span className="h-2.5 w-2.5 rounded-full bg-[#10B981]" />
-            <span>Income</span>
-          </div>
-          <div className="flex items-center gap-1.5">
-            <span className="h-2.5 w-2.5 rounded-full bg-[#EF4444]" />
-            <span>Expenses</span>
-          </div>
+    <div className="flex flex-col justify-between h-full space-y-6">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--color-text-secondary)]">
+            Performance Overview
+          </span>
+          <h3 className="text-2xl font-bold tracking-tight text-[var(--color-text-primary)] mt-1">
+            Cash Flow & Net Worth Growth
+          </h3>
+        </div>
+
+        <div className="flex items-center gap-3 bg-[var(--color-bg-primary)] px-3.5 py-1.5 rounded-full border border-[var(--color-border-primary)] shadow-2xs">
+          <TrendingUp className="w-4 h-4 text-[var(--color-success)]" />
+          <span className="text-xs font-semibold text-[var(--color-text-primary)]">
+            +18.4% this quarter
+          </span>
         </div>
       </div>
 
-      <div className="w-full h-[260px]">
+      {/* Recharts Area Chart */}
+      <div className="w-full h-[240px] sm:h-[280px]">
         <ResponsiveContainer width="100%" height="100%">
-          <AreaChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+          <AreaChart data={data} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
             <defs>
-              <linearGradient id="monthlyIncomeGradient" x1="0" y1="0" x2="0" y2="1">
+              <linearGradient id="incomeGradient" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="5%" stopColor="#10B981" stopOpacity={0.35} />
                 <stop offset="95%" stopColor="#10B981" stopOpacity={0.0} />
               </linearGradient>
-              <linearGradient id="monthlyExpensesGradient" x1="0" y1="0" x2="0" y2="1">
+              <linearGradient id="expensesGradient" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="5%" stopColor="#EF4444" stopOpacity={0.25} />
                 <stop offset="95%" stopColor="#EF4444" stopOpacity={0.0} />
               </linearGradient>
@@ -93,7 +73,7 @@ export function MonthlyTrendChart({ data = [] }: { data?: MonthlyTrend[] }) {
               axisLine={false}
               tickLine={false}
               tick={{ fill: "var(--color-text-secondary)", fontSize: 11 }}
-              tickFormatter={(val) => `₹${val >= 1000 ? `${(val / 1000).toFixed(0)}k` : val}`}
+              tickFormatter={(val) => `₹${val / 1000}k`}
             />
             <Tooltip
               content={({ active, payload, label }) => {
@@ -123,7 +103,7 @@ export function MonthlyTrendChart({ data = [] }: { data?: MonthlyTrend[] }) {
               stroke="#10B981"
               strokeWidth={2.5}
               fillOpacity={1}
-              fill="url(#monthlyIncomeGradient)"
+              fill="url(#incomeGradient)"
             />
             <Area
               type="monotone"
@@ -131,13 +111,13 @@ export function MonthlyTrendChart({ data = [] }: { data?: MonthlyTrend[] }) {
               stroke="#EF4444"
               strokeWidth={2}
               fillOpacity={1}
-              fill="url(#monthlyExpensesGradient)"
+              fill="url(#expensesGradient)"
             />
           </AreaChart>
         </ResponsiveContainer>
       </div>
-    </motion.div>
+    </div>
   );
 }
 
-export default MonthlyTrendChart;
+export default ClippedAreaChart;

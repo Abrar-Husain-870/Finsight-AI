@@ -9,6 +9,9 @@ interface UiState {
   triggerCelebration: () => void;
   mobileMenuOpen: boolean;
   setMobileMenuOpen: (val: boolean) => void;
+  sidebarCollapsed: boolean;
+  setSidebarCollapsed: (val: boolean) => void;
+  toggleSidebar: () => void;
 }
 
 export const useUiStore = create<UiState>((set) => ({
@@ -20,4 +23,7 @@ export const useUiStore = create<UiState>((set) => ({
   triggerCelebration: () => set((state) => ({ celebrationTrigger: state.celebrationTrigger + 1 })),
   mobileMenuOpen: false,
   setMobileMenuOpen: (val) => set({ mobileMenuOpen: val }),
+  sidebarCollapsed: false,
+  setSidebarCollapsed: (val) => set({ sidebarCollapsed: val }),
+  toggleSidebar: () => set((state) => ({ sidebarCollapsed: !state.sidebarCollapsed })),
 }));
