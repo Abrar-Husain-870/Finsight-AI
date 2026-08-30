@@ -7,6 +7,8 @@ interface UiState {
   setAboutModalOpen: (val: boolean) => void;
   celebrationTrigger: number;
   triggerCelebration: () => void;
+  mobileMenuOpen: boolean;
+  setMobileMenuOpen: (val: boolean) => void;
 }
 
 export const useUiStore = create<UiState>((set) => ({
@@ -16,4 +18,6 @@ export const useUiStore = create<UiState>((set) => ({
   setAboutModalOpen: (val) => set({ isAboutModalOpen: val }),
   celebrationTrigger: 0,
   triggerCelebration: () => set((state) => ({ celebrationTrigger: state.celebrationTrigger + 1 })),
+  mobileMenuOpen: false,
+  setMobileMenuOpen: (val) => set({ mobileMenuOpen: val }),
 }));

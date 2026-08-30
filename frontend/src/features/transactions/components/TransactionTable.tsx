@@ -47,7 +47,7 @@ export const TransactionTable = React.memo(function TransactionTable({ transacti
   return (
     <div className="w-full flex flex-col">
       {/* Desktop Header */}
-      <div className="hidden sm:grid grid-cols-[2fr_1fr_1.5fr_1fr_80px] gap-4 px-6 py-4 bg-[var(--color-bg-secondary)]/30 border-b border-[var(--color-border-primary)] text-xs font-semibold text-[var(--color-text-secondary)] uppercase tracking-wider">
+      <div className="hidden sm:grid grid-cols-[2fr_1fr_1.5fr_1fr_80px] gap-4 px-6 py-3.5 bg-[var(--color-bg-secondary)] border-b border-[var(--color-border-primary)] text-xs font-semibold text-[var(--color-text-secondary)] uppercase tracking-wider">
         <div>Transaction</div>
         <div>Date</div>
         <div>Description</div>

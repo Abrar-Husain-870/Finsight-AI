@@ -6,6 +6,7 @@ import { DeleteConfirmationDialog } from '../../features/transactions/components
 import { SearchBar } from '../../features/transactions/components/SearchBar.js';
 import { Pagination } from '../../components/ui/Pagination.js';
 import { Plus } from 'lucide-react';
+import { Button } from '../../components/ui/Button.js';
 import { TransactionResponse, TransactionFilterInput } from '@finsight/shared';
 import { useKeyboardShortcuts } from '../../hooks/useKeyboardShortcuts.js';
 import { toast } from 'sonner';
@@ -74,28 +75,28 @@ export default function TransactionsPage() {
   };
 
   return (
-    <div className="flex h-full flex-col">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-6 pb-4">
+    <div className="flex flex-col p-6 sm:p-10 max-w-[1400px] mx-auto w-full gap-8 sm:gap-10">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-[var(--color-text-primary)]">Transactions</h1>
-          <p className="text-sm text-[var(--color-text-secondary)]">Manage your income and expenses.</p>
+          <h1 className="text-3xl font-bold tracking-tight text-[var(--color-text-primary)]">Transactions</h1>
+          <p className="text-sm text-[var(--color-text-secondary)] mt-1">Manage your income and expenses.</p>
         </div>
         <div className="flex items-center gap-3">
           <SearchBar ref={searchInputRef} value={filters.merchant || ''} onChange={handleSearch} />
-          <button
+          <Button
             onClick={() => {
               setSelectedTx(null);
               setIsDrawerOpen(true);
             }}
-            className="inline-flex items-center gap-2 rounded-md bg-[var(--color-accent-primary)] px-4 py-2 text-sm font-semibold text-[var(--color-accent-primary-foreground)] shadow-sm hover:bg-[var(--color-accent-secondary)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-border-focus)]"
+            size="md"
           >
-            <Plus className="-ml-0.5 h-4 w-4" aria-hidden="true" />
+            <Plus className="mr-1 h-4 w-4" aria-hidden="true" />
             New
-          </button>
+          </Button>
         </div>
       </div>
 
-      <div className="flex-1 px-6 pb-6">
+      <div className="w-full">
         {isError ? (
           <ErrorState 
             title="Failed to load transactions"
@@ -103,7 +104,7 @@ export default function TransactionsPage() {
             onRetry={refetch}
           />
         ) : (
-          <div className="h-full overflow-hidden rounded-xl border border-[var(--color-border-primary)] bg-[var(--color-bg-primary)] shadow-sm flex flex-col">
+          <div className="overflow-hidden rounded-[var(--radius-xl)] border border-[var(--color-border-primary)] bg-[var(--color-bg-primary)] shadow-[var(--shadow-card)] flex flex-col">
             <div className="flex-1 overflow-auto">
               <TransactionTable 
                 transactions={data?.data || []} 

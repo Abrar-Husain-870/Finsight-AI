@@ -11,6 +11,7 @@ import { Button } from '../components/ui/Button.js';
 import { Input as CustomInput } from '../components/ui/Input.js';
 
 import { useAuthStore } from '../features/auth/store/auth.store.js';
+import { apiClient } from '../lib/axios.js';
 
 const AiMessageRow = React.memo(({ message }: { message: { role: string; content: string } }) => {
   const isUser = message.role === 'user';
@@ -35,7 +36,7 @@ const AiMessageRow = React.memo(({ message }: { message: { role: string; content
       <div className={cn("flex items-center justify-center h-8 w-8 rounded-full shrink-0", isUser ? "bg-[var(--color-accent-primary)] text-[var(--color-accent-primary-foreground)] shadow-sm" : "bg-[var(--color-bg-secondary)] text-[var(--color-text-primary)] shadow-sm")}>
         {isUser ? <User className="h-4 w-4" /> : <Bot className="h-4 w-4 text-[var(--color-ai-accent)]" />}
       </div>
-      <div className={cn("px-5 py-3.5 max-w-[85%] shadow-sm", isUser ? "bg-[var(--color-accent-primary)] text-[var(--color-accent-primary-foreground)] rounded-2xl rounded-tr-sm" : "bg-[var(--color-bg-primary)] text-[var(--color-text-primary)] rounded-2xl rounded-tl-sm border border-[var(--color-border-primary)]/50")}>
+      <div className={cn("px-5 py-3.5 max-w-[85%] shadow-sm", isUser ? "bg-[var(--color-accent-primary)] text-[var(--color-accent-primary-foreground)] rounded-2xl rounded-tr-sm" : "bg-[var(--color-ai-bg)] text-[var(--color-text-primary)] rounded-2xl rounded-tl-sm border border-[var(--color-ai-accent)]/20")}>
         <div className="text-sm prose prose-sm max-w-none leading-relaxed" style={proseStyle}>
           <ReactMarkdown>{message.content}</ReactMarkdown>
         </div>
@@ -115,10 +116,10 @@ export default function AiCoachPage() {
     setStreamContent('');
 
     try {
-      const token = useAuthStore.getState().accessToken;
+      let token = useAuthStore.getState().accessToken;
       const baseURL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
 
-      const response = await fetch(`${baseURL}/ai/chat`, {
+      let response = await fetch(`${baseURL}/ai/chat`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -127,6 +128,29 @@ export default function AiCoachPage() {
         credentials: 'include',
         body: JSON.stringify({ content: userMessage, sessionId: activeSessionId })
       });
+
+      if (response.status === 401) {
+        try {
+          const { data: refreshRes } = await apiClient.post('/auth/refresh');
+          const newToken = refreshRes.data.accessToken;
+          const store = useAuthStore.getState();
+          if (store.user) {
+            store.setAuth(store.user, newToken);
+          }
+          response = await fetch(`${baseURL}/ai/chat`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${newToken}`
+            },
+            credentials: 'include',
+            body: JSON.stringify({ content: userMessage, sessionId: activeSessionId })
+          });
+        } catch (refreshErr) {
+          useAuthStore.getState().clearAuth(true);
+          throw new Error('Your session has expired. Please log in again.');
+        }
+      }
 
       if (!response.ok) {
         let msg = 'Failed to connect to AI engine.';

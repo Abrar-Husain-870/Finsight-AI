@@ -3,6 +3,7 @@ import { TransactionResponse } from '@finsight/shared';
 import { useCurrency } from '../../../lib/hooks/useCurrency.js';
 import { useCategoryTree } from '../../categories/hooks/useCategories.js';
 import { CategoryIcon } from '../../categories/components/CategoryIcon.js';
+import { cn } from '../../../lib/utils.js';
 import { motion } from 'framer-motion';
 
 export function RecentTransactionsWidget({ transactions }: { transactions: TransactionResponse[] }) {
@@ -41,31 +42,36 @@ export function RecentTransactionsWidget({ transactions }: { transactions: Trans
   return (
     <div className="flex flex-col gap-1">
       {transactions.slice(0, 5).map((tx, i) => {
-        const { name, icon, color } = getCategoryDetails(tx.categoryId);
+        const { name, icon } = getCategoryDetails(tx.categoryId);
         const formattedDate = new Intl.DateTimeFormat('en-US', {
           month: 'short',
           day: 'numeric',
         }).format(new Date(tx.date));
+
+        const isExpense = tx.amount < 0;
 
         return (
           <motion.div 
             key={tx.id}
             initial={{ opacity: 0, y: 5 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3, delay: i * 0.05 }}
-            className="flex items-center justify-between p-3 rounded-[var(--radius-lg)] hover:bg-[var(--color-bg-secondary)]/50 transition-colors group cursor-default"
+            transition={{ duration: 0.25, delay: i * 0.04 }}
+            className="flex items-center justify-between py-2.5 px-3 rounded-[var(--radius-lg)] hover:bg-[var(--color-bg-secondary)] transition-colors group cursor-default"
           >
-            <div className="flex items-center gap-4">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--color-bg-secondary)] group-hover:bg-[var(--color-bg-primary)] transition-colors shadow-sm">
-                <CategoryIcon name={icon} className={`text-${color} h-4 w-4`} colorClass="bg-transparent" />
+            <div className="flex items-center gap-3.5 min-w-0">
+              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[var(--color-bg-tertiary)] group-hover:bg-[var(--color-bg-secondary)] transition-colors shadow-sm shrink-0">
+                <CategoryIcon name={icon} className="h-4 w-4 text-[var(--color-text-primary)]" colorClass="bg-transparent" />
               </div>
-              <div className="flex flex-col">
-                <span className="font-medium text-sm text-[var(--color-text-primary)]">{tx.merchant || 'Unknown Merchant'}</span>
+              <div className="flex flex-col min-w-0">
+                <span className="font-medium text-sm text-[var(--color-text-primary)] truncate">{tx.merchant || 'Unknown Merchant'}</span>
                 <span className="text-xs text-[var(--color-text-secondary)]">{name} • {formattedDate}</span>
               </div>
             </div>
-            <div className="text-sm font-medium text-[var(--color-text-primary)] tracking-tight">
-              {formatMoney(tx.amount)}
+            <div className={cn(
+                "text-sm font-semibold tabular-nums tracking-tight text-right ml-4 shrink-0",
+                isExpense ? "text-[var(--color-danger)]" : "text-[var(--color-success)]"
+              )}>
+              {isExpense ? formatMoney(Math.abs(tx.amount)) : `+${formatMoney(tx.amount)}`}
             </div>
           </motion.div>
         );

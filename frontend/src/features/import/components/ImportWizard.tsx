@@ -7,6 +7,7 @@ import { useImportPreview, useImportCommit } from '../hooks/useImport.js';
 import { CategoryPicker } from '../../categories/components/CategoryPicker.js';
 import { useCurrency } from '../../../lib/hooks/useCurrency.js';
 import { toast } from 'sonner';
+import { Button } from '../../../components/ui/Button.js';
 
 type Step = 'UPLOAD' | 'MAP_COLUMNS' | 'PREVIEW' | 'SUMMARY';
 
@@ -127,12 +128,11 @@ export function ImportWizard() {
             </div>
           ))}
         </div>
-        <div className="flex justify-end gap-3 mt-4">
-          <button onClick={() => setStep('UPLOAD')} className="px-4 py-2 text-sm font-semibold text-[var(--color-text-primary)] hover:bg-[var(--color-bg-secondary)] rounded-md border border-[var(--color-border-primary)]">Back</button>
-          <button onClick={handlePreview} disabled={previewMutation.isPending} className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-[var(--color-accent-primary)] hover:bg-[var(--color-accent-hover)] rounded-md disabled:opacity-50">
-            {previewMutation.isPending ? 'Processing...' : 'Next'}
-            <ChevronRight className="h-4 w-4" />
-          </button>
+        <div className="flex justify-end items-center gap-3 mt-4">
+          <Button variant="outline" size="sm" onClick={() => setStep('UPLOAD')}>Back</Button>
+          <Button variant="primary" size="sm" onClick={handlePreview} isLoading={previewMutation.isPending}>
+            Next <ChevronRight className="ml-1 h-4 w-4" />
+          </Button>
         </div>
       </div>
     );
@@ -202,12 +202,11 @@ export function ImportWizard() {
           </table>
         </div>
 
-        <div className="flex justify-end gap-3">
-          <button onClick={() => setStep('MAP_COLUMNS')} className="px-4 py-2 text-sm font-semibold text-[var(--color-text-primary)] hover:bg-[var(--color-bg-secondary)] rounded-md border border-[var(--color-border-primary)]">Back</button>
-          <button onClick={handleCommit} disabled={commitMutation.isPending} className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-[var(--color-accent-primary)] hover:bg-[var(--color-accent-hover)] rounded-md disabled:opacity-50">
-            {commitMutation.isPending ? 'Importing...' : 'Complete Import'}
-            <Check className="h-4 w-4" />
-          </button>
+        <div className="flex justify-end items-center gap-3">
+          <Button variant="outline" size="sm" onClick={() => setStep('MAP_COLUMNS')}>Back</Button>
+          <Button variant="primary" size="sm" onClick={handleCommit} isLoading={commitMutation.isPending}>
+            Complete Import <Check className="ml-1 h-4 w-4" />
+          </Button>
         </div>
       </div>
     );
@@ -223,12 +222,14 @@ export function ImportWizard() {
         <p className="mt-2 text-sm text-[var(--color-text-secondary)]">
           Successfully imported <strong>{summaryData.successRows}</strong> out of {summaryData.totalRows} transactions.
         </p>
-        <button 
+        <Button 
+          variant="outline"
+          size="md"
           onClick={() => { setStep('UPLOAD'); setFile(null); setPreviewData(null); }}
-          className="mt-6 px-6 py-2.5 text-sm font-semibold text-[var(--color-text-primary)] hover:bg-[var(--color-bg-secondary)] rounded-md border border-[var(--color-border-primary)] transition-colors"
+          className="mt-6"
         >
           Import Another File
-        </button>
+        </Button>
       </div>
     );
   }

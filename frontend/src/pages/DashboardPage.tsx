@@ -54,17 +54,17 @@ export default function DashboardPage() {
         <DashboardOnboarding />
       ) : (
         <>
-          {/* Hero Metric Section */}
-          <div className="flex flex-col items-center justify-center pt-8 pb-4">
-            <span className="text-sm font-medium tracking-wide text-[var(--color-text-secondary)] uppercase mb-4">
-              Net Cash Flow
+          {/* Primary Financial Position Header */}
+          <div className="flex flex-col items-center justify-center pt-4 pb-2 text-center">
+            <span className="text-xs font-semibold tracking-wider text-[var(--color-text-secondary)] uppercase mb-3">
+              Net Cash Position
             </span>
             {isLoading ? (
-              <div className="h-[80px] w-[300px] bg-[var(--color-bg-secondary)] rounded-lg animate-pulse" />
+              <div className="h-[80px] w-[300px] bg-[var(--color-bg-secondary)] rounded-2xl animate-pulse" />
             ) : (
               <h1 
                 className={cn(
-                  "text-[64px] sm:text-[88px] font-bold tracking-tighter leading-none mb-8 transition-colors",
+                  "text-[52px] sm:text-[76px] md:text-[88px] font-bold tracking-tighter leading-none tabular-nums mb-6 transition-colors",
                   isPositiveCashFlow ? "text-[var(--color-text-primary)]" : "text-[var(--color-danger)]"
                 )}
               >
@@ -72,26 +72,33 @@ export default function DashboardPage() {
               </h1>
             )}
 
-            {/* Micro Stats Row */}
+            {/* Financial Ledger Ribbon */}
             {!isLoading && summary && (
-              <div className="flex flex-wrap items-center justify-center gap-8 sm:gap-16 text-sm">
-                <div className="flex flex-col items-center gap-1">
-                  <span className="text-[var(--color-text-secondary)]">Income</span>
-                  <span className="font-medium text-[var(--color-text-primary)]">{formatMoney(summary.totalIncome)}</span>
+              <div className="inline-flex flex-wrap items-center justify-center gap-6 sm:gap-10 px-6 sm:px-10 py-3 sm:py-3.5 bg-[var(--color-bg-secondary)] border border-[var(--color-border-primary)] rounded-xl shadow-sm">
+                <div className="flex items-center gap-3">
+                  <span className="text-[11px] font-semibold uppercase tracking-wider text-[var(--color-text-secondary)]">Income</span>
+                  <span className="text-sm sm:text-base font-semibold tabular-nums text-[var(--color-success)]">+{formatMoney(summary.totalIncome)}</span>
                 </div>
-                <div className="flex flex-col items-center gap-1">
-                  <span className="text-[var(--color-text-secondary)]">Expenses</span>
-                  <span className="font-medium text-[var(--color-text-primary)]">{formatMoney(summary.totalExpenses)}</span>
+                
+                <div className="hidden sm:block h-6 w-px bg-[var(--color-border-primary)]" />
+                
+                <div className="flex items-center gap-3">
+                  <span className="text-[11px] font-semibold uppercase tracking-wider text-[var(--color-text-secondary)]">Expenses</span>
+                  <span className="text-sm sm:text-base font-semibold tabular-nums text-[var(--color-danger)]">{formatMoney(Math.abs(summary.totalExpenses))}</span>
                 </div>
-                <div className="flex flex-col items-center gap-1">
-                  <span className="text-[var(--color-text-secondary)]">Savings</span>
-                  <span className="font-medium text-[var(--color-text-primary)]">{formatMoney(summary.savings)}</span>
+                
+                <div className="hidden sm:block h-6 w-px bg-[var(--color-border-primary)]" />
+                
+                <div className="flex items-center gap-3">
+                  <span className="text-[11px] font-semibold uppercase tracking-wider text-[var(--color-text-secondary)]">Net Savings</span>
+                  <span className="text-sm sm:text-base font-semibold tabular-nums text-[var(--color-text-primary)]">{formatMoney(summary.savings)}</span>
                 </div>
               </div>
             )}
           </div>
 
-          <div className="grid grid-cols-1 gap-8 lg:grid-cols-3 lg:gap-12 mt-4">
+          {/* Financial Analytics Grid */}
+          <div className="grid grid-cols-1 gap-8 lg:grid-cols-3 lg:gap-10">
             <div className="lg:col-span-2">
               <WidgetContainer title="Cash Flow Trend">
                 {isLoading ? (
@@ -112,22 +119,26 @@ export default function DashboardPage() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 mt-4">
-            <WidgetContainer 
-              title="Recent Transactions" 
-              action={
-                <Link to="/transactions" className="flex items-center text-sm font-medium text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] transition-colors">
-                  View all
-                  <ArrowRight className="ml-1 h-4 w-4" />
-                </Link>
-              }
-            >
+          {/* Recent Activity Ledger Section */}
+          <div className="flex flex-col gap-4">
+            <div className="flex items-center justify-between px-1">
+              <div className="flex items-center gap-2.5">
+                <h3 className="text-base font-semibold tracking-tight text-[var(--color-text-primary)]">Recent Activity</h3>
+                <span className="text-[11px] font-semibold px-2 py-0.5 rounded-md bg-[var(--color-bg-secondary)] text-[var(--color-text-secondary)] border border-[var(--color-border-primary)] uppercase tracking-wider">Last 5</span>
+              </div>
+              <Link to="/transactions" className="inline-flex items-center gap-1 text-xs font-semibold text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] transition-colors">
+                View all transactions
+                <ArrowRight className="h-3.5 w-3.5" />
+              </Link>
+            </div>
+            
+            <div className="rounded-[var(--radius-xl)] border border-[var(--color-border-primary)] bg-[var(--color-bg-primary)] shadow-sm p-2 sm:p-4">
               {isLoading ? (
                  <div className="h-[200px] w-full bg-[var(--color-bg-secondary)] rounded-md animate-pulse" />
               ) : summary ? (
                  <RecentTransactionsWidget transactions={summary.recentTransactions} />
               ) : null}
-            </WidgetContainer>
+            </div>
           </div>
         </>
       )}

@@ -41,11 +41,21 @@ export function MonthlyTrendChart({ data = [] }: { data?: MonthlyTrend[] }) {
       role="figure"
       aria-label="Revenue vs Costs Trend"
     >
-      <div className="absolute top-0 left-0 z-10 flex flex-col gap-1 p-2">
-         <span className="text-sm font-medium text-[var(--color-text-secondary)]">Revenue vs Costs</span>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
+        <span className="text-xs font-semibold uppercase tracking-wider text-[var(--color-text-secondary)]">Revenue vs Costs</span>
+        <div className="flex items-center gap-4 text-xs font-medium text-[var(--color-text-secondary)]">
+          <div className="flex items-center gap-1.5">
+            <span className="h-2.5 w-2.5 rounded-full shadow-sm" style={{ backgroundColor: 'var(--chart-1)' }} />
+            <span>Revenue</span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <span className="h-2.5 w-2.5 rounded-full shadow-sm" style={{ backgroundColor: 'var(--color-danger)' }} />
+            <span>Costs</span>
+          </div>
+        </div>
       </div>
 
-      <div className="pt-12 w-full">
+      <div className="w-full">
         <AreaChart aspectRatio="4 / 1" data={chartData}>
           <Grid horizontal />
           <Area curve={curveMonotoneX} dataKey="revenue" fill="var(--chart-1)" fillOpacity={0.3} strokeWidth={2} />

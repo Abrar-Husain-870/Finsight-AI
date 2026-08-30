@@ -29,7 +29,7 @@ export function SystemBanners() {
   }, []);
 
   return (
-    <div className="fixed top-0 left-0 right-0 z-50 flex flex-col items-center pointer-events-none">
+    <div className="fixed top-0 left-0 right-0 z-50 flex flex-col items-center pointer-events-none" aria-live="polite" aria-atomic="true">
       <AnimatePresence>
         {!isOnline && (
           <motion.div

@@ -9,17 +9,14 @@ import { toast } from 'sonner';
 import { Input } from '../../../components/ui/Input.js';
 import { Button } from '../../../components/ui/Button.js';
 import { mapHttpError } from '../../../lib/errors.js';
-import { useUnsavedChanges } from '../../../hooks/useUnsavedChanges.js';
 
 export function RegisterForm() {
   const setAuth = useAuthStore((s) => s.setAuth);
   const [submitError, setSubmitError] = React.useState<string | null>(null);
   
-  const { register, handleSubmit, formState: { errors, isSubmitting, isDirty } } = useForm<RegisterInput>({
+  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<RegisterInput>({
     resolver: zodResolver(registerSchema),
   });
-
-  useUnsavedChanges(isDirty, 'You have unsaved registration details.');
 
   const onSubmit = async (data: RegisterInput) => {
     try {

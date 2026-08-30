@@ -17,7 +17,7 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
   if (isSessionExpired) {
     return (
       <div className="flex min-h-screen w-full flex-col items-center justify-center bg-[var(--color-bg-primary)] p-6">
-        <ErrorState 
+        <ErrorState
           icon={LogIn}
           title="Session Expired"
           description="For your security, your session has expired due to inactivity. Please log in again to continue."
@@ -38,7 +38,7 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
   }
 
   if (!isAuthenticated) {
-    return <Navigate to="/login" state={{ from: location }} replace />;
+    return <Navigate to="/landing" state={{ from: location }} replace />;
   }
 
   return <>{children}</>;

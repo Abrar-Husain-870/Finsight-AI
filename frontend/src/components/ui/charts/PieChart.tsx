@@ -90,7 +90,7 @@ export function PieChart({
                             path: pie.path
                           });
                         }
-                        return childElement;
+                        return null;
                       }
                       return null;
                     })}

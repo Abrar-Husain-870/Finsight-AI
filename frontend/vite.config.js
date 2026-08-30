@@ -9,6 +9,17 @@ export default defineConfig({
             '@': path.resolve(__dirname, './src'),
         },
     },
+    build: {
+        rollupOptions: {
+            output: {
+                manualChunks: {
+                    'vendor-charts': ['recharts', '@visx/axis', '@visx/shape', '@visx/scale', '@visx/group', '@visx/curve'],
+                    'vendor-motion': ['framer-motion'],
+                    'vendor-query': ['@tanstack/react-query', 'axios'],
+                }
+            }
+        }
+    },
     server: {
         port: 5173,
         proxy: {

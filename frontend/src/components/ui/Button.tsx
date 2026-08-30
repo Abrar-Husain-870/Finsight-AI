@@ -1,52 +1,71 @@
-import React from 'react';
-import { cn } from '../../lib/utils.js';
-import { Loader2 } from 'lucide-react';
-import { motion, HTMLMotionProps } from 'framer-motion';
-import { springConfig } from '../../lib/motion.js';
+import { Slot } from "@radix-ui/react-slot";
+import { cva, type VariantProps } from "class-variance-authority";
+import * as React from "react";
+import { Loader2 } from "lucide-react";
+import { cn } from "@/lib/utils";
 
-export interface ButtonProps extends HTMLMotionProps<"button"> {
-  variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger';
-  size?: 'sm' | 'md' | 'lg' | 'icon';
+const buttonVariants = cva(
+  "inline-flex items-center justify-center whitespace-nowrap rounded-lg text-sm font-medium transition-colors outline-offset-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-ring/70 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 cursor-pointer",
+  {
+    variants: {
+      variant: {
+        default: "bg-[var(--color-text-primary)] text-[var(--color-bg-primary)] shadow-sm hover:opacity-90",
+        primary: "bg-[var(--color-text-primary)] text-[var(--color-bg-primary)] shadow-sm hover:opacity-90",
+        destructive: "bg-[var(--color-danger)] text-white shadow-sm hover:bg-[var(--color-danger)]/90",
+        danger: "bg-[var(--color-danger)] text-white shadow-sm hover:bg-[var(--color-danger)]/90",
+        outline: "border border-[var(--color-border-primary)] bg-[var(--color-bg-primary)] text-[var(--color-text-primary)] shadow-sm hover:bg-[var(--color-bg-secondary)]",
+        secondary: "bg-[var(--color-bg-secondary)] text-[var(--color-text-primary)] border border-[var(--color-border-primary)] shadow-sm hover:bg-[var(--color-bg-tertiary)]",
+        ghost: "text-[var(--color-text-primary)] hover:bg-[var(--color-bg-secondary)]",
+        link: "text-[var(--color-text-primary)] underline-offset-4 hover:underline",
+      },
+      size: {
+        default: "h-9 px-4 py-2",
+        sm: "h-8 rounded-lg px-3 text-xs",
+        md: "h-9 px-4 py-2 text-sm",
+        lg: "h-10 rounded-lg px-8 text-base",
+        icon: "h-9 w-9",
+      },
+    },
+    defaultVariants: {
+      variant: "default",
+      size: "default",
+    },
+  },
+);
+
+export interface ButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
+    VariantProps<typeof buttonVariants> {
+  asChild?: boolean;
   isLoading?: boolean;
 }
 
-export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant = 'primary', size = 'md', isLoading, children, disabled, ...props }, ref) => {
-    
-    const variants = {
-      primary: 'bg-[var(--color-accent-primary)] text-[var(--color-accent-primary-foreground)] hover:bg-[var(--color-accent-secondary)] shadow-sm border border-transparent',
-      secondary: 'bg-[var(--color-bg-secondary)] text-[var(--color-text-primary)] hover:bg-[var(--color-border-primary)] border border-transparent',
-      outline: 'border border-[var(--color-border-primary)] bg-transparent hover:bg-[var(--color-bg-secondary)] text-[var(--color-text-primary)]',
-      ghost: 'bg-transparent hover:bg-[var(--color-bg-secondary)] text-[var(--color-text-primary)] border border-transparent',
-      danger: 'bg-[var(--color-danger)] text-white hover:opacity-90 shadow-sm border border-transparent',
-    };
-
-    const sizes = {
-      sm: 'h-8 px-4 text-xs tracking-wide',
-      md: 'h-10 px-6 py-2 text-sm tracking-tight',
-      lg: 'h-12 px-10 text-base tracking-tight',
-      icon: 'h-10 w-10 justify-center',
-    };
-
+const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+  ({ className, variant, size, asChild = false, isLoading = false, children, disabled, ...props }, ref) => {
+    if (asChild) {
+      return (
+        <Slot 
+          className={cn(buttonVariants({ variant, size, className }))} 
+          ref={ref} 
+          {...props}
+        >
+          {children}
+        </Slot>
+      );
+    }
     return (
-      <motion.button
-        ref={ref}
-        whileHover={{ scale: disabled || isLoading ? 1 : 1.015 }}
-        whileTap={{ scale: disabled || isLoading ? 1 : 0.97 }}
-        transition={springConfig}
-        className={cn(
-          'inline-flex items-center justify-center rounded-[var(--radius-lg)] font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-border-focus)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-bg-primary)] disabled:pointer-events-none disabled:opacity-40',
-          variants[variant],
-          sizes[size],
-          className
-        )}
-        disabled={disabled || isLoading}
+      <button 
+        className={cn(buttonVariants({ variant, size, className }))} 
+        ref={ref} 
+        disabled={disabled || isLoading} 
         {...props}
       >
-        {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-        {children as React.ReactNode}
-      </motion.button>
+        {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />}
+        {children}
+      </button>
     );
-  }
+  },
 );
-Button.displayName = 'Button';
+Button.displayName = "Button";
+
+export { Button, buttonVariants };

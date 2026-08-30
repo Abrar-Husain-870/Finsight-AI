@@ -3,6 +3,7 @@ import { useUiStore } from '../../store/uiStore.js';
 import { useFocusTrap } from '../../hooks/useFocusTrap.js';
 import { X, Shield, Cpu, Code2, Zap, Compass } from 'lucide-react';
 import { useProductTour } from '../../features/tour/useProductTour.js';
+import { Button } from './Button.js';
 
 export function AboutModal() {
   const { isAboutModalOpen, setAboutModalOpen } = useUiStore();
@@ -88,15 +89,17 @@ export function AboutModal() {
               <li>Presentation Mode optimizes visual density for projecting.</li>
               <li>Guided product tour highlights core architecture.</li>
             </ul>
-            <button
+            <Button
               onClick={() => {
                 setAboutModalOpen(false);
                 startTour();
               }}
-              className="flex items-center justify-center w-full gap-2 py-2 px-4 rounded-lg bg-[var(--color-accent-primary)] text-[var(--color-accent-primary-foreground)] font-medium hover:bg-[var(--color-accent-secondary)] transition-colors"
+              variant="primary"
+              size="md"
+              className="w-full"
             >
-              <Compass className="h-4 w-4" /> Start Interactive Tour
-            </button>
+              <Compass className="mr-2 h-4 w-4" /> Start Interactive Tour
+            </Button>
           </div>
         </div>
       </div>

@@ -4,21 +4,26 @@ import { Presentation, Database, Info, AlertTriangle } from 'lucide-react';
 import { cn } from '../../lib/utils.js';
 import { useQueryClient } from '@tanstack/react-query';
 import { apiClient } from '../../lib/axios.js';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
 
 export function SidebarBottomControls() {
   const { presentationMode, setPresentationMode, setAboutModalOpen } = useUiStore();
   const [showConfirm, setShowConfirm] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
 
   const handleLoadDemo = async () => {
     setIsLoading(true);
     try {
       await apiClient.post('/demo/seed');
-      await queryClient.invalidateQueries();
-      window.location.href = '/'; // hard reload to reset all states
+      await queryClient.resetQueries();
+      toast.success('Demo workspace loaded successfully');
+      navigate('/');
     } catch (err) {
       console.error('Failed to load demo workspace', err);
+      toast.error('Failed to seed demo workspace');
     } finally {
       setIsLoading(false);
       setShowConfirm(false);

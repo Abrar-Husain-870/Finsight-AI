@@ -31,15 +31,20 @@ export function CategoryDonutChart({ data }: { data: CategoryBreakdown[] }) {
   const { formatMoney } = useCurrency();
 
   const chartData = React.useMemo(() => {
-    return data.map((d, idx) => ({
-      label: d.categoryName,
-      value: Math.abs(fromMinor(d.amount)),
-      color: d.categoryColor?.startsWith('#') 
-        ? d.categoryColor 
-        : (colorMap[d.categoryColor] || fallbackPalette[idx % fallbackPalette.length]),
-      icon: d.categoryIcon,
-      rawColor: d.categoryColor
-    }));
+    return data.map((d, idx) => {
+      const isRawBlue = d.categoryColor === '#1d4ed8' || d.categoryColor === '#2563eb' || d.categoryColor === '#3b82f6';
+      return {
+        label: d.categoryName,
+        value: Math.abs(fromMinor(d.amount)),
+        color: isRawBlue
+          ? 'var(--chart-1)'
+          : (d.categoryColor?.startsWith('#') 
+            ? d.categoryColor 
+            : (colorMap[d.categoryColor] || fallbackPalette[idx % fallbackPalette.length])),
+        icon: d.categoryIcon,
+        rawColor: d.categoryColor
+      };
+    });
   }, [data]);
 
   if (chartData.length === 0) {

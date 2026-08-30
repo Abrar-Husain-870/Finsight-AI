@@ -55,11 +55,11 @@ export const TransactionRow = React.memo(function TransactionRow({ transaction, 
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.98 }}
         transition={{ duration: 0.2 }}
-        className="hidden sm:grid grid-cols-[2fr_1fr_1.5fr_1fr_80px] gap-4 items-center px-4 py-3 rounded-[var(--radius-lg)] group hover:bg-[var(--color-bg-secondary)]/40 transition-colors"
+        className="hidden sm:grid grid-cols-[2fr_1fr_1.5fr_1fr_80px] gap-4 items-center px-4 py-3 rounded-[var(--radius-lg)] group hover:bg-[var(--color-bg-secondary)] transition-colors cursor-default"
       >
         <div className="flex items-center gap-4 pl-2">
-          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--color-bg-secondary)] group-hover:bg-[var(--color-bg-primary)] transition-colors shadow-sm">
-            <CategoryIcon name={categoryIcon} className={cn(`text-${categoryColor}`, "h-4 w-4")} colorClass="bg-transparent" />
+          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--color-bg-tertiary)] group-hover:bg-[var(--color-bg-secondary)] transition-colors shadow-sm">
+            <CategoryIcon name={categoryIcon} className="h-4 w-4 text-[var(--color-text-primary)]" colorClass="bg-transparent" />
           </div>
           <div className="flex flex-col">
             <span className="font-medium text-sm text-[var(--color-text-primary)]">{transaction.merchant || 'Unknown Merchant'}</span>
@@ -67,7 +67,7 @@ export const TransactionRow = React.memo(function TransactionRow({ transaction, 
           </div>
         </div>
         
-        <div className="text-sm text-[var(--color-text-secondary)]">
+        <div className="text-sm text-[var(--color-text-secondary)] font-medium">
           {formattedDate}
         </div>
         
@@ -75,15 +75,18 @@ export const TransactionRow = React.memo(function TransactionRow({ transaction, 
           {transaction.description || '-'}
         </div>
         
-        <div className="text-sm font-semibold text-right text-[var(--color-text-primary)] tracking-tight">
-          {formatMoney(transaction.amount)}
+        <div className={cn(
+          "text-sm font-semibold tabular-nums text-right tracking-tight",
+          transaction.amount < 0 ? "text-[var(--color-danger)]" : "text-[var(--color-success)]"
+        )}>
+          {formatMoney(Math.abs(transaction.amount))}
         </div>
         
-        <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity focus-within:opacity-100 pr-2">
-          <button onClick={() => onEdit(transaction)} aria-label={`Edit transaction ${transaction.merchant}`} className="text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-bg-primary)] p-1.5 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-border-focus)] transition-all">
+        <div className="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity focus-within:opacity-100 pr-2">
+          <button onClick={() => onEdit(transaction)} aria-label={`Edit transaction ${transaction.merchant}`} className="text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-bg-tertiary)] p-1.5 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-border-focus)] transition-colors">
             <Edit2 className="h-3.5 w-3.5" aria-hidden="true" />
           </button>
-          <button onClick={() => onDelete(transaction)} aria-label={`Delete transaction ${transaction.merchant}`} className="text-[var(--color-text-secondary)] hover:text-[var(--color-danger)] hover:bg-[var(--color-danger-muted)] p-1.5 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-danger)] transition-all">
+          <button onClick={() => onDelete(transaction)} aria-label={`Delete transaction ${transaction.merchant}`} className="text-[var(--color-text-secondary)] hover:text-[var(--color-danger)] hover:bg-[var(--color-danger)]/10 p-1.5 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-danger)] transition-colors">
             <Trash2 className="h-3.5 w-3.5" aria-hidden="true" />
           </button>
         </div>
@@ -99,20 +102,25 @@ export const TransactionRow = React.memo(function TransactionRow({ transaction, 
       >
         <div className="flex justify-between items-start mb-3">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--color-bg-secondary)]">
-              <CategoryIcon name={categoryIcon} className={cn(`text-${categoryColor}`, "h-4 w-4")} colorClass="bg-transparent" />
+            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--color-bg-tertiary)]">
+              <CategoryIcon name={categoryIcon} className="h-4 w-4 text-[var(--color-text-primary)]" colorClass="bg-transparent" />
             </div>
             <div className="flex flex-col">
               <span className="font-medium text-[var(--color-text-primary)] text-sm">{transaction.merchant || 'Unknown Merchant'}</span>
               <span className="text-xs text-[var(--color-text-secondary)]">{categoryName}</span>
             </div>
           </div>
-          <span className="font-semibold text-[var(--color-text-primary)] text-sm tracking-tight">{formatMoney(transaction.amount)}</span>
+          <span className={cn(
+            "font-semibold text-sm tabular-nums tracking-tight",
+            transaction.amount < 0 ? "text-[var(--color-danger)]" : "text-[var(--color-success)]"
+          )}>
+            {formatMoney(Math.abs(transaction.amount))}
+          </span>
         </div>
         <div className="flex justify-between items-center mt-1 pt-3 border-t border-[var(--color-border-primary)]">
           <span className="text-xs text-[var(--color-text-secondary)]">{formattedDate}</span>
           <div className="flex items-center gap-1">
-            <button onClick={() => onEdit(transaction)} aria-label={`Edit transaction ${transaction.merchant}`} className="text-[var(--color-text-secondary)] p-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-border-focus)] rounded">
+            <button onClick={() => onEdit(transaction)} aria-label={`Edit transaction ${transaction.merchant}`} className="text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] p-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-border-focus)] rounded">
               <Edit2 className="h-4 w-4" aria-hidden="true" />
             </button>
             <button onClick={() => onDelete(transaction)} aria-label={`Delete transaction ${transaction.merchant}`} className="text-[var(--color-text-secondary)] hover:text-[var(--color-danger)] p-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-danger)] rounded">

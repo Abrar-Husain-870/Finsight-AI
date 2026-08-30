@@ -9,17 +9,14 @@ import { toast } from 'sonner';
 import { Input } from '../../../components/ui/Input.js';
 import { Button } from '../../../components/ui/Button.js';
 import { mapHttpError } from '../../../lib/errors.js';
-import { useUnsavedChanges } from '../../../hooks/useUnsavedChanges.js';
 
 export function LoginForm() {
   const setAuth = useAuthStore((s) => s.setAuth);
   const [submitError, setSubmitError] = React.useState<string | null>(null);
   
-  const { register, handleSubmit, formState: { errors, isSubmitting, isDirty } } = useForm<LoginInput>({
+  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<LoginInput>({
     resolver: zodResolver(loginSchema),
   });
-
-  useUnsavedChanges(isDirty, 'You have unsaved login details.');
 
   const onSubmit = async (data: LoginInput) => {
     try {
