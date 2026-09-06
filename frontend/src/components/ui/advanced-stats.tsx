@@ -118,25 +118,25 @@ export function AdvancedStats({
               timelineRef={timelineRef}
               key={kpi.label}
               className={cn(
-                'p-5 sm:p-6 rounded-2xl border bg-[var(--color-bg-secondary)] border-[var(--color-border-primary)] shadow-2xs transition-all hover:border-[var(--color-border-hover)]',
+                'p-4 sm:p-5 rounded-2xl border bg-[var(--color-bg-secondary)] border-[var(--color-border-primary)] shadow-2xs transition-all hover:border-[var(--color-border-hover)] overflow-hidden flex flex-col justify-between',
               )}
             >
-              <p className="text-[11px] font-bold text-[var(--color-text-secondary)] uppercase tracking-wider mb-2">
+              <p className="text-[11px] font-bold text-[var(--color-text-secondary)] uppercase tracking-wider mb-2 truncate">
                 {kpi.label}
               </p>
-              <div className="flex items-baseline justify-between gap-2">
-                <p className="text-xl sm:text-2xl font-extrabold text-[var(--color-text-primary)] tracking-tight tabular-nums">
+              <div className="flex items-center justify-between gap-2 min-w-0 w-full">
+                <p className="text-base sm:text-lg md:text-xl font-extrabold text-[var(--color-text-primary)] tracking-tight tabular-nums truncate min-w-0 flex-1">
                   {kpi.value}
                 </p>
                 <span
                   className={cn(
-                    'text-xs font-bold px-2 py-0.5 rounded-full flex items-center gap-0.5 shrink-0',
+                    'text-xs font-bold px-2 py-0.5 rounded-full flex items-center gap-0.5 shrink-0 whitespace-nowrap',
                     kpi.status === 'up'
-                      ? 'text-emerald-700 bg-emerald-500/10 border border-emerald-500/20'
-                      : 'text-emerald-700 bg-emerald-500/10 border border-emerald-500/20'
+                      ? 'text-emerald-700 dark:text-emerald-400 bg-emerald-500/10 border border-emerald-500/20'
+                      : 'text-rose-700 dark:text-rose-400 bg-rose-500/10 border border-rose-500/20'
                   )}
                 >
-                  {kpi.status === 'up' ? <TrendingUp className="w-3 h-3" /> : <TrendingDown className="w-3 h-3" />}
+                  {kpi.status === 'up' ? <TrendingUp className="w-3 h-3 shrink-0" /> : <TrendingDown className="w-3 h-3 shrink-0" />}
                   {kpi.change}
                 </span>
               </div>

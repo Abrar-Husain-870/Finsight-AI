@@ -111,8 +111,8 @@ export default function DashboardPage() {
           <AdvancedStats />
 
           {/* Financial Analytics Grid */}
-          <div className="grid grid-cols-1 gap-8 lg:grid-cols-3 lg:gap-10">
-            <div className="lg:col-span-2">
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-12 lg:gap-8 items-stretch">
+            <div className="lg:col-span-7 flex flex-col h-full">
               <WidgetContainer title="Cash Flow Trend">
                 {isLoading ? (
                   <div className="h-[300px] w-full bg-[var(--color-bg-secondary)] rounded-md animate-pulse" />
@@ -121,7 +121,7 @@ export default function DashboardPage() {
                 ) : null}
               </WidgetContainer>
             </div>
-            <div>
+            <div className="lg:col-span-5 flex flex-col h-full">
               <WidgetContainer title="Expense Breakdown">
                 {isLoading ? (
                   <div className="h-[300px] w-full bg-[var(--color-bg-secondary)] rounded-md animate-pulse" />

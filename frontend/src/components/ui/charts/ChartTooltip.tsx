@@ -106,17 +106,19 @@ export function ChartTooltip({
 
   return (
     <>
-      {/* Invisible rect to capture events */}
-      <rect
-        x={0}
-        y={0}
-        width={innerWidth}
-        height={innerHeight}
-        fill="transparent"
-        onPointerMove={handlePointerMove}
-        onPointerLeave={handlePointerLeave}
-        className="cursor-crosshair"
-      />
+      {/* Invisible rect to capture events for continuous scale charts */}
+      {showCrosshair && typeof xScale?.invert === 'function' && (
+        <rect
+          x={0}
+          y={0}
+          width={innerWidth}
+          height={innerHeight}
+          fill="transparent"
+          onPointerMove={handlePointerMove}
+          onPointerLeave={handlePointerLeave}
+          className="cursor-crosshair"
+        />
+      )}
 
       {tooltipOpen && tooltipData && (
         <g>
@@ -161,16 +163,25 @@ export function ChartTooltip({
           className="absolute z-50 pointer-events-none rounded-lg bg-[var(--color-bg-primary)] border border-[var(--color-border-primary)] shadow-md p-3 text-sm"
         >
           {content ? content({ activeData: tooltipData }) : (
-            <div className="flex flex-col gap-1">
-              <div className="text-xs text-[var(--color-text-secondary)] mb-1">
-                {new Date(tooltipData[xDataKey]).toLocaleDateString()}
+            <div className="flex flex-col gap-1 p-1 text-xs">
+              <div className="font-bold text-[var(--color-text-primary)] mb-0.5">
+                {tooltipData[xDataKey] instanceof Date
+                  ? (tooltipData[xDataKey] as Date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+                  : String(tooltipData[xDataKey] ?? '')}
               </div>
               {Object.keys(tooltipData).map(k => {
-                if (k !== xDataKey && typeof tooltipData[k] === 'number') {
+                if (k !== xDataKey && k !== 'fill' && typeof tooltipData[k] === 'number') {
                   return (
-                    <div key={k} className="flex justify-between gap-4 font-medium text-[var(--color-text-primary)]">
-                      <span className="capitalize">{k}</span>
-                      <span className="tabular-nums">{tooltipData[k]}</span>
+                    <div key={k} className="flex items-center justify-between gap-4 font-medium text-[var(--color-text-primary)]">
+                      <div className="flex items-center gap-1.5 text-[var(--color-text-secondary)]">
+                        {tooltipData.fill && (
+                          <span className="h-2 w-2 rounded-full shrink-0" style={{ backgroundColor: tooltipData.fill }} />
+                        )}
+                        <span className="capitalize">{k}</span>
+                      </div>
+                      <span className="font-bold tabular-nums">
+                        {tooltipData[k] >= 1000 ? `$${tooltipData[k].toLocaleString()}` : `$${tooltipData[k]}`}
+                      </span>
                     </div>
                   );
                 }

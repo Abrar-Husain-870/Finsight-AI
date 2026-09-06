@@ -66,22 +66,22 @@ export function StatsCardsWithLinks({
 }: StatsCardsWithLinksProps) {
   return (
     <div className={cn("w-full py-2", className)}>
-      <dl className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 w-full">
+      <dl className="grid grid-cols-1 gap-3.5 sm:grid-cols-2 lg:grid-cols-4 w-full">
         {items.map((item) => (
           <div
             key={item.name}
-            className="flex flex-col justify-between rounded-2xl border border-[var(--color-border-primary)] bg-[var(--color-bg-secondary)] text-[var(--color-text-primary)] shadow-xs transition-all duration-300 hover:border-[var(--color-border-hover)] hover:shadow-md p-4 sm:p-5"
+            className="flex flex-col justify-between rounded-2xl border border-[var(--color-border-primary)] bg-[var(--color-bg-secondary)] text-[var(--color-text-primary)] shadow-xs transition-all duration-300 hover:border-[var(--color-border-hover)] hover:shadow-md p-3.5 sm:p-4 overflow-hidden"
           >
             {/* Top Metric Header with Radial Ring */}
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
               <div className="relative flex items-center justify-center shrink-0">
-                <div className="h-[76px] w-[76px]">
+                <div className="h-[52px] w-[52px] sm:h-[58px] sm:w-[58px]">
                   <ResponsiveContainer width="100%" height="100%">
                     <RadialBarChart
                       data={[item]}
-                      innerRadius={28}
-                      outerRadius={36}
-                      barSize={7}
+                      innerRadius={18}
+                      outerRadius={24}
+                      barSize={5}
                       startAngle={90}
                       endAngle={450}
                     >
@@ -103,25 +103,25 @@ export function StatsCardsWithLinks({
                   </ResponsiveContainer>
                 </div>
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <span className="text-xs font-bold text-[var(--color-text-primary)] tabular-nums">
+                  <span className="text-[10px] sm:text-[11px] font-bold text-[var(--color-text-primary)] tabular-nums">
                     {item.capacity}%
                   </span>
                 </div>
               </div>
 
-              <div className="space-y-1 min-w-0">
-                <dt className="text-xs font-bold text-[var(--color-text-primary)] truncate flex items-center gap-1.5">
-                  {item.icon}
-                  <span>{item.name}</span>
+              <div className="space-y-0.5 min-w-0 flex-1">
+                <dt className="text-xs sm:text-xs font-bold text-[var(--color-text-primary)] leading-tight tracking-tight flex items-start gap-1 min-w-0">
+                  {item.icon && <span className="shrink-0 mt-0.5">{item.icon}</span>}
+                  <span className="break-words text-balance min-w-0 flex-1">{item.name}</span>
                 </dt>
-                <dd className="text-[11px] font-medium text-[var(--color-text-secondary)] leading-tight">
+                <dd className="text-[11px] font-medium text-[var(--color-text-secondary)] leading-tight break-words text-balance">
                   {item.currentText}
                 </dd>
               </div>
             </div>
 
             {/* Bottom Footer Action Link */}
-            <div className="mt-4 pt-3 border-t border-[var(--color-border-primary)] flex justify-end">
+            <div className="mt-3 pt-2.5 border-t border-[var(--color-border-primary)] flex justify-end">
               <Link
                 to={item.href}
                 className="inline-flex items-center gap-1 text-xs font-bold text-[var(--color-text-primary)] hover:text-[var(--color-text-secondary)] transition-colors"

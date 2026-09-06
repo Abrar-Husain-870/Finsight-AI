@@ -5,6 +5,7 @@ import { useLineChart } from './LineChartContext.js';
 export interface GridProps {
   horizontal?: boolean;
   vertical?: boolean;
+  fadeVertical?: boolean;
   numTicksRows?: number;
   numTicksColumns?: number;
   stroke?: string;
@@ -14,6 +15,7 @@ export interface GridProps {
 export function Grid({
   horizontal = true,
   vertical = false,
+  fadeVertical = false,
   numTicksRows = 5,
   numTicksColumns = 10,
   stroke = 'var(--color-border-primary)',
@@ -32,7 +34,7 @@ export function Grid({
       stroke={stroke}
       strokeDasharray={strokeDasharray}
       rowLineStyle={horizontal ? undefined : { display: 'none' }}
-      columnLineStyle={vertical ? undefined : { display: 'none' }}
+      columnLineStyle={vertical ? (fadeVertical ? { opacity: 0.4 } : undefined) : { display: 'none' }}
     />
   );
 }

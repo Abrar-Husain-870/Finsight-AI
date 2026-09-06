@@ -7,6 +7,7 @@ import { AmountInput } from '../../../components/ui/AmountInput.js';
 import { useCreateTransaction, useUpdateTransaction } from '../hooks/useTransactions.js';
 import { toast } from 'sonner';
 import { useUnsavedChanges } from '../../../hooks/useUnsavedChanges.js';
+import { useCurrency } from '../../../lib/hooks/useCurrency.js';
 import { Input } from '../../../components/ui/Input.js';
 import { Button } from '../../../components/ui/Button.js';
 
@@ -17,6 +18,8 @@ interface TransactionFormProps {
 }
 
 export function TransactionForm({ initialData, onSuccess, onDirtyChange }: TransactionFormProps) {
+  const { currency: userCurrency } = useCurrency();
+
   const { register, handleSubmit, control, formState: { errors, isDirty } } = useForm({
     resolver: zodResolver(createTransactionSchema),
     defaultValues: {
@@ -26,7 +29,7 @@ export function TransactionForm({ initialData, onSuccess, onDirtyChange }: Trans
       merchant: initialData?.merchant ?? '',
       description: initialData?.description ?? '',
       notes: initialData?.notes ?? '',
-      currency: initialData?.currency ?? 'USD',
+      currency: initialData?.currency ?? userCurrency,
     }
   });
 

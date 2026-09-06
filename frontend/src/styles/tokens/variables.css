@@ -38,6 +38,8 @@
   --chart-3: #b45309;
   --chart-4: #6d28d9;
   --chart-5: #c2410c;
+  --chart-line-primary: #10b981;
+  --chart-line-secondary: #ef4444;
 
   /* Typography */
   --font-sans: 'Inter', system-ui, -apple-system, sans-serif;

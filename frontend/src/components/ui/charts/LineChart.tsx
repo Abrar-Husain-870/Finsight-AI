@@ -16,7 +16,7 @@ export interface LineChartProps {
   tweenYDomainOnXDomainChange?: boolean;
 }
 
-const defaultMargin = { top: 10, right: 0, bottom: 30, left: 0 };
+const defaultMargin = { top: 25, right: 20, bottom: 35, left: 50 };
 
 export function LineChart({
   data,
@@ -74,10 +74,10 @@ export function LineChart({
       });
     });
     
-    // Add 10% padding to top
+    // Add 25% padding to top so peak markers and tooltips are never cropped
     return scaleLinear({
       range: [innerHeight, 0],
-      domain: [0, maxVal * 1.1 || 10], // default max to 10 if all data is 0
+      domain: [0, maxVal * 1.25 || 10],
       nice: true,
     });
   }, [allDataPoints, innerHeight, xDataKey, xDomain, tweenYDomainOnXDomainChange]);

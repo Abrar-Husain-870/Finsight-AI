@@ -47,6 +47,10 @@ export const TransactionRow = React.memo(function TransactionRow({ transaction, 
     year: 'numeric'
   }).format(new Date(transaction.date));
 
+  // Extract rating from notes if present
+  const ratingMatch = transaction.notes?.match(/^(?:⭐\s*Rating|\[Rating\]):\s*([1-5])\/5/i);
+  const ratingValue = ratingMatch && ratingMatch[1] ? parseInt(ratingMatch[1], 10) : null;
+
   return (
     <>
       {/* Desktop Grid Row */}
@@ -58,11 +62,18 @@ export const TransactionRow = React.memo(function TransactionRow({ transaction, 
         className="hidden sm:grid grid-cols-[2fr_1fr_1.5fr_1fr_80px] gap-4 items-center px-4 py-3 rounded-[var(--radius-lg)] group hover:bg-[var(--color-bg-secondary)] transition-colors cursor-default"
       >
         <div className="flex items-center gap-4 pl-2">
-          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--color-bg-tertiary)] group-hover:bg-[var(--color-bg-secondary)] transition-colors shadow-sm">
+          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--color-bg-tertiary)] group-hover:bg-[var(--color-bg-secondary)] transition-colors shadow-xs">
             <CategoryIcon name={categoryIcon} className="h-4 w-4 text-[var(--color-text-primary)]" colorClass="bg-transparent" />
           </div>
           <div className="flex flex-col">
-            <span className="font-medium text-sm text-[var(--color-text-primary)]">{transaction.merchant || 'Unknown Merchant'}</span>
+            <div className="flex items-center gap-2">
+              <span className="font-medium text-sm text-[var(--color-text-primary)]">{transaction.merchant || 'Unknown Merchant'}</span>
+              {ratingValue && (
+                <span className="inline-flex items-center gap-0.5 text-[10px] font-semibold px-1.5 py-0.2 rounded bg-amber-500/10 text-amber-600 border border-amber-500/20">
+                  ★ {ratingValue}/5
+                </span>
+              )}
+            </div>
             <span className="text-xs text-[var(--color-text-secondary)]">{categoryName}</span>
           </div>
         </div>

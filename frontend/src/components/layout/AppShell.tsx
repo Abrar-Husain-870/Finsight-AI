@@ -16,7 +16,11 @@ export function AppShell() {
   const currency = useAuthStore(s => s.user?.currency || 'USD');
 
   return (
-    <div className="min-h-screen bg-[var(--color-bg-secondary)]" data-presentation={presentationMode ? 'true' : 'false'}>
+    <div
+      className="min-h-screen bg-[var(--color-bg-secondary)]"
+      data-presentation={presentationMode ? 'true' : 'false'}
+      style={{ '--sidebar-offset': sidebarCollapsed ? '72px' : '288px' } as React.CSSProperties}
+    >
       <a 
         href="#main-content" 
         className="sr-only focus:not-sr-only focus:absolute focus:z-[100] focus:top-4 focus:left-4 focus:px-4 focus:py-2 focus:bg-[var(--color-bg-primary)] focus:text-[var(--color-text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-border-focus)] focus:rounded-md shadow-md"

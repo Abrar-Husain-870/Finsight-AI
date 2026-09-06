@@ -11,6 +11,7 @@ interface LineChartContextType {
   xScale: any;
   yScale: any;
   xDataKey: string;
+  orientation?: 'vertical' | 'horizontal';
   tooltipOpen: boolean;
   tooltipData: any;
   tooltipLeft: number;
@@ -41,6 +42,7 @@ interface LineChartProviderProps {
   xDataKey: string;
   xScale: any;
   yScale: any;
+  orientation?: 'vertical' | 'horizontal';
   containerRef: HTMLDivElement | null;
 }
 
@@ -53,6 +55,7 @@ export function LineChartProvider({
   xDataKey,
   xScale,
   yScale,
+  orientation = 'vertical',
   containerRef,
 }: LineChartProviderProps) {
   const [tooltipOpen, setTooltipOpen] = useState(false);
@@ -87,6 +90,7 @@ export function LineChartProvider({
       xScale,
       yScale,
       xDataKey,
+      orientation,
       tooltipOpen,
       tooltipData,
       tooltipLeft,
@@ -107,6 +111,7 @@ export function LineChartProvider({
       xScale,
       yScale,
       xDataKey,
+      orientation,
       tooltipOpen,
       tooltipData,
       tooltipLeft,

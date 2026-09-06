@@ -12,6 +12,8 @@ export interface AreaProps {
   strokeWidth?: number;
   curve?: any;
   animate?: boolean;
+  showMarkers?: boolean;
+  markers?: { radius?: number; ringGap?: number; strokeWidth?: number };
 }
 
 export function Area({
@@ -21,6 +23,8 @@ export function Area({
   strokeWidth = 2,
   curve = curveMonotoneX,
   animate = true,
+  showMarkers = false,
+  markers = { radius: 5, ringGap: 2, strokeWidth: 2 },
 }: AreaProps) {
   const { data, xScale, yScale, xDataKey } = useLineChart();
 
@@ -48,6 +52,23 @@ export function Area({
           strokeWidth={strokeWidth}
           curve={curve}
         />
+        {showMarkers && data.map((d, i) => {
+          const cx = xScale(new Date(d[xDataKey])) ?? 0;
+          const cy = yScale(d[dataKey]) ?? 0;
+          const r = markers?.radius || 5;
+          const sw = markers?.strokeWidth || 2;
+          return (
+            <circle
+              key={i}
+              cx={cx}
+              cy={cy}
+              r={r}
+              fill="var(--color-bg-primary)"
+              stroke={fill}
+              strokeWidth={sw}
+            />
+          );
+        })}
       </motion.g>
     </g>
   );

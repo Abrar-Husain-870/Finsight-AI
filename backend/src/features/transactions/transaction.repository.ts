@@ -15,7 +15,17 @@ export class TransactionRepository {
       deletedAt: null,
     };
 
-    if (filters.categoryId) where.categoryId = filters.categoryId;
+    if (filters.categoryId) {
+      const category = await prisma.category.findUnique({
+        where: { id: filters.categoryId },
+        include: { children: { select: { id: true } } },
+      });
+      if (category && category.children && category.children.length > 0) {
+        where.categoryId = { in: [category.id, ...category.children.map(c => c.id)] };
+      } else {
+        where.categoryId = filters.categoryId;
+      }
+    }
     if (filters.merchant) where.merchant = { contains: filters.merchant };
     
     if (filters.startDate || filters.endDate) {
