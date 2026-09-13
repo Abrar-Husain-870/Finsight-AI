@@ -4,7 +4,7 @@ services:
     runtime: node
     plan: free
     region: oregon
-    buildCommand: pnpm install && pnpm --filter @finsight/backend exec prisma generate && pnpm --filter @finsight/backend run build && pnpm --filter @finsight/backend exec prisma db push
+    buildCommand: pnpm install && pnpm --filter @finsight/shared run build && pnpm --filter @finsight/backend exec prisma generate && pnpm --filter @finsight/backend run build && pnpm --filter @finsight/backend exec prisma db push
     startCommand: pnpm --filter @finsight/backend start
     envVars:
       - key: NODE_ENV
