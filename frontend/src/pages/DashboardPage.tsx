@@ -80,14 +80,14 @@ export default function DashboardPage() {
               <div className="inline-flex flex-wrap items-center justify-center gap-6 sm:gap-10 px-6 sm:px-10 py-3 sm:py-3.5 bg-[var(--color-bg-secondary)] border border-[var(--color-border-primary)] rounded-xl shadow-sm">
                 <div className="flex items-center gap-3">
                   <span className="text-[11px] font-semibold uppercase tracking-wider text-[var(--color-text-secondary)]">Income</span>
-                  <span className="text-sm sm:text-base font-semibold tabular-nums text-[var(--color-success)]">+{formatMoney(summary.totalIncome)}</span>
+                  <span className="text-sm sm:text-base font-semibold tabular-nums text-emerald-500 dark:text-emerald-400">+{formatMoney(summary.totalIncome)}</span>
                 </div>
                 
                 <div className="hidden sm:block h-6 w-px bg-[var(--color-border-primary)]" />
                 
                 <div className="flex items-center gap-3">
                   <span className="text-[11px] font-semibold uppercase tracking-wider text-[var(--color-text-secondary)]">Expenses</span>
-                  <span className="text-sm sm:text-base font-semibold tabular-nums text-[var(--color-danger)]">{formatMoney(Math.abs(summary.totalExpenses))}</span>
+                  <span className="text-sm sm:text-base font-semibold tabular-nums text-red-500 dark:text-red-400">-{formatMoney(Math.abs(summary.totalExpenses))}</span>
                 </div>
                 
                 <div className="hidden sm:block h-6 w-px bg-[var(--color-border-primary)]" />

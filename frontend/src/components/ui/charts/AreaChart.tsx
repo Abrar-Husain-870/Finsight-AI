@@ -14,13 +14,13 @@ export function AreaChart({
 }: AreaChartProps) {
   return (
     <div 
-      className={cn("w-full relative", className)}
+      className={cn("w-full h-full relative", className)}
       style={{ 
-        aspectRatio: aspectRatio || 'auto', 
+        aspectRatio: aspectRatio || undefined, 
         minHeight: aspectRatio ? undefined : '250px' 
       }}
     >
-      <LineChart className="!min-h-0" {...props} />
+      <LineChart className="w-full h-full min-h-[inherit]" {...props} />
     </div>
   );
 }

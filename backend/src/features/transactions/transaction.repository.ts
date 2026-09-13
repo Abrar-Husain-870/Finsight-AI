@@ -26,7 +26,7 @@ export class TransactionRepository {
         where.categoryId = filters.categoryId;
       }
     }
-    if (filters.merchant) where.merchant = { contains: filters.merchant };
+    if (filters.merchant) where.merchant = { contains: filters.merchant, mode: 'insensitive' };
     
     if (filters.startDate || filters.endDate) {
       where.date = {};
@@ -42,10 +42,83 @@ export class TransactionRepository {
 
     const skip = (filters.page - 1) * filters.limit;
 
+    // Handle global absolute amount sorting across full dataset
+    if (filters.sortBy === 'amount') {
+      const rawConditions: Prisma.Sql[] = [
+        Prisma.sql`t."userId" = ${userId}`,
+        Prisma.sql`t."deletedAt" IS NULL`
+      ];
+
+      if (filters.merchant) {
+        rawConditions.push(Prisma.sql`t."merchant" ILIKE ${'%' + filters.merchant + '%'}`);
+      }
+
+      if (filters.categoryId) {
+        const category = await prisma.category.findUnique({
+          where: { id: filters.categoryId },
+          include: { children: { select: { id: true } } },
+        });
+        if (category && category.children && category.children.length > 0) {
+          const ids = [category.id, ...category.children.map(c => c.id)];
+          rawConditions.push(Prisma.sql`t."categoryId" IN (${Prisma.join(ids)})`);
+        } else {
+          rawConditions.push(Prisma.sql`t."categoryId" = ${filters.categoryId}`);
+        }
+      }
+
+      if (filters.startDate) {
+        rawConditions.push(Prisma.sql`t."date" >= ${new Date(filters.startDate)}`);
+      }
+      if (filters.endDate) {
+        rawConditions.push(Prisma.sql`t."date" <= ${new Date(filters.endDate)}`);
+      }
+
+      const whereClause = Prisma.sql`WHERE ${Prisma.join(rawConditions, ' AND ')}`;
+      const orderDirection = filters.sortOrder === 'asc' ? Prisma.sql`ASC` : Prisma.sql`DESC`;
+
+      const [rawRows, total] = await Promise.all([
+        prisma.$queryRaw<{ id: string }[]>`
+          SELECT t.id FROM "Transaction" t
+          ${whereClause}
+          ORDER BY ABS(t.amount) ${orderDirection}, t.date DESC, t."createdAt" DESC, t.id DESC
+          LIMIT ${filters.limit} OFFSET ${skip}
+        `,
+        prisma.transaction.count({ where })
+      ]);
+
+      const ids = rawRows.map(r => r.id);
+      const fetchedTxs = await prisma.transaction.findMany({
+        where: { id: { in: ids } },
+        include: { category: true }
+      });
+      
+      const txMap = new Map(fetchedTxs.map(t => [t.id, t]));
+      const transactions = ids.map(id => txMap.get(id)!).filter(Boolean);
+
+      return { transactions, total };
+    }
+
+    const orderByClause: Prisma.TransactionOrderByWithRelationInput[] = [];
+
+    if (filters.sortBy === 'date') {
+      orderByClause.push({ date: filters.sortOrder });
+      orderByClause.push({ createdAt: 'desc' });
+      orderByClause.push({ id: 'desc' });
+    } else if (filters.sortBy === 'merchant') {
+      orderByClause.push({ merchant: filters.sortOrder });
+      orderByClause.push({ date: 'desc' });
+      orderByClause.push({ id: 'desc' });
+    } else {
+      orderByClause.push({ [filters.sortBy]: filters.sortOrder } as Prisma.TransactionOrderByWithRelationInput);
+      orderByClause.push({ date: 'desc' });
+      orderByClause.push({ id: 'desc' });
+    }
+
     const [transactions, total] = await Promise.all([
       prisma.transaction.findMany({
         where,
-        orderBy: { [filters.sortBy]: filters.sortOrder },
+        include: { category: true },
+        orderBy: orderByClause,
         skip,
         take: filters.limit,
       }),

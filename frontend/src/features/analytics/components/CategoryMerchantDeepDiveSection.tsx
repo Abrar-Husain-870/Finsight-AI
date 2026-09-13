@@ -1,18 +1,16 @@
 import React, { useMemo } from 'react';
+import { AnalyticsSummaryResponse, TransactionResponse, fromMinor } from '@finsight/shared';
+import { PatternLines } from '@visx/pattern';
 import {
-  ResponsiveContainer,
   BarChart,
   Bar,
-  PieChart,
-  Pie,
-  Cell,
-  XAxis,
-  YAxis,
-  Tooltip,
-  CartesianGrid,
-  Legend
-} from 'recharts';
-import { AnalyticsSummaryResponse, TransactionResponse, fromMinor } from '@finsight/shared';
+  BarXAxis,
+  BarYAxis,
+  YAxis as CustomYAxis,
+  Grid,
+  ChartTooltip,
+  FunnelChart
+} from '../../../components/ui/charts/index.js';
 import { useCurrency } from '../../../lib/hooks/useCurrency.js';
 import { WidgetContainer } from '../../../components/ui/WidgetContainer.js';
 import { Layers, Store, AlertCircle } from 'lucide-react';
@@ -28,21 +26,22 @@ export function CategoryMerchantDeepDiveSection({ analyticsData, transactions }:
   const { formatMoney } = useCurrency();
 
   // 1. Parent Category vs Subcategory Breakdown (Bar Chart Data)
-  const subcategoryData = useMemo(() => {
+  const categoryData = useMemo(() => {
     if (analyticsData?.categoryAnalysis && analyticsData.categoryAnalysis.length > 0) {
       return analyticsData.categoryAnalysis.map(c => ({
-        subcategory: c.categoryName,
-        spend: fromMinor(c.amount)
+        browser: c.categoryName,
+        users: fromMinor(c.amount),
+        fill: 'var(--primary)'
       })).slice(0, 7);
     }
     return [
-      { subcategory: 'Groceries', spend: 850 },
-      { subcategory: 'Coffee', spend: 240 },
-      { subcategory: 'Restaurants', spend: 620 },
-      { subcategory: 'Rent/Mortgage', spend: 1800 },
-      { subcategory: 'Utilities', spend: 310 },
-      { subcategory: 'Public Transit', spend: 190 },
-      { subcategory: 'Crypto/Stocks', spend: 450 },
+      { browser: 'Rent/Mortgage', users: 1800, fill: 'var(--primary)' },
+      { browser: 'Groceries', users: 850, fill: 'var(--primary)' },
+      { browser: 'Restaurants', users: 620, fill: 'var(--primary)' },
+      { browser: 'Crypto/Stocks', users: 450, fill: 'var(--primary)' },
+      { browser: 'Utilities', users: 310, fill: 'var(--primary)' },
+      { browser: 'Coffee', users: 240, fill: 'var(--primary)' },
+      { browser: 'Public Transit', users: 190, fill: 'var(--primary)' },
     ];
   }, [analyticsData]);
 
@@ -50,17 +49,17 @@ export function CategoryMerchantDeepDiveSection({ analyticsData, transactions }:
   const merchantData = useMemo(() => {
     if (analyticsData?.merchantAnalysis && analyticsData.merchantAnalysis.length > 0) {
       return analyticsData.merchantAnalysis.map(m => ({
-        merchant: m.merchant.toUpperCase(),
-        spend: fromMinor(m.amount),
-        count: m.count
+        browser: m.merchant.toUpperCase(),
+        users: fromMinor(m.amount),
+        fill: 'var(--primary)'
       })).slice(0, 6);
     }
     return [
-      { merchant: 'AMAZON', spend: 1240, count: 8 },
-      { merchant: 'STARBUCKS', spend: 320, count: 14 },
-      { merchant: 'WHOLE FOODS', spend: 890, count: 6 },
-      { merchant: 'TRADER JOES', spend: 540, count: 5 },
-      { merchant: 'UBER', spend: 210, count: 11 },
+      { browser: 'AMAZON', users: 1240, fill: 'var(--primary)' },
+      { browser: 'WHOLE FOODS', users: 890, fill: 'var(--primary)' },
+      { browser: 'TRADER JOES', users: 540, fill: 'var(--primary)' },
+      { browser: 'STARBUCKS', users: 320, fill: 'var(--primary)' },
+      { browser: 'UBER', users: 210, fill: 'var(--primary)' },
     ];
   }, [analyticsData]);
 
@@ -72,7 +71,7 @@ export function CategoryMerchantDeepDiveSection({ analyticsData, transactions }:
         name: c.categoryName,
         value: fromMinor(c.amount),
         percent: Math.round((c.amount / totalExpense) * 100),
-        color: CATEGORY_COLORS[idx % CATEGORY_COLORS.length]
+        color: CATEGORY_COLORS[idx % CATEGORY_COLORS.length] || '#3B82F6'
       }));
     }
     return [
@@ -85,22 +84,22 @@ export function CategoryMerchantDeepDiveSection({ analyticsData, transactions }:
   }, [analyticsData]);
 
   // Check highest concentration category risk
-  const highestConcentration = categoryRiskData.length > 0 ? categoryRiskData.reduce((prev, curr) => (curr.percent > prev.percent ? curr : prev)) : null;
+  const highestConcentration = categoryRiskData.length > 0 ? categoryRiskData.reduce((prev: any, curr: any) => (curr.percent > prev.percent ? curr : prev)) : null;
 
   return (
     <div className="space-y-6 pt-4">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-xl font-bold tracking-tight text-[var(--color-text-primary)] flex items-center gap-2">
-            <Layers className="h-5 w-5 text-blue-500" />
+          <h2 className="text-xl font-bold tracking-tight text-[var(--foreground)] flex items-center gap-2">
+            <Layers className="h-5 w-5 text-[var(--chart-2)]" />
             3. Category & Merchant Deep-Dive Visualizations
           </h2>
-          <p className="text-xs text-[var(--color-text-secondary)] mt-0.5">
+          <p className="text-xs text-[var(--muted-foreground)] mt-0.5">
             Granular breakdown across subcategories, vendor spend volume, and concentration risk monitoring.
           </p>
         </div>
         {highestConcentration && highestConcentration.percent > 35 && (
-          <div className="px-3 py-1.5 rounded-xl border border-amber-500/20 bg-amber-500/10 text-xs font-semibold text-amber-600 flex items-center gap-1.5">
+          <div className="px-3 py-1.5 rounded-xl border border-[var(--chart-2)]/20 bg-[var(--chart-2)]/10 text-xs font-semibold text-[var(--chart-2)] flex items-center gap-1.5">
             <AlertCircle className="h-3.5 w-3.5" />
             Risk: {highestConcentration.name} represents {highestConcentration.percent}% of total spend
           </div>
@@ -109,68 +108,62 @@ export function CategoryMerchantDeepDiveSection({ analyticsData, transactions }:
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* 1. Parent Category vs Subcategory Breakdown (Bar Chart) */}
-        <WidgetContainer title="Parent Category vs. Subcategory Breakdown (Subcategory Ranking Bar Chart)">
-          <div className="h-[260px] w-full">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={subcategoryData} layout="vertical">
-                <CartesianGrid strokeDasharray="3 3" opacity={0.15} />
-                <XAxis type="number" tick={{ fontSize: 11, fill: 'var(--color-text-secondary)' }} />
-                <YAxis dataKey="subcategory" type="category" width={110} tick={{ fontSize: 11, fill: 'var(--color-text-secondary)' }} />
-                <Tooltip
-                  formatter={(val: any) => [formatMoney(Number(val) || 0), 'Total Spend']}
-                  contentStyle={{ backgroundColor: 'var(--color-bg-primary)', borderColor: 'var(--color-border-primary)', borderRadius: '12px' }}
-                />
-                <Bar dataKey="spend" fill="#3B82F6" radius={[0, 6, 6, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
+        <WidgetContainer title="Category & Subcategory Breakdown">
+          <div className="h-[260px] w-full pt-1">
+            <BarChart
+              data={categoryData}
+              xDataKey="browser"
+              orientation="horizontal"
+              margin={{ top: 8, right: 16, bottom: 24, left: 100 }}
+              aspectRatio="4 / 3"
+            >
+              <Grid horizontal={false} vertical fadeVertical />
+              <Bar dataKey="users" lineCap={4} />
+              <BarYAxis />
+              <ChartTooltip showCrosshair={false} />
+            </BarChart>
           </div>
         </WidgetContainer>
 
         {/* 2. Top Merchant Frequency & Spend (Bar Chart) */}
-        <WidgetContainer title="Top Merchant Frequency & Spend Volume (Bar Chart)">
-          <div className="h-[260px] w-full">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={merchantData}>
-                <CartesianGrid strokeDasharray="3 3" opacity={0.15} />
-                <XAxis dataKey="merchant" tick={{ fontSize: 10, fill: 'var(--color-text-secondary)' }} />
-                <YAxis tick={{ fontSize: 11, fill: 'var(--color-text-secondary)' }} />
-                <Tooltip
-                  formatter={(val: any, name?: any) => [name === 'spend' ? formatMoney(Number(val) || 0) : val, name === 'spend' ? 'Spend Volume' : 'Count']}
-                  contentStyle={{ backgroundColor: 'var(--color-bg-primary)', borderColor: 'var(--color-border-primary)', borderRadius: '12px' }}
-                />
-                <Bar dataKey="spend" fill="#8B5CF6" radius={[6, 6, 0, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
+        <WidgetContainer title="Top Merchant Spend">
+          <div className="h-[260px] w-full pt-1">
+            <BarChart
+              data={merchantData}
+              xDataKey="browser"
+              orientation="vertical"
+              margin={{ top: 8, right: 8, bottom: 40, left: 45 }}
+              aspectRatio="4 / 3"
+            >
+              <Grid horizontal vertical fadeVertical />
+              <Bar dataKey="users" lineCap={4} />
+              <BarXAxis />
+              <CustomYAxis />
+              <ChartTooltip showCrosshair={false} />
+            </BarChart>
           </div>
         </WidgetContainer>
       </div>
 
-      {/* 3. Category Concentration Risk (Pie Chart) */}
-      <WidgetContainer title="Category Concentration Risk Breakdown (Percentage Share Slices)">
-        <div className="h-[260px] w-full flex items-center justify-center">
-          <ResponsiveContainer width="100%" height="100%">
-            <PieChart>
-              <Pie
-                data={categoryRiskData}
-                dataKey="value"
-                nameKey="name"
-                cx="50%"
-                cy="50%"
-                innerRadius={60}
-                outerRadius={90}
-                paddingAngle={4}
-              >
-                {categoryRiskData.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={entry.color || '#3B82F6'} />
-                ))}
-              </Pie>
-              <Tooltip
-                formatter={(val: any) => [formatMoney(Number(val) || 0), 'Category Total']}
-                contentStyle={{ backgroundColor: 'var(--color-bg-primary)', borderColor: 'var(--color-border-primary)', borderRadius: '12px' }}
+      {/* 3. Category Concentration Risk (Funnel Chart) */}
+      <WidgetContainer title="Category Concentration Risk">
+        <div className="h-[260px] w-full flex items-center justify-center pt-2">
+          <FunnelChart
+            color="var(--chart-2)"
+            data={categoryRiskData}
+            layers={3}
+            renderPattern={(id, color) => (
+              <PatternLines
+                background={color}
+                height={8}
+                id={id}
+                orientation={["diagonal"]}
+                stroke="rgba(255,255,255,0.35)"
+                strokeWidth={2}
+                width={8}
               />
-              <Legend iconType="circle" wrapperStyle={{ fontSize: '11px' }} />
-            </PieChart>
-          </ResponsiveContainer>
+            )}
+          />
         </div>
       </WidgetContainer>
     </div>

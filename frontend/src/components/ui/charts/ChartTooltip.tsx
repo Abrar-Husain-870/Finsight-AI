@@ -51,55 +51,72 @@ export function ChartTooltip({
     containerRef
   } = useLineChart();
 
+  const lastActiveIndexRef = React.useRef<number | null>(null);
+  const rafIdRef = React.useRef<number | null>(null);
+
   const handlePointerMove = useCallback((event: React.PointerEvent<SVGRectElement> | React.MouseEvent<SVGRectElement>) => {
     const point = localPoint(event);
     if (!point) return;
 
-    // Convert screen coordinates to SVG coordinates
-    const x = point.x - margin.left;
-    const x0 = xScale.invert(x);
+    if (rafIdRef.current) {
+      cancelAnimationFrame(rafIdRef.current);
+    }
 
-    // Find the closest data point
-    const bisectDate = bisector((d: any) => new Date(d[xDataKey])).left;
-    const index = bisectDate(data, x0, 1);
-    const d0 = data[index - 1];
-    const d1 = data[index];
-    
-    let d = d0;
-    let activeIndex = index - 1;
-    if (d1 && d0) {
-      const d0Date = new Date(d0[xDataKey]).getTime();
-      const d1Date = new Date(d1[xDataKey]).getTime();
-      if (x0.getTime() - d0Date > d1Date - x0.getTime()) {
+    rafIdRef.current = requestAnimationFrame(() => {
+      // Convert screen coordinates to SVG coordinates
+      const x = point.x - margin.left;
+      const x0 = xScale.invert(x);
+
+      // Find the closest data point
+      const bisectDate = bisector((d: any) => new Date(d[xDataKey])).left;
+      const index = bisectDate(data, x0, 1);
+      const d0 = data[index - 1];
+      const d1 = data[index];
+      
+      let d = d0;
+      let activeIndex = index - 1;
+      if (d1 && d0) {
+        const d0Date = new Date(d0[xDataKey]).getTime();
+        const d1Date = new Date(d1[xDataKey]).getTime();
+        if (x0.getTime() - d0Date > d1Date - x0.getTime()) {
+          d = d1;
+          activeIndex = index;
+        }
+      } else if (d1) {
         d = d1;
         activeIndex = index;
       }
-    } else if (d1) {
-      d = d1;
-      activeIndex = index;
-    }
 
-    if (!d) return;
+      if (!d) return;
 
-    setActivePointIndex(activeIndex);
-
-    // Calculate Y coordinates for dots
-    // We get the max Y value to place the crosshair tooltip
-    let maxY = 0;
-    Object.keys(d).forEach(k => {
-      if (k !== xDataKey && typeof d[k] === 'number') {
-        if (d[k] > maxY) maxY = d[k];
+      if (lastActiveIndexRef.current === activeIndex) {
+        return;
       }
-    });
+      lastActiveIndexRef.current = activeIndex;
 
-    showTooltip({
-      tooltipData: d,
-      tooltipLeft: xScale(new Date(d[xDataKey])),
-      tooltipTop: yScale(maxY)
+      setActivePointIndex(activeIndex);
+
+      // Calculate Y coordinates for dots
+      let maxY = 0;
+      Object.keys(d).forEach(k => {
+        if (k !== xDataKey && typeof d[k] === 'number') {
+          if (d[k] > maxY) maxY = d[k];
+        }
+      });
+
+      showTooltip({
+        tooltipData: d,
+        tooltipLeft: xScale(new Date(d[xDataKey])),
+        tooltipTop: yScale(maxY)
+      });
     });
   }, [data, xScale, yScale, xDataKey, margin, showTooltip, setActivePointIndex]);
 
   const handlePointerLeave = useCallback(() => {
+    if (rafIdRef.current) {
+      cancelAnimationFrame(rafIdRef.current);
+    }
+    lastActiveIndexRef.current = null;
     hideTooltip();
     setActivePointIndex(null);
   }, [hideTooltip, setActivePointIndex]);

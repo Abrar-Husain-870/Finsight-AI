@@ -35,20 +35,19 @@ export function AppShell() {
         )}
       >
         <Header />
-        <main id="main-content" className="flex-1" tabIndex={-1}>
-          <div className="px-4 py-8 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={`${location.pathname}-${currency}`}
-                variants={pageTransitionVariants}
-                initial="initial"
-                animate="animate"
-                exit="exit"
-              >
-                <Outlet />
-              </motion.div>
-            </AnimatePresence>
-          </div>
+        <main id="main-content" className="flex-1 flex flex-col min-w-0" tabIndex={-1}>
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={`${location.pathname}-${currency}`}
+              variants={pageTransitionVariants}
+              initial="initial"
+              animate="animate"
+              exit="exit"
+              className="flex-1 flex flex-col w-full"
+            >
+              <Outlet />
+            </motion.div>
+          </AnimatePresence>
         </main>
         <KeyboardShortcutsDialog />
         <AboutModal />

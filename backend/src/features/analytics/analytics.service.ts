@@ -81,14 +81,6 @@ export class AnalyticsService {
         description: 'Your expenses exceeded your income in the last 30 days.',
         actionable: 'Review your largest transactions to identify cutbacks.'
       });
-    } else if (currentIncome > 0 && currentCashFlow > (currentIncome * 0.2)) {
-      insights.push({
-        id: crypto.randomUUID(),
-        type: 'POSITIVE',
-        title: 'Strong Savings Rate',
-        description: `You saved ${Math.round((currentCashFlow / currentIncome) * 100)}% of your income.`,
-        actionable: 'Consider transferring excess funds to an investment account.'
-      });
     }
 
     if (expenseTrend > 20) {

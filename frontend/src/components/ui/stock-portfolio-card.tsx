@@ -85,14 +85,14 @@ const defaultInsights: InsightCardItem[] = [
     title: "Your spending is trending lower this month",
     actionText: "View spending insights",
     link: "/analytics",
-    icon: <PieChart className="w-3.5 h-3.5 text-amber-500" />,
+    icon: <PieChart className="w-3.5 h-3.5 text-[var(--chart-2)]" />,
   },
   {
     category: "FINANCIAL HEALTH",
     title: "Your savings are on track this month",
     actionText: "View financial health",
     link: "/health",
-    icon: <ShieldCheck className="w-3.5 h-3.5 text-emerald-500" />,
+    icon: <ShieldCheck className="w-3.5 h-3.5 text-[var(--chart-2)]" />,
   },
 ];
 
@@ -150,7 +150,7 @@ export function StockPortfolioCard({
           <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight tabular-nums text-[var(--color-text-primary)]">
             +{formatMoney(totalNetSavings)}
           </h2>
-          <div className="mt-1.5 flex items-center gap-1.5 text-xs font-bold tabular-nums text-[var(--color-success)]">
+          <div className="mt-1.5 flex items-center gap-1.5 text-xs font-bold tabular-nums text-[var(--chart-2)]">
             <ChevronUp className="h-4 w-4" />
             <span>↑ {savingsChangePercent.toFixed(1)}% vs Last Month</span>
           </div>
@@ -176,9 +176,9 @@ export function StockPortfolioCard({
             >
               <div className="flex items-center gap-3.5">
                 <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[var(--color-bg-tertiary)] border border-[var(--color-border-primary)] text-[var(--color-text-primary)]">
-                  {item.type === 'income' && <ArrowDownLeft className="w-4 h-4 text-[var(--color-success)]" />}
-                  {item.type === 'expense' && <ArrowUpRight className="w-4 h-4 text-[var(--color-danger)]" />}
-                  {item.type === 'savings' && <PiggyBank className="w-4 h-4 text-[var(--color-accent-primary)]" />}
+                  {item.type === 'income' && <ArrowDownLeft className="w-4 h-4 text-emerald-500 dark:text-emerald-400" />}
+                  {item.type === 'expense' && <ArrowUpRight className="w-4 h-4 text-red-500 dark:text-red-400" />}
+                  {item.type === 'savings' && <PiggyBank className="w-4 h-4 text-[var(--color-text-primary)]" />}
                 </div>
                 <div>
                   <p className="font-semibold text-sm text-[var(--color-text-primary)]">{item.name}</p>
@@ -187,10 +187,19 @@ export function StockPortfolioCard({
               </div>
 
               <div className="text-right">
-                <p className="font-bold text-sm text-[var(--color-text-primary)] tabular-nums">{item.value}</p>
+                <p className={cn(
+                  "font-bold text-sm tabular-nums",
+                  item.type === 'income' ? "text-emerald-500 dark:text-emerald-400" :
+                  item.type === 'expense' ? "text-red-500 dark:text-red-400" :
+                  "text-[var(--color-text-primary)]"
+                )}>
+                  {item.value}
+                </p>
                 <div className={cn(
                   "flex items-center justify-end gap-1 text-xs font-semibold tabular-nums mt-0.5",
-                  item.isPositive ? "text-[var(--color-success)]" : "text-[var(--color-danger)]"
+                  item.type === 'income' ? "text-emerald-500 dark:text-emerald-400" :
+                  item.type === 'expense' ? "text-red-500 dark:text-red-400" :
+                  "text-[var(--color-text-primary)]"
                 )}>
                   <span>{item.change}</span>
                 </div>
@@ -204,7 +213,7 @@ export function StockPortfolioCard({
       <motion.div variants={itemVariants} className="pt-2 border-t border-[var(--color-border-primary)]">
         <div className="flex justify-between items-center mb-4">
           <h3 className="text-base font-bold text-[var(--color-text-primary)] flex items-center gap-2">
-            <Sparkles className="w-4 h-4 text-amber-500" />
+            <Sparkles className="w-4 h-4 text-[var(--chart-2)]" />
             FinSight Intelligence
           </h3>
           <div className="flex gap-1.5">

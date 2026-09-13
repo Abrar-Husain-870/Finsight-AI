@@ -30,33 +30,33 @@ const defaultItems: StatItem[] = [
     name: "Financial Score",
     capacity: 84,
     currentText: "84 of 100 health score",
-    fill: "#F59E0B", // Amber
+    fill: "var(--primary)", // White in dark / Black in light
     href: "/health",
-    icon: <ShieldCheck className="w-4 h-4 text-amber-500" />,
+    icon: <ShieldCheck className="w-4 h-4 text-[var(--primary)]" />,
   },
   {
     name: "Goals Milestone",
     capacity: 75,
     currentText: "9 of 12 goals reached",
-    fill: "#3B82F6", // Blue
+    fill: "var(--chart-2)", // Blue
     href: "/goals",
-    icon: <Target className="w-4 h-4 text-blue-500" />,
+    icon: <Target className="w-4 h-4 text-[var(--chart-2)]" />,
   },
   {
     name: "Budget Allocation",
     capacity: 62,
     currentText: "₹56.3k of ₹90k cap used",
-    fill: "#10B981", // Emerald
+    fill: "var(--muted-foreground)", // Grey
     href: "/analytics",
-    icon: <PieChart className="w-4 h-4 text-emerald-500" />,
+    icon: <PieChart className="w-4 h-4 text-[var(--muted-foreground)]" />,
   },
   {
     name: "Emergency Reserve",
     capacity: 90,
     currentText: "5.4 of 6 months covered",
-    fill: "#8B5CF6", // Purple
+    fill: "var(--chart-2)", // Blue
     href: "/simulation",
-    icon: <ShieldAlert className="w-4 h-4 text-purple-500" />,
+    icon: <ShieldAlert className="w-4 h-4 text-[var(--chart-2)]" />,
   },
 ];
 

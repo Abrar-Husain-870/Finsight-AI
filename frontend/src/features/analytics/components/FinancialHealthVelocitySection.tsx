@@ -6,8 +6,6 @@ import {
   BarChart,
   Bar,
   Cell,
-  AreaChart,
-  Area,
   XAxis,
   YAxis,
   Tooltip,
@@ -15,6 +13,20 @@ import {
   Legend,
   ReferenceLine
 } from 'recharts';
+import {
+  AreaChart as VisxAreaChart,
+  Grid,
+  Area as VisxArea,
+  LineChart as VisxLineChart,
+  Line as VisxLine,
+  XAxis as CustomXAxis,
+  YAxis as CustomYAxis,
+  ChartTooltip,
+  BarChart as VisxBarChart,
+  Bar as VisxBar,
+  BarXAxis,
+  useLineChart
+} from '../../../components/ui/charts/index.js';
 import { HealthScoreResponse, AnalyticsSummaryResponse } from '@finsight/shared';
 import { useCurrency } from '../../../lib/hooks/useCurrency.js';
 import { WidgetContainer } from '../../../components/ui/WidgetContainer.js';
@@ -25,20 +37,58 @@ interface FinancialHealthVelocitySectionProps {
   analyticsData?: AnalyticsSummaryResponse | null | undefined;
 }
 
+function BenchmarkLine({ value = 20, label = '20% Target' }: { value?: number; label?: string }) {
+  const { yScale, innerWidth } = useLineChart();
+  const y = yScale(value) ?? 0;
+
+  return (
+    <g className="pointer-events-none">
+      <line
+        x1={0}
+        y1={y}
+        x2={innerWidth}
+        y2={y}
+        stroke="var(--muted-foreground)"
+        strokeWidth={2}
+        strokeDasharray="6 6"
+        opacity={0.85}
+      />
+      <text
+        x={innerWidth}
+        y={y - 6}
+        fill="var(--muted-foreground)"
+        fontSize={10}
+        fontWeight={700}
+        textAnchor="end"
+      >
+        {label}
+      </text>
+    </g>
+  );
+}
+
 export function FinancialHealthVelocitySection({ healthData, analyticsData }: FinancialHealthVelocitySectionProps) {
   const { formatMoney } = useCurrency();
 
   // 1. Health Score Trajectory (Line Chart Data)
-  const healthHistoryData = healthData?.history?.map(h => ({
-    month: h.date,
-    score: h.score
-  })) || [
-    { month: 'May', score: 72 },
-    { month: 'Jun', score: 78 },
-    { month: 'Jul', score: 75 },
-    { month: 'Aug', score: 81 },
-    { month: 'Sep', score: 84 },
-  ];
+  const healthHistoryChartData = React.useMemo(() => {
+    if (healthData?.history && healthData.history.length > 0) {
+      return healthData.history.map(h => ({
+        date: new Date(h.date),
+        desktop: h.score,
+        score: h.score,
+      }));
+    }
+    const today = new Date();
+    return Array.from({ length: 5 }, (_, i) => {
+      const d = new Date(today.getFullYear(), today.getMonth() - (4 - i), 1);
+      return {
+        date: d,
+        desktop: Math.floor(70 + Math.sin(i) * 10 + i * 3),
+        score: Math.floor(70 + Math.sin(i) * 10 + i * 3),
+      };
+    });
+  }, [healthData]);
 
   // 2. Daily Burn Rate / Velocity (Line Chart Data)
   const dailyBurnData = Array.from({ length: 30 }, (_, i) => {
@@ -57,135 +107,143 @@ export function FinancialHealthVelocitySection({ healthData, analyticsData }: Fi
     : 24;
 
   const savingsBenchmarkData = [
-    { name: 'Your Savings Rate', rate: actualSavingsRate, fill: '#10B981' },
-    { name: '20% Benchmark Target', rate: 20, fill: '#3B82F6' },
+    { month: 'Your Savings Rate', desktop: actualSavingsRate, fill: 'var(--primary)' },
+    { month: '20% Benchmark Target', desktop: 20, fill: 'var(--chart-3)' },
   ];
 
   // 4. Income vs. Expense Velocity (Dual Area Chart Data)
-  const incomeVsExpenseData = analyticsData?.monthlyTrends?.map(t => ({
-    month: t.month,
-    Income: t.income,
-    Expense: t.expense
-  })) || [
-    { month: 'May', Income: 5500, Expense: 4200 },
-    { month: 'Jun', Income: 6000, Expense: 4100 },
-    { month: 'Jul', Income: 5800, Expense: 4600 },
-    { month: 'Aug', Income: 6200, Expense: 4300 },
-    { month: 'Sep', Income: 6800, Expense: 4500 },
-  ];
+  const incomeVsExpenseData = React.useMemo(() => {
+    const today = new Date();
+    if (analyticsData?.monthlyTrends && analyticsData.monthlyTrends.length > 0) {
+      return analyticsData.monthlyTrends.map((t, idx) => {
+        let d = t.month ? new Date(t.month) : null;
+        if (!d || isNaN(d.getTime())) {
+          d = new Date(today.getFullYear(), today.getMonth() - (analyticsData.monthlyTrends.length - 1 - idx), 1);
+        }
+        return {
+          date: d,
+          desktop: t.income,
+          mobile: t.expense
+        };
+      });
+    }
+
+    const monthsAgo = (m: number) => new Date(today.getFullYear(), today.getMonth() - m, 1);
+    return [
+      { date: monthsAgo(4), desktop: 5500, mobile: 4200 },
+      { date: monthsAgo(3), desktop: 6000, mobile: 4100 },
+      { date: monthsAgo(2), desktop: 5800, mobile: 4600 },
+      { date: monthsAgo(1), desktop: 6200, mobile: 4300 },
+      { date: monthsAgo(0), desktop: 6800, mobile: 4500 },
+    ];
+  }, [analyticsData]);
 
   return (
     <div className="space-y-6 pt-4">
       <div>
-        <h2 className="text-xl font-bold tracking-tight text-[var(--color-text-primary)] flex items-center gap-2">
-          <Activity className="h-5 w-5 text-emerald-500" />
+        <h2 className="text-xl font-bold tracking-tight text-[var(--foreground)] flex items-center gap-2">
+          <Activity className="h-5 w-5 text-[var(--foreground)]" />
           2. Core Financial Health & Velocity Cards & Graphs
         </h2>
-        <p className="text-xs text-[var(--color-text-secondary)] mt-0.5">
+        <p className="text-xs text-[var(--muted-foreground)] mt-0.5">
           Macro health trajectory, daily burn velocity pace, savings benchmarks, and cash flow dual area trends.
         </p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* 1. Financial Health Score Card (Line Chart) */}
-        <WidgetContainer title="Financial Health Score Card (6-Month Trajectory)">
+        <WidgetContainer title="Financial Health Score">
           <div className="flex items-center justify-between mb-2">
             <div className="flex items-baseline gap-2">
-              <span className="text-4xl font-extrabold text-[var(--color-text-primary)] tabular-nums">
+              <span className="text-4xl font-extrabold text-[var(--foreground)] tabular-nums">
                 {healthData?.overallScore || 84}
               </span>
-              <span className="text-sm font-semibold text-[var(--color-text-secondary)]">/ 100 Health Score</span>
+              <span className="text-sm font-semibold text-[var(--muted-foreground)]">/ 100 Health Score</span>
             </div>
-            <div className="px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-xs font-bold text-emerald-600 flex items-center gap-1">
+            <div className="px-2.5 py-1 rounded-full bg-[var(--chart-2)]/10 border border-[var(--chart-2)]/20 text-xs font-bold text-[var(--chart-2)] flex items-center gap-1">
               <ShieldCheck className="h-3.5 w-3.5" /> Excellent
             </div>
           </div>
-          <div className="h-[220px] w-full">
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={healthHistoryData}>
-                <CartesianGrid strokeDasharray="3 3" opacity={0.15} />
-                <XAxis dataKey="month" tick={{ fontSize: 11, fill: 'var(--color-text-secondary)' }} />
-                <YAxis domain={[0, 100]} tick={{ fontSize: 11, fill: 'var(--color-text-secondary)' }} />
-                <Tooltip
-                  formatter={(val: any) => [`${val} / 100`, 'Health Score']}
-                  contentStyle={{ backgroundColor: 'var(--color-bg-primary)', borderColor: 'var(--color-border-primary)', borderRadius: '12px' }}
-                />
-                <Line type="monotone" dataKey="score" stroke="#10B981" strokeWidth={3} dot={{ r: 5, fill: '#10B981' }} />
-              </LineChart>
-            </ResponsiveContainer>
+          <div className="h-[220px] w-full pt-1">
+            <VisxLineChart margin={{ top: 8, right: 8, bottom: 40, left: 8 }} data={healthHistoryChartData}>
+              <Grid horizontal />
+              <VisxLine dataKey="desktop" strokeWidth={2} />
+              <CustomXAxis />
+              <ChartTooltip />
+            </VisxLineChart>
           </div>
         </WidgetContainer>
 
         {/* 2. Daily Burn Rate (Velocity) (Line Chart) */}
-        <WidgetContainer title="Daily Burn Rate (Cumulative Daily Spend vs. Ceiling Limit)">
+        <WidgetContainer title="Daily Burn Velocity">
           <div className="h-[260px] w-full">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={dailyBurnData}>
-                <CartesianGrid strokeDasharray="3 3" opacity={0.15} />
-                <XAxis dataKey="day" tick={{ fontSize: 10, fill: 'var(--color-text-secondary)' }} interval={4} />
-                <YAxis tick={{ fontSize: 11, fill: 'var(--color-text-secondary)' }} />
+                <CartesianGrid strokeDasharray="3 3" opacity={0.15} stroke="var(--border)" />
+                <XAxis dataKey="day" tick={{ fontSize: 10, fill: 'var(--muted-foreground)' }} interval={4} />
+                <YAxis tick={{ fontSize: 11, fill: 'var(--muted-foreground)' }} />
                 <Tooltip
                   formatter={(val: any) => [formatMoney(Number(val) || 0), 'Cumulative Spend']}
-                  contentStyle={{ backgroundColor: 'var(--color-bg-primary)', borderColor: 'var(--color-border-primary)', borderRadius: '12px' }}
+                  contentStyle={{ backgroundColor: 'var(--card)', borderColor: 'var(--border)', color: 'var(--card-foreground)', borderRadius: '12px' }}
                 />
-                <Legend wrapperStyle={{ fontSize: '11px' }} />
-                <Line type="monotone" name="Actual Spend Pace" dataKey="cumulativeSpend" stroke="#F59E0B" strokeWidth={2.5} dot={false} />
-                <Line type="monotone" name="Target Budget Pace" dataKey="targetLimit" stroke="#9CA3AF" strokeWidth={2} strokeDasharray="4 4" dot={false} />
+                <Legend wrapperStyle={{ fontSize: '11px', color: 'var(--foreground)' }} />
+                <Line type="monotone" name="Actual Spend Pace" dataKey="cumulativeSpend" stroke="var(--primary)" strokeWidth={2.5} dot={false} />
+                <Line type="monotone" name="Target Budget Pace" dataKey="targetLimit" stroke="var(--muted-foreground)" strokeWidth={2} strokeDasharray="4 4" dot={false} />
               </LineChart>
             </ResponsiveContainer>
           </div>
         </WidgetContainer>
 
         {/* 3. Savings Rate vs 20% Benchmark (Bar Chart) */}
-        <WidgetContainer title="Savings Rate vs. 20% Recommended Benchmark Bar">
-          <div className="h-[240px] w-full">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={savingsBenchmarkData}>
-                <CartesianGrid strokeDasharray="3 3" opacity={0.15} />
-                <XAxis dataKey="name" tick={{ fontSize: 11, fill: 'var(--color-text-secondary)' }} />
-                <YAxis domain={[0, 50]} tick={{ fontSize: 11, fill: 'var(--color-text-secondary)' }} unit="%" />
-                <Tooltip
-                  formatter={(val: any) => [`${val}%`, 'Savings Rate']}
-                  contentStyle={{ backgroundColor: 'var(--color-bg-primary)', borderColor: 'var(--color-border-primary)', borderRadius: '12px' }}
-                />
-                <ReferenceLine y={20} stroke="#EF4444" strokeDasharray="3 3" label={{ value: '20% Target', fill: '#EF4444', fontSize: 10 }} />
-                <Bar dataKey="rate" radius={[8, 8, 0, 0]}>
-                  {savingsBenchmarkData.map((entry, index) => (
-                    <Cell key={`bar-${index}`} fill={entry.fill} />
-                  ))}
-                </Bar>
-              </BarChart>
-            </ResponsiveContainer>
+        <WidgetContainer title="Savings Rate vs. 20% Target">
+          <div className="h-[240px] w-full pt-1">
+            <VisxBarChart margin={{ top: 8, right: 8, bottom: 40, left: 45 }} data={savingsBenchmarkData} xDataKey="month">
+              <Grid horizontal />
+              <VisxBar dataKey="desktop" lineCap="round" />
+              <BenchmarkLine value={20} label="20% Benchmark Target" />
+              <CustomYAxis tickFormat={(v) => `${v}%`} />
+              <BarXAxis />
+              <ChartTooltip
+                content={({ activeData }) => (
+                  <div className="flex flex-col gap-1 p-1 text-xs">
+                    <div className="font-bold text-[var(--foreground)]">
+                      {activeData.month}
+                    </div>
+                    <div className="flex items-center justify-between gap-3 text-[var(--muted-foreground)]">
+                      <span className="flex items-center gap-1.5">
+                        <span className="h-2 w-2 rounded-full" style={{ backgroundColor: activeData.fill }} />
+                        Savings Rate:
+                      </span>
+                      <span className="font-bold text-[var(--foreground)]">{activeData.desktop}%</span>
+                    </div>
+                  </div>
+                )}
+              />
+            </VisxBarChart>
           </div>
         </WidgetContainer>
 
         {/* 4. Income vs Expense Velocity (Area Chart) */}
-        <WidgetContainer title="Income vs. Expense Velocity Comparison (Dual Area Chart)">
-          <div className="h-[240px] w-full">
-            <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={incomeVsExpenseData}>
-                <defs>
-                  <linearGradient id="incomeGrad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#10B981" stopOpacity={0.35}/>
-                    <stop offset="95%" stopColor="#10B981" stopOpacity={0}/>
-                  </linearGradient>
-                  <linearGradient id="expenseGrad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#EF4444" stopOpacity={0.35}/>
-                    <stop offset="95%" stopColor="#EF4444" stopOpacity={0}/>
-                  </linearGradient>
-                </defs>
-                <CartesianGrid strokeDasharray="3 3" opacity={0.15} />
-                <XAxis dataKey="month" tick={{ fontSize: 11, fill: 'var(--color-text-secondary)' }} />
-                <YAxis tick={{ fontSize: 11, fill: 'var(--color-text-secondary)' }} />
-                <Tooltip
-                  formatter={(val: any) => [formatMoney(Number(val) || 0)]}
-                  contentStyle={{ backgroundColor: 'var(--color-bg-primary)', borderColor: 'var(--color-border-primary)', borderRadius: '12px' }}
-                />
-                <Legend wrapperStyle={{ fontSize: '11px' }} />
-                <Area type="monotone" dataKey="Income" stroke="#10B981" fillOpacity={1} fill="url(#incomeGrad)" strokeWidth={2.5} />
-                <Area type="monotone" dataKey="Expense" stroke="#EF4444" fillOpacity={1} fill="url(#expenseGrad)" strokeWidth={2.5} />
-              </AreaChart>
-            </ResponsiveContainer>
+        <WidgetContainer title="Income vs. Expense Velocity">
+          <div className="flex items-center justify-end gap-4 mb-1 text-xs font-medium">
+            <div className="flex items-center gap-1.5 text-[var(--chart-2)]">
+              <span className="h-2.5 w-2.5 rounded-full bg-[var(--chart-2)]" />
+              <span>Income</span>
+            </div>
+            <div className="flex items-center gap-1.5 text-[var(--muted-foreground)]">
+              <span className="h-2.5 w-2.5 rounded-full bg-[var(--muted-foreground)]" />
+              <span>Expense</span>
+            </div>
+          </div>
+          <div className="h-[240px] w-full pt-1">
+            <VisxAreaChart data={incomeVsExpenseData} margin={{ top: 8, right: 8, bottom: 40, left: 56 }}>
+              <Grid horizontal />
+              <VisxArea dataKey="desktop" fill="var(--chart-2)" fillOpacity={0.3} strokeWidth={2} />
+              <VisxArea dataKey="mobile" fill="var(--muted-foreground)" fillOpacity={0.3} strokeWidth={2} />
+              <CustomYAxis yAxisId="left" />
+              <CustomXAxis />
+              <ChartTooltip />
+            </VisxAreaChart>
           </div>
         </WidgetContainer>
       </div>

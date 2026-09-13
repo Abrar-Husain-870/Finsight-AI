@@ -7,6 +7,7 @@ export interface YAxisProps {
   numTicks?: number;
   tickFormat?: (value: any, index: number) => string;
   hideAxisLine?: boolean;
+  yAxisId?: string;
 }
 
 export function YAxis({

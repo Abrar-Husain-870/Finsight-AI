@@ -3,7 +3,6 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { AppProviders } from './providers/index.js';
 import { SystemBanners } from './components/ui/SystemBanners.js';
 import { AppShell } from './components/layout/AppShell.js';
-import { AuthLayout } from './components/layout/AuthLayout.js';
 import { AuthGuard } from './features/auth/components/AuthGuard.js';
 import { GuestGuard } from './features/auth/components/GuestGuard.js';
 import { MotionConfig } from 'framer-motion';
@@ -21,6 +20,7 @@ const ImportPage = React.lazy(() => import('./pages/import/ImportPage.js'));
 const AnalyticsPage = React.lazy(() => import('./pages/AnalyticsPage.js'));
 const HealthPage = React.lazy(() => import('./pages/HealthPage.js'));
 const GoalsPage = React.lazy(() => import('./pages/GoalsPage.js'));
+const BudgetPage = React.lazy(() => import('./pages/BudgetPage.js'));
 const SimulationPage = React.lazy(() => import('./pages/SimulationPage.js'));
 const AiCoachPage = React.lazy(() => import('./pages/AiCoachPage.js'));
 const SettingsPage = React.lazy(() => import('./pages/SettingsPage.js'));
@@ -50,10 +50,7 @@ export function App() {
             } />
 
             <Route path="/login" element={<GuestGuard><LoginPage /></GuestGuard>} />
-
-            <Route element={<GuestGuard><AuthLayout /></GuestGuard>}>
-              <Route path="/register" element={<RegisterPage />} />
-            </Route>
+            <Route path="/register" element={<GuestGuard><RegisterPage /></GuestGuard>} />
             
             <Route path="/auth/success" element={<GuestGuard><OAuthSuccessPage /></GuestGuard>} />
 
@@ -91,6 +88,12 @@ export function App() {
               <Route path="/goals" element={
                 <React.Suspense fallback={<PageFallback name="Goals" />}>
                   <GoalsPage />
+                </React.Suspense>
+              } />
+
+              <Route path="/budget" element={
+                <React.Suspense fallback={<PageFallback name="Budget" />}>
+                  <BudgetPage />
                 </React.Suspense>
               } />
               

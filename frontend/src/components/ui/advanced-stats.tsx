@@ -55,34 +55,34 @@ export function AdvancedStats({
 
           {/* Breakdown Section */}
           <div className="flex flex-col gap-6 h-full justify-between">
-            {/* Primary Goal Card (Contrast Dark Block) */}
+            {/* Primary Goal Card */}
             <TimelineAnimation
               animationNum={2}
               timelineRef={timelineRef}
-              className="p-6 rounded-3xl h-full bg-zinc-900 dark:bg-zinc-800 text-white flex flex-col justify-between shadow-md border border-zinc-700/50 min-h-[160px]"
+              className="p-6 rounded-3xl h-full bg-[var(--color-bg-secondary)] text-[var(--color-text-primary)] flex flex-col justify-between shadow-xs border border-[var(--color-border-primary)] min-h-[160px]"
             >
               <div>
-                <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-400 mb-1 flex items-center gap-1.5">
-                  <Target className="w-3 h-3 text-amber-400" />
+                <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--color-text-secondary)] mb-1 flex items-center gap-1.5">
+                  <Target className="w-3.5 h-3.5 text-[var(--chart-2)]" />
                   Primary Savings Goal
                 </p>
-                <h4 className="text-xl font-bold tracking-tight text-white mt-1">
+                <h4 className="text-xl font-bold tracking-tight text-[var(--color-text-primary)] mt-1">
                   {primaryGoalName}
                 </h4>
               </div>
 
               <div className="mt-6">
                 <div className="flex justify-between items-end mb-2">
-                  <span className="text-3xl font-extrabold tracking-tight tabular-nums text-white">
+                  <span className="text-3xl font-extrabold tracking-tight tabular-nums text-[var(--color-text-primary)]">
                     {primaryGoalProgress}%
                   </span>
-                  <span className="text-xs font-semibold text-zinc-400 mb-1">
+                  <span className="text-xs font-semibold text-[var(--color-text-secondary)] mb-1">
                     Target: {primaryGoalTarget}
                   </span>
                 </div>
-                <div className="w-full h-2 bg-zinc-800 rounded-full overflow-hidden p-0.5 border border-zinc-700">
+                <div className="w-full h-2 bg-[var(--color-bg-tertiary)] rounded-full overflow-hidden p-0.5 border border-[var(--color-border-primary)]">
                   <div 
-                    className="h-full bg-gradient-to-r from-amber-400 to-emerald-400 rounded-full transition-all duration-500" 
+                    className="h-full bg-[var(--chart-2)] rounded-full transition-all duration-500" 
                     style={{ width: `${primaryGoalProgress}%` }}
                   />
                 </div>
@@ -97,13 +97,13 @@ export function AdvancedStats({
             >
               <div className="flex items-center gap-3 mb-3">
                 <div className="size-9 rounded-xl bg-[var(--color-bg-tertiary)] border border-[var(--color-border-primary)] flex items-center justify-center text-[var(--color-text-primary)]">
-                  <ShieldCheck className="w-5 h-5 text-[var(--color-text-primary)]" />
+                  <ShieldCheck className="w-5 h-5 text-[var(--chart-2)]" />
                 </div>
                 <h4 className="font-bold text-base text-[var(--color-text-primary)]">Financial Growth</h4>
               </div>
               <p className="text-xs sm:text-sm text-[var(--color-text-secondary)] leading-relaxed">
                 Organic net savings are up{' '}
-                <span className="text-[var(--color-text-primary)] font-bold">24%</span>{' '}
+                <span className="text-[var(--chart-2)] font-bold">24%</span>{' '}
                 compared to previous quarter.
               </p>
             </TimelineAnimation>
@@ -132,11 +132,11 @@ export function AdvancedStats({
                   className={cn(
                     'text-xs font-bold px-2 py-0.5 rounded-full flex items-center gap-0.5 shrink-0 whitespace-nowrap',
                     kpi.status === 'up'
-                      ? 'text-emerald-700 dark:text-emerald-400 bg-emerald-500/10 border border-emerald-500/20'
-                      : 'text-rose-700 dark:text-rose-400 bg-rose-500/10 border border-rose-500/20'
+                      ? 'text-[var(--chart-2)] bg-[var(--chart-2)]/10 border border-[var(--chart-2)]/20'
+                      : 'text-[var(--color-text-secondary)] bg-[var(--color-bg-tertiary)] border border-[var(--color-border-primary)]'
                   )}
                 >
-                  {kpi.status === 'up' ? <TrendingUp className="w-3 h-3 shrink-0" /> : <TrendingDown className="w-3 h-3 shrink-0" />}
+                  {kpi.status === 'up' ? <TrendingUp className="w-3 h-3 shrink-0 text-[var(--chart-2)]" /> : <TrendingDown className="w-3 h-3 shrink-0" />}
                   {kpi.change}
                 </span>
               </div>

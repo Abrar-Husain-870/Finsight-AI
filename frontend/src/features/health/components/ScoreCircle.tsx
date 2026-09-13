@@ -1,45 +1,53 @@
 
 import React from 'react';
-import { cn } from '../../../lib/utils.js';
+import { Vo2MaxCard } from '../../../components/ui/progress.js';
+import { ShieldCheck } from 'lucide-react';
 
-export function ScoreCircle({ score, trend }: { score: number; trend: number }) {
-  const radius = 60;
-  const circumference = 2 * Math.PI * radius;
-  const offset = circumference - (score / 100) * circumference;
-  
-  let color = 'text-[var(--color-success)]';
-  if (score < 40) color = 'text-[var(--color-danger)]';
-  else if (score < 70) color = 'text-[var(--color-warning)]';
+export function ScoreCircle({ score, trend }: { score: number; trend?: number }) {
+  const { status, strokeColor } = React.useMemo(() => {
+    if (score >= 80) return { status: 'Optimal', strokeColor: '#10B981' };
+    if (score >= 65) return { status: 'Stable', strokeColor: '#34D399' };
+    if (score >= 50) return { status: 'Fair', strokeColor: '#94A3B8' };
+    return { status: 'At Risk', strokeColor: '#64748B' };
+  }, [score]);
 
   return (
-    <div className="relative flex flex-col items-center justify-center">
-      <svg className="w-40 h-40 transform -rotate-90">
-        <circle cx="80" cy="80" r={radius} className="stroke-[var(--color-bg-secondary)]" strokeWidth="12" fill="transparent" />
-        <circle 
-          cx="80" cy="80" r={radius} 
-          className={cn("transition-all duration-1000 ease-out", color)} 
-          strokeWidth="12" 
-          fill="transparent" 
-          strokeDasharray={circumference} 
-          strokeDashoffset={offset} 
-          strokeLinecap="round" 
-          stroke="currentColor"
-        />
-      </svg>
-      <div className="absolute flex flex-col items-center justify-center">
-        <span className={cn("text-4xl font-bold", color)}>{score}</span>
-        <span className="text-xs text-[var(--color-text-secondary)] font-medium">/ 100</span>
-      </div>
-      <div className="mt-4 flex items-center gap-1 text-sm font-medium">
-        {trend > 0 ? (
-          <span className="text-[var(--color-success)]">+{trend} pts</span>
-        ) : trend < 0 ? (
-          <span className="text-[var(--color-danger)]">{trend} pts</span>
-        ) : (
-          <span className="text-[var(--color-text-secondary)]">No change</span>
-        )}
-        <span className="text-[var(--color-text-secondary)]">vs last month</span>
-      </div>
+    <div className="w-full flex items-center justify-center">
+      <Vo2MaxCard
+        title="Financial Health"
+        value={score}
+        status={status}
+        progress={Math.min(100, Math.max(0, score))}
+        strokeColor={strokeColor}
+        icon={<ShieldCheck className="h-5 w-5" />}
+        className="w-full max-w-full"
+        description={
+          <div className="space-y-1">
+            <p>
+              Your score is in the{' '}
+              <span className="font-semibold" style={{ color: strokeColor }}>
+                {score >= 80 ? 'Top 15%' : score >= 65 ? 'Top 35%' : 'Bottom 40%'}
+              </span>{' '}
+              of peer profiles.
+            </p>
+            {trend !== undefined && (
+              <div className="flex items-center justify-center gap-1 text-xs text-[var(--color-text-secondary)] pt-0.5">
+                {trend > 0 ? (
+                  <span className="text-emerald-500 font-semibold">+{trend} pts</span>
+                ) : trend < 0 ? (
+                  <span className="text-rose-500 font-semibold">{trend} pts</span>
+                ) : (
+                  <span className="text-[var(--color-text-secondary)] font-semibold">0 pts</span>
+                )}
+                <span>vs last month</span>
+              </div>
+            )}
+          </div>
+        }
+      />
     </div>
   );
 }
+
+export default ScoreCircle;
+

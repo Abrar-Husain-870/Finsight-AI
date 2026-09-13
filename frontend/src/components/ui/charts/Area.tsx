@@ -9,6 +9,7 @@ export interface AreaProps {
   dataKey: string;
   fill?: string;
   fillOpacity?: number;
+  stroke?: string;
   strokeWidth?: number;
   curve?: any;
   animate?: boolean;
@@ -16,10 +17,17 @@ export interface AreaProps {
   markers?: { radius?: number; ringGap?: number; strokeWidth?: number };
 }
 
+const parseDate = (val: any) => {
+  if (val instanceof Date) return val;
+  if (typeof val === 'number') return new Date(val);
+  return new Date(val);
+};
+
 export function Area({
   dataKey,
   fill = 'var(--chart-line-primary)',
   fillOpacity = 0.3,
+  stroke,
   strokeWidth = 2,
   curve = curveMonotoneX,
   animate = true,
@@ -37,7 +45,7 @@ export function Area({
       >
         <AreaClosed
           data={data}
-          x={(d) => xScale(new Date(d[xDataKey])) ?? 0}
+          x={(d) => xScale(parseDate(d[xDataKey])) ?? 0}
           y={(d) => yScale(d[dataKey]) ?? 0}
           yScale={yScale}
           fill={fill}
@@ -46,14 +54,14 @@ export function Area({
         />
         <LinePath
           data={data}
-          x={(d) => xScale(new Date(d[xDataKey])) ?? 0}
+          x={(d) => xScale(parseDate(d[xDataKey])) ?? 0}
           y={(d) => yScale(d[dataKey]) ?? 0}
-          stroke={fill}
+          stroke={stroke || fill}
           strokeWidth={strokeWidth}
           curve={curve}
         />
         {showMarkers && data.map((d, i) => {
-          const cx = xScale(new Date(d[xDataKey])) ?? 0;
+          const cx = xScale(parseDate(d[xDataKey])) ?? 0;
           const cy = yScale(d[dataKey]) ?? 0;
           const r = markers?.radius || 5;
           const sw = markers?.strokeWidth || 2;

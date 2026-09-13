@@ -57,11 +57,11 @@ export function AiInsightsProjectionsSection({ analyticsData }: AiInsightsProjec
   return (
     <div className="space-y-6 pt-4">
       <div>
-        <h2 className="text-xl font-bold tracking-tight text-[var(--color-text-primary)] flex items-center gap-2">
-          <Sparkles className="h-5 w-5 text-amber-500" />
+        <h2 className="text-xl font-bold tracking-tight text-[var(--foreground)] flex items-center gap-2">
+          <Sparkles className="h-5 w-5 text-[var(--chart-2)]" />
           5. AI Insights & Financial Projections
         </h2>
-        <p className="text-xs text-[var(--color-text-secondary)] mt-0.5">
+        <p className="text-xs text-[var(--muted-foreground)] mt-0.5">
           Anomaly detection spikes line chart and interactive scenario what-if wealth projection area chart.
         </p>
       </div>
@@ -72,18 +72,18 @@ export function AiInsightsProjectionsSection({ analyticsData }: AiInsightsProjec
           <div className="h-[260px] w-full">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={anomalyTrackingData}>
-                <CartesianGrid strokeDasharray="3 3" opacity={0.15} />
-                <XAxis dataKey="day" tick={{ fontSize: 11, fill: 'var(--color-text-secondary)' }} />
-                <YAxis yAxisId="left" tick={{ fontSize: 11, fill: 'var(--color-text-secondary)' }} />
-                <YAxis yAxisId="right" orientation="right" domain={[0, 100]} tick={{ fontSize: 11, fill: 'var(--color-text-secondary)' }} unit="%" />
+                <CartesianGrid strokeDasharray="3 3" opacity={0.15} stroke="var(--border)" />
+                <XAxis dataKey="day" tick={{ fontSize: 11, fill: 'var(--muted-foreground)' }} />
+                <YAxis yAxisId="left" tick={{ fontSize: 11, fill: 'var(--muted-foreground)' }} />
+                <YAxis yAxisId="right" orientation="right" domain={[0, 100]} tick={{ fontSize: 11, fill: 'var(--muted-foreground)' }} unit="%" />
                 <Tooltip
                   formatter={(val: any, name: any) => [name === 'spendVariance' ? formatMoney(Number(val) || 0) : `${val}%`, name === 'spendVariance' ? 'Spend Variance' : 'Anomaly Risk']}
-                  contentStyle={{ backgroundColor: 'var(--color-bg-primary)', borderColor: 'var(--color-border-primary)', borderRadius: '12px' }}
+                  contentStyle={{ backgroundColor: 'var(--card)', borderColor: 'var(--border)', color: 'var(--card-foreground)', borderRadius: '12px' }}
                 />
-                <Legend wrapperStyle={{ fontSize: '11px' }} />
-                <ReferenceLine yAxisId="right" y={60} stroke="#EF4444" strokeDasharray="3 3" label={{ value: 'Anomaly Risk Alert Threshold', fill: '#EF4444', fontSize: 10 }} />
-                <Line yAxisId="right" type="monotone" name="Anomaly Risk Index (%)" dataKey="anomalyScore" stroke="#EF4444" strokeWidth={2.5} dot={{ r: 5, fill: '#EF4444' }} />
-                <Line yAxisId="left" type="monotone" name="Spend Variance ($)" dataKey="spendVariance" stroke="#F59E0B" strokeWidth={2} strokeDasharray="4 4" dot={false} />
+                <Legend wrapperStyle={{ fontSize: '11px', color: 'var(--foreground)' }} />
+                <ReferenceLine yAxisId="right" y={60} stroke="var(--muted-foreground)" strokeDasharray="3 3" label={{ value: 'Anomaly Risk Alert Threshold', fill: 'var(--muted-foreground)', fontSize: 10 }} />
+                <Line yAxisId="right" type="monotone" name="Anomaly Risk Index (%)" dataKey="anomalyScore" stroke="var(--chart-2)" strokeWidth={2.5} dot={{ r: 5, fill: 'var(--chart-2)' }} />
+                <Line yAxisId="left" type="monotone" name="Spend Variance ($)" dataKey="spendVariance" stroke="var(--primary)" strokeWidth={2} strokeDasharray="4 4" dot={false} />
               </LineChart>
             </ResponsiveContainer>
           </div>
@@ -93,11 +93,11 @@ export function AiInsightsProjectionsSection({ analyticsData }: AiInsightsProjec
         <WidgetContainer title="What-If Scenario Simulator Preview (Baseline vs. Projected Cash Flow Trajectory)">
           <div className="space-y-3">
             {/* Interactive Sliders */}
-            <div className="grid grid-cols-2 gap-4 p-3 bg-[var(--color-bg-secondary)]/50 rounded-xl border border-[var(--color-border-primary)] text-xs">
+            <div className="grid grid-cols-2 gap-4 p-3 bg-[var(--muted)]/50 rounded-xl border border-[var(--border)] text-xs">
               <div className="space-y-1">
                 <div className="flex justify-between font-medium">
-                  <span className="text-[var(--color-text-secondary)]">Income Adjustment:</span>
-                  <span className="font-bold text-emerald-600">+{incomeAdj}%</span>
+                  <span className="text-[var(--muted-foreground)]">Income Adjustment:</span>
+                  <span className="font-bold text-[var(--primary)]">+{incomeAdj}%</span>
                 </div>
                 <input
                   type="range"
@@ -105,13 +105,13 @@ export function AiInsightsProjectionsSection({ analyticsData }: AiInsightsProjec
                   max="50"
                   value={incomeAdj}
                   onChange={(e) => setIncomeAdj(Number(e.target.value))}
-                  className="w-full h-1.5 bg-gray-200 dark:bg-gray-700 rounded-lg appearance-none cursor-pointer accent-emerald-500"
+                  className="w-full h-1.5 bg-[var(--muted)] rounded-lg appearance-none cursor-pointer accent-[var(--primary)]"
                 />
               </div>
               <div className="space-y-1">
                 <div className="flex justify-between font-medium">
-                  <span className="text-[var(--color-text-secondary)]">Expense Adjustment:</span>
-                  <span className="font-bold text-amber-600">{expenseAdj}%</span>
+                  <span className="text-[var(--muted-foreground)]">Expense Adjustment:</span>
+                  <span className="font-bold text-[var(--primary)]">{expenseAdj}%</span>
                 </div>
                 <input
                   type="range"
@@ -119,7 +119,7 @@ export function AiInsightsProjectionsSection({ analyticsData }: AiInsightsProjec
                   max="30"
                   value={expenseAdj}
                   onChange={(e) => setExpenseAdj(Number(e.target.value))}
-                  className="w-full h-1.5 bg-gray-200 dark:bg-gray-700 rounded-lg appearance-none cursor-pointer accent-amber-500"
+                  className="w-full h-1.5 bg-[var(--muted)] rounded-lg appearance-none cursor-pointer accent-[var(--primary)]"
                 />
               </div>
             </div>
@@ -129,24 +129,24 @@ export function AiInsightsProjectionsSection({ analyticsData }: AiInsightsProjec
                 <AreaChart data={simulationChartData}>
                   <defs>
                     <linearGradient id="baseGrad" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#9CA3AF" stopOpacity={0.3}/>
-                      <stop offset="95%" stopColor="#9CA3AF" stopOpacity={0}/>
+                      <stop offset="5%" stopColor="var(--muted-foreground)" stopOpacity={0.3}/>
+                      <stop offset="95%" stopColor="var(--muted-foreground)" stopOpacity={0}/>
                     </linearGradient>
                     <linearGradient id="projGrad" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#10B981" stopOpacity={0.4}/>
-                      <stop offset="95%" stopColor="#10B981" stopOpacity={0}/>
+                      <stop offset="5%" stopColor="var(--chart-2)" stopOpacity={0.4}/>
+                      <stop offset="95%" stopColor="var(--chart-2)" stopOpacity={0}/>
                     </linearGradient>
                   </defs>
-                  <CartesianGrid strokeDasharray="3 3" opacity={0.15} />
-                  <XAxis dataKey="month" tick={{ fontSize: 11, fill: 'var(--color-text-secondary)' }} />
-                  <YAxis tick={{ fontSize: 11, fill: 'var(--color-text-secondary)' }} />
+                  <CartesianGrid strokeDasharray="3 3" opacity={0.15} stroke="var(--border)" />
+                  <XAxis dataKey="month" tick={{ fontSize: 11, fill: 'var(--muted-foreground)' }} />
+                  <YAxis tick={{ fontSize: 11, fill: 'var(--muted-foreground)' }} />
                   <Tooltip
                     formatter={(val: any) => [formatMoney(Number(val) || 0)]}
-                    contentStyle={{ backgroundColor: 'var(--color-bg-primary)', borderColor: 'var(--color-border-primary)', borderRadius: '12px' }}
+                    contentStyle={{ backgroundColor: 'var(--card)', borderColor: 'var(--border)', color: 'var(--card-foreground)', borderRadius: '12px' }}
                   />
-                  <Legend wrapperStyle={{ fontSize: '11px' }} />
-                  <Area type="monotone" name="Baseline Wealth Path" dataKey="BaselineCashFlow" stroke="#9CA3AF" fillOpacity={1} fill="url(#baseGrad)" strokeWidth={2} />
-                  <Area type="monotone" name="Projected Wealth Path" dataKey="ProjectedScenario" stroke="#10B981" fillOpacity={1} fill="url(#projGrad)" strokeWidth={2.5} />
+                  <Legend wrapperStyle={{ fontSize: '11px', color: 'var(--foreground)' }} />
+                  <Area type="monotone" name="Baseline Wealth Path" dataKey="BaselineCashFlow" stroke="var(--muted-foreground)" fillOpacity={1} fill="url(#baseGrad)" strokeWidth={2} />
+                  <Area type="monotone" name="Projected Wealth Path" dataKey="ProjectedScenario" stroke="var(--chart-2)" fillOpacity={1} fill="url(#projGrad)" strokeWidth={2.5} />
                 </AreaChart>
               </ResponsiveContainer>
             </div>

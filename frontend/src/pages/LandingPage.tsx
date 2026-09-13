@@ -9,6 +9,7 @@ import { Stats2 } from '../components/ui/stats-2.js';
 import { Compare2 } from '../components/ui/compare-2.js';
 import { TestimonialsSection } from '../components/ui/testimonials-3.js';
 import FAQs from '../components/ui/text-reveal-faqs.js';
+import { IntelligenceFlowSection } from '../components/ui/intelligence-flow-section.js';
 import { authApi } from '../features/auth/api/auth.api.js';
 import { useAuthStore } from '../features/auth/store/auth.store.js';
 import { useTheme } from '../providers/ThemeProvider.js';
@@ -111,8 +112,8 @@ export default function LandingPage() {
               </AnimatePresence>
             </motion.button>
             <div className="h-5 w-px bg-[var(--color-border-primary)]" aria-hidden="true" />
-            <Link 
-              to="/login" 
+            <Link
+              to="/login"
               className="text-sm font-semibold text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] transition-colors px-2 py-1.5"
             >
               Sign in
@@ -161,6 +162,11 @@ export default function LandingPage() {
             primaryActionLabel={isLoading ? "Logging in..." : "Explore Dashboard Demo"}
             onPrimaryAction={handleDemoLogin}
           />
+        </div>
+
+        {/* Intelligence Flow Section (Reference Replication) */}
+        <div className="w-full border-b border-[var(--color-border-primary)]">
+          <IntelligenceFlowSection />
         </div>
 
         {/* Hero Section 3: Hero10 Fan Showcase */}

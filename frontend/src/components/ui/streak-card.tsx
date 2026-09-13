@@ -90,23 +90,23 @@ const StreakCard = React.forwardRef<HTMLDivElement, StreakCardProps>(
       >
         <header className="mb-3 flex items-center justify-between gap-3">
           <div className="flex items-center gap-2">
-            <Flame className="text-amber-500 h-6 w-6 fill-amber-400 dark:fill-amber-300" aria-hidden="true" />
-            <h3 className="text-xl sm:text-2xl leading-none font-bold tracking-tight text-[var(--color-text-primary)]">{title}</h3>
+            <Flame className="text-[var(--chart-2)] h-6 w-6 fill-[var(--chart-2)]" aria-hidden="true" />
+            <h3 className="text-xl sm:text-2xl leading-none font-bold tracking-tight text-[var(--foreground)]">{title}</h3>
           </div>
           <Button
             variant="ghost"
             size="sm"
             onClick={onActionClick}
             aria-label={actionLabel}
-            className="text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] text-xs font-semibold transition-colors"
+            className="text-[var(--muted-foreground)] hover:text-[var(--foreground)] text-xs font-semibold transition-colors"
           >
             {actionLabel}
           </Button>
         </header>
 
-        <p className="mb-4 text-4xl sm:text-5xl leading-none font-extrabold tracking-tight tabular-nums text-[var(--color-text-primary)]">
+        <p className="mb-4 text-4xl sm:text-5xl leading-none font-extrabold tracking-tight tabular-nums text-[var(--foreground)]">
           {currentStreak}
-          <span className="text-[var(--color-text-secondary)] ml-2 text-xl sm:text-2xl font-semibold">
+          <span className="text-[var(--muted-foreground)] ml-2 text-xl sm:text-2xl font-semibold">
             days active
           </span>
         </p>
@@ -119,35 +119,35 @@ const StreakCard = React.forwardRef<HTMLDivElement, StreakCardProps>(
         />
 
         <div
-          className="mt-4 grid grid-cols-2 gap-4 border-t border-[var(--color-border-primary)] border-dashed pt-4"
+          className="mt-4 grid grid-cols-2 gap-4 border-t border-[var(--border)] border-dashed pt-4"
           aria-label="Streak stats"
         >
           <div>
-            <p className="text-[var(--color-text-secondary)] text-xs font-semibold uppercase tracking-wider">Longest Streak</p>
-            <p className="text-2xl sm:text-3xl leading-tight font-bold tabular-nums text-[var(--color-text-primary)]">
+            <p className="text-[var(--muted-foreground)] text-xs font-semibold uppercase tracking-wider">Longest Streak</p>
+            <p className="text-2xl sm:text-3xl leading-tight font-bold tabular-nums text-[var(--foreground)]">
               {longestStreak}
-              <span className="ml-1 text-base font-semibold text-[var(--color-text-secondary)]">days</span>
+              <span className="ml-1 text-base font-semibold text-[var(--muted-foreground)]">days</span>
             </p>
           </div>
           <div className="text-right">
-            <p className="text-[var(--color-text-secondary)] text-xs font-semibold uppercase tracking-wider">Total Logged</p>
-            <p className="text-2xl sm:text-3xl leading-tight font-bold tabular-nums text-[var(--color-text-primary)]">{total}</p>
+            <p className="text-[var(--muted-foreground)] text-xs font-semibold uppercase tracking-wider">Total Logged</p>
+            <p className="text-2xl sm:text-3xl leading-tight font-bold tabular-nums text-[var(--foreground)]">{total}</p>
           </div>
         </div>
 
         {showHowItWorks && (
-          <div className="mt-4 border-t border-[var(--color-border-primary)] pt-4">
+          <div className="mt-4 border-t border-[var(--border)] pt-4">
             <button
               type="button"
-              className="bg-[var(--color-bg-primary)] flex w-full items-center justify-between rounded-2xl px-4 py-3 text-left border border-[var(--color-border-primary)] cursor-pointer"
+              className="bg-[var(--card)] flex w-full items-center justify-between rounded-2xl px-4 py-3 text-left border border-[var(--border)] cursor-pointer"
               onClick={() => setIsHowItWorksOpen((prev) => !prev)}
               aria-expanded={isHowItWorksOpen}
               aria-controls={howItWorksContentId}
             >
-              <span className="text-sm font-bold text-[var(--color-text-primary)]">{howItWorksTitle}</span>
+              <span className="text-sm font-bold text-[var(--foreground)]">{howItWorksTitle}</span>
               <ChevronDown
                 className={cn(
-                  "text-[var(--color-text-secondary)] h-4 w-4 transition-transform duration-200",
+                  "text-[var(--muted-foreground)] h-4 w-4 transition-transform duration-200",
                   isHowItWorksOpen && "rotate-180"
                 )}
                 aria-hidden="true"
@@ -169,7 +169,7 @@ const StreakCard = React.forwardRef<HTMLDivElement, StreakCardProps>(
                       className="flex items-start gap-2.5"
                     >
                       <Icon
-                        className="text-amber-500 mt-0.5 h-4 w-4 shrink-0"
+                        className="text-[var(--chart-2)] mt-0.5 h-4 w-4 shrink-0"
                         aria-hidden="true"
                       />
                       <p className="text-[var(--color-text-secondary)] text-xs sm:text-sm leading-relaxed">

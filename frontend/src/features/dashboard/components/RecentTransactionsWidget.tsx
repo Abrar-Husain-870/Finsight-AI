@@ -68,10 +68,10 @@ export function RecentTransactionsWidget({ transactions }: { transactions: Trans
               </div>
             </div>
             <div className={cn(
-                "text-sm font-semibold tabular-nums tracking-tight text-right ml-4 shrink-0",
-                isExpense ? "text-[var(--color-danger)]" : "text-[var(--color-success)]"
+                "text-sm font-bold tabular-nums tracking-tight text-right ml-4 shrink-0",
+                isExpense ? "text-red-500 dark:text-red-400" : "text-emerald-500 dark:text-emerald-400"
               )}>
-              {isExpense ? formatMoney(Math.abs(tx.amount)) : `+${formatMoney(tx.amount)}`}
+              {isExpense ? `-${formatMoney(Math.abs(tx.amount))}` : `+${formatMoney(tx.amount)}`}
             </div>
           </motion.div>
         );

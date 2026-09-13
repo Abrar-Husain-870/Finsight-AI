@@ -34,8 +34,8 @@ export class DashboardService {
       const monthKey = `${txDate.getFullYear()}-${String(txDate.getMonth() + 1).padStart(2, '0')}`;
       const trend = trendMap.get(monthKey);
       
-      const isIncome = tx.category.type === 'INCOME';
-      const isExpense = tx.category.type === 'EXPENSE';
+      const isIncome = tx.category?.type === 'INCOME' || tx.amount > 0;
+      const isExpense = tx.category?.type === 'EXPENSE' || tx.amount < 0;
 
       if (trend) {
         if (isIncome) trend.income += tx.amount;

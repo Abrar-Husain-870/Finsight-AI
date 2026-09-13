@@ -11,8 +11,8 @@ const buttonVariants = cva(
       variant: {
         default: "bg-[var(--color-text-primary)] text-[var(--color-bg-primary)] shadow-sm hover:opacity-90",
         primary: "bg-[var(--color-text-primary)] text-[var(--color-bg-primary)] shadow-sm hover:opacity-90",
-        destructive: "bg-[var(--color-danger)] text-white shadow-sm hover:bg-[var(--color-danger)]/90",
-        danger: "bg-[var(--color-danger)] text-white shadow-sm hover:bg-[var(--color-danger)]/90",
+        destructive: "bg-red-600 text-white shadow-sm hover:bg-red-700 active:bg-red-800",
+        danger: "bg-red-600 text-white shadow-sm hover:bg-red-700 active:bg-red-800",
         outline: "border border-[var(--color-border-primary)] bg-[var(--color-bg-primary)] text-[var(--color-text-primary)] shadow-sm hover:bg-[var(--color-bg-secondary)]",
         secondary: "bg-[var(--color-bg-secondary)] text-[var(--color-text-primary)] border border-[var(--color-border-primary)] shadow-sm hover:bg-[var(--color-bg-tertiary)]",
         ghost: "text-[var(--color-text-primary)] hover:bg-[var(--color-bg-secondary)]",

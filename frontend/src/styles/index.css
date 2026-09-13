@@ -3,6 +3,8 @@
 @import 'tw-animate-css';
 @import './tokens/variables.css';
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme inline {
   --animate-accordion-down: accordion-down 0.2s ease-out;
   --animate-accordion-up: accordion-up 0.2s ease-out;

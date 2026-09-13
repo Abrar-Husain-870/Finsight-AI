@@ -1,48 +1,67 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { RegisterForm } from '../../features/auth/components/RegisterForm.js';
-import { GoogleLoginButton } from '../../features/auth/components/GoogleLoginButton.js';
-import { motion } from 'framer-motion';
-import { pageTransitionVariants } from '../../lib/motion.js';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuthStore } from '../../features/auth/store/auth.store.js';
+import { authApi } from '../../features/auth/api/auth.api.js';
+import { mapHttpError } from '../../lib/errors.js';
+import { toast } from 'sonner';
+import GamingLogin from '../../components/ui/gaming-login.js';
 
 export default function RegisterPage() {
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const setAuth = useAuthStore(s => s.setAuth);
+  const navigate = useNavigate();
+
+  const handleRegisterSubmit = async (name: string, email: string, password: string) => {
+    try {
+      setIsLoading(true);
+      setError(null);
+      const data = await authApi.register({ name, email, password });
+      setAuth(data.user, data.accessToken);
+      toast.success('Account created successfully! Welcome to FinSight.');
+      navigate('/');
+    } catch (err: unknown) {
+      const appError = mapHttpError(err);
+      setError(appError.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleDemoLogin = async () => {
+    try {
+      setIsLoading(true);
+      setError(null);
+      const data = await authApi.demoLogin();
+      setAuth(data.user, data.accessToken);
+      toast.success('Welcome to FinSight Demo!');
+      navigate('/');
+    } catch (err: unknown) {
+      const appError = mapHttpError(err);
+      setError(appError.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
-    <motion.div
-      variants={pageTransitionVariants}
-      initial="initial"
-      animate="animate"
-      exit="exit"
-      className="flex flex-col w-full"
-    >
-      <div className="mb-8 text-center">
-        <h2 className="text-2xl font-bold tracking-tight text-[var(--color-text-primary)]">
-          Create an account
-        </h2>
-        <p className="text-sm text-[var(--color-text-secondary)] mt-2">
-          Already have an account?{' '}
-          <Link to="/login" className="font-medium text-[var(--color-text-primary)] hover:underline transition-colors">
-            Sign in
-          </Link>
-        </p>
+    <div className="relative min-h-screen w-full flex items-center justify-center px-4 py-12 overflow-hidden">
+      {/* Background Video from src/Public/signin_page_loop_vid.mp4 */}
+      <GamingLogin.VideoBackground />
+
+      {/* Centered Register Card */}
+      <div className="relative z-20 w-full max-w-md animate-fadeIn">
+        <GamingLogin.RegisterForm 
+          onSubmit={handleRegisterSubmit} 
+          onDemoLogin={handleDemoLogin}
+          isLoading={isLoading}
+          error={error}
+        />
       </div>
 
-      <RegisterForm />
-
-      <div className="my-8 flex items-center">
-        <div className="flex-1 border-t border-[var(--color-border-primary)]" />
-        <span className="bg-[var(--color-bg-primary)] px-4 text-xs font-medium text-[var(--color-text-secondary)]">
-          OR
-        </span>
-        <div className="flex-1 border-t border-[var(--color-border-primary)]" />
-      </div>
-
-      <GoogleLoginButton />
-      
-      <p className="mt-8 text-center text-xs text-[var(--color-text-secondary)] leading-relaxed">
-        By clicking continue, you agree to our{' '}
-        <span className="underline cursor-pointer hover:text-[var(--color-text-primary)] transition-colors">Terms of Service</span> and{' '}
-        <span className="underline cursor-pointer hover:text-[var(--color-text-primary)] transition-colors">Privacy Policy</span>.
-      </p>
-    </motion.div>
+      <footer className="absolute bottom-4 left-0 right-0 text-center text-xs text-white/70 font-medium z-20">
+        © {new Date().getFullYear()} FinSight. All rights reserved. Bank-grade privacy & local encryption.
+      </footer>
+    </div>
   );
 }

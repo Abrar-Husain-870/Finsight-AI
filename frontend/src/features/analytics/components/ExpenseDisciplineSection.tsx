@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
 import {
   ResponsiveContainer,
   LineChart,
@@ -12,7 +12,7 @@ import {
   YAxis,
   Tooltip,
   CartesianGrid,
-  Legend
+  Legend as RechartsLegend
 } from 'recharts';
 import { curveMonotoneX } from "@visx/curve";
 import {
@@ -29,7 +29,14 @@ import {
   BarXAxis,
   BarYAxis,
   Background,
-  ChartTooltip
+  ChartTooltip,
+  PieChart as VisxPieChart,
+  PieSlice,
+  PieCenter,
+  Legend,
+  LegendItemComponent,
+  LegendMarker,
+  LegendLabel
 } from '../../../components/ui/charts/index.js';
 import { TransactionResponse, fromMinor } from '@finsight/shared';
 import { useCurrency } from '../../../lib/hooks/useCurrency.js';
@@ -45,6 +52,7 @@ const RATING_COLORS = ['#EF4444', '#F97316', '#F59E0B', '#10B981', '#3B82F6'];
 
 export function ExpenseDisciplineSection({ transactions }: ExpenseDisciplineSectionProps) {
   const { formatMoney } = useCurrency();
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
   // Process rating data from transaction notes
   const processedData = useMemo(() => {
@@ -136,33 +144,38 @@ export function ExpenseDisciplineSection({ transactions }: ExpenseDisciplineSect
 
     // 2. Essential vs Non-essential Spend Ratio (Bar Chart Data)
     const essentialRatioData = [
-      { month: 'Essential (4-5★)', desktop: essentialTotal || 1250, fill: 'var(--chart-line-primary)' },
-      { month: 'Non-Essential (1-3★)', desktop: nonEssentialTotal || 680, fill: 'var(--chart-line-secondary)' }
+      { month: 'Essential (4-5★)', desktop: essentialTotal || 1250, fill: 'var(--chart-2)' },
+      { month: 'Non-Essential (1-3★)', desktop: nonEssentialTotal || 680, fill: 'var(--muted-foreground)' }
     ];
 
     // 3. Average Expense Satisfaction per Category (Bar Chart Data)
-    const satisfactionData = Object.entries(categoryRatings).map(([category, data]) => ({
-      browser: category,
-      users: Number((data.totalRating / data.count).toFixed(1)),
-      fill: '#F59E0B'
-    })).slice(0, 6);
+    const satisfactionData = Object.entries(categoryRatings)
+      .filter(([cat]) => cat !== 'General' || Object.keys(categoryRatings).length === 1)
+      .map(([category, data]) => ({
+        browser: category,
+        users: Number((data.totalRating / data.count).toFixed(1)),
+        fill: 'var(--primary)'
+      })).slice(0, 6);
 
-    if (satisfactionData.length === 0) {
+    if (satisfactionData.length <= 1) {
+      satisfactionData.length = 0;
       satisfactionData.push(
-        { browser: 'Food & Dining', users: 4.2, fill: '#F59E0B' },
-        { browser: 'Housing', users: 4.8, fill: '#F59E0B' },
-        { browser: 'Transportation', users: 3.5, fill: '#F59E0B' },
-        { browser: 'Investments', users: 4.9, fill: '#F59E0B' }
+        { browser: 'Housing', users: 4.8, fill: 'var(--primary)' },
+        { browser: 'Food & Dining', users: 4.2, fill: 'var(--primary)' },
+        { browser: 'Investments', users: 4.9, fill: 'var(--primary)' },
+        { browser: 'Transportation', users: 3.5, fill: 'var(--primary)' },
+        { browser: 'Shopping', users: 3.8, fill: 'var(--primary)' },
+        { browser: 'Entertainment', users: 4.1, fill: 'var(--primary)' }
       );
     }
 
     // 4. Expense Rating Breakdown (Pie Chart Data)
     const pieData = [
-      { name: '1★ Regret', value: ratingAmounts[1] || 150, color: '#EF4444' },
-      { name: '2★ Impulsive', value: ratingAmounts[2] || 220, color: '#F97316' },
-      { name: '3★ Neutral', value: ratingAmounts[3] || 450, color: '#F59E0B' },
-      { name: '4★ Useful', value: ratingAmounts[4] || 890, color: '#10B981' },
-      { name: '5★ Essential', value: ratingAmounts[5] || 1200, color: '#3B82F6' },
+      { label: '1★ Regret', value: ratingAmounts[1] || 150, color: 'var(--muted-foreground)' },
+      { label: '2★ Impulsive', value: ratingAmounts[2] || 220, color: 'var(--border)' },
+      { label: '3★ Neutral', value: ratingAmounts[3] || 450, color: 'var(--muted)' },
+      { label: '4★ Useful', value: ratingAmounts[4] || 890, color: 'var(--chart-2)' },
+      { label: '5★ Essential', value: ratingAmounts[5] || 1200, color: 'var(--primary)' },
     ];
 
     // 5. Regret vs. Essential Spend by Category (Stacked Bar Chart Data)
@@ -196,20 +209,20 @@ export function ExpenseDisciplineSection({ transactions }: ExpenseDisciplineSect
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-xl font-bold tracking-tight text-[var(--color-text-primary)] flex items-center gap-2">
-            <Star className="h-5 w-5 text-amber-500 fill-amber-400" />
+          <h2 className="text-xl font-bold tracking-tight text-[var(--foreground)] flex items-center gap-2">
+            <Star className="h-5 w-5 text-[var(--chart-2)] fill-[var(--chart-2)]" />
             1. Expense Necessity & Discipline Analytics
           </h2>
-          <p className="text-xs text-[var(--color-text-secondary)] mt-0.5">
+          <p className="text-xs text-[var(--muted-foreground)] mt-0.5">
             Behavioral analysis based on user 1-to-5 star purchase necessity ratings.
           </p>
         </div>
         <div className="flex items-center gap-3">
-          <div className="px-3 py-1.5 rounded-xl border border-red-500/20 bg-red-500/10 text-xs font-semibold text-red-600 flex items-center gap-1.5">
+          <div className="px-3 py-1.5 rounded-xl border border-[var(--border)] bg-[var(--muted)]/50 text-xs font-semibold text-[var(--muted-foreground)] flex items-center gap-1.5">
             <ThumbsDown className="h-3.5 w-3.5" />
             Regret Total: {formatMoney(processedData.regretTotal)}
           </div>
-          <div className="px-3 py-1.5 rounded-xl border border-emerald-500/20 bg-emerald-500/10 text-xs font-semibold text-emerald-600 flex items-center gap-1.5">
+          <div className="px-3 py-1.5 rounded-xl border border-[var(--chart-2)]/20 bg-[var(--chart-2)]/10 text-xs font-semibold text-[var(--chart-2)] flex items-center gap-1.5">
             <ThumbsUp className="h-3.5 w-3.5" />
             Essential Total: {formatMoney(processedData.essentialTotal)}
           </div>
@@ -217,23 +230,23 @@ export function ExpenseDisciplineSection({ transactions }: ExpenseDisciplineSect
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* 1. Regret vs. Wise Spending Trend (Good vs Bad Expenditure) */}
-        <WidgetContainer title="Regret vs. Wise Spending Trend (Bad vs. Good Expenditure)">
+        {/* 1. Regret vs. Wise Spending Trend */}
+        <WidgetContainer title="Regret vs. Wise Spend Trend">
           <div className="flex items-center justify-end gap-4 mb-1 text-xs font-medium">
-            <div className="flex items-center gap-1.5 text-emerald-500">
-              <span className="h-2.5 w-2.5 rounded-full bg-[#10B981]" />
+            <div className="flex items-center gap-1.5 text-[var(--chart-2)]">
+              <span className="h-2.5 w-2.5 rounded-full bg-[var(--chart-2)]" />
               <span>Wise Spend (4-5★)</span>
             </div>
-            <div className="flex items-center gap-1.5 text-red-500">
-              <span className="h-2.5 w-2.5 rounded-full bg-[#EF4444]" />
+            <div className="flex items-center gap-1.5 text-[var(--muted-foreground)]">
+              <span className="h-2.5 w-2.5 rounded-full bg-[var(--muted-foreground)]" />
               <span>Regret Spend (1-2★)</span>
             </div>
           </div>
           <div className="w-full min-h-[220px] flex items-center justify-center pt-1">
             <AreaChart aspectRatio="2.2 / 1" data={processedData.disciplineTrendData}>
               <Grid horizontal />
-              <Area curve={curveMonotoneX} dataKey="revenue" fill="#10B981" fillOpacity={0.3} strokeWidth={2} />
-              <Area curve={curveMonotoneX} dataKey="costs" fill="#EF4444" fillOpacity={0.35} strokeWidth={2} />
+              <Area curve={curveMonotoneX} dataKey="revenue" fill="var(--chart-2)" fillOpacity={0.3} strokeWidth={2} />
+              <Area curve={curveMonotoneX} dataKey="costs" fill="var(--muted-foreground)" fillOpacity={0.35} strokeWidth={2} />
               <SegmentBackground />
               <SegmentLineFrom />
               <SegmentLineTo />
@@ -242,14 +255,14 @@ export function ExpenseDisciplineSection({ transactions }: ExpenseDisciplineSect
               <ChartTooltip
                 content={({ activeData }) => (
                   <div className="flex flex-col gap-1.5 p-1 text-xs">
-                    <div className="font-bold text-[var(--color-text-primary)]">
+                    <div className="font-bold text-[var(--foreground)]">
                       {new Date(activeData.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                     </div>
-                    <div className="flex items-center justify-between gap-4 text-emerald-500 font-medium">
+                    <div className="flex items-center justify-between gap-4 text-[var(--chart-2)] font-medium">
                       <span>Wise Spend (4-5★):</span>
                       <span className="font-semibold tabular-nums">+{formatMoney(activeData.revenue)}</span>
                     </div>
-                    <div className="flex items-center justify-between gap-4 text-red-500 font-medium">
+                    <div className="flex items-center justify-between gap-4 text-[var(--muted-foreground)] font-medium">
                       <span>Regret Spend (1-2★):</span>
                       <span className="font-semibold tabular-nums">-{formatMoney(activeData.costs)}</span>
                     </div>
@@ -261,19 +274,20 @@ export function ExpenseDisciplineSection({ transactions }: ExpenseDisciplineSect
         </WidgetContainer>
 
         {/* 2. Essential Purchase Ratio (Bar Chart) */}
-        <WidgetContainer title="Essential vs. Non-Essential Spend Ratio">
-          <div className="w-full max-w-md mx-auto min-h-[220px] flex items-center justify-center pt-2">
-            <VisxBarChart margin={{ top: 8, right: 8, bottom: 40, left: 8 }} data={processedData.essentialRatioData} xDataKey="month">
+        <WidgetContainer title="Essential vs. Non-Essential Ratio">
+          <div className="w-full min-h-[220px] flex items-center justify-center pt-2">
+            <VisxBarChart margin={{ top: 8, right: 12, bottom: 40, left: 45 }} data={processedData.essentialRatioData} xDataKey="month">
               <Background pattern="dots" opacity={0.85} />
               <VisxBar dataKey="desktop" lineCap="round" />
               <BarXAxis />
+              <CustomYAxis numTicks={4} />
               <ChartTooltip showCrosshair={false} />
             </VisxBarChart>
           </div>
         </WidgetContainer>
 
         {/* 3. Average Expense Satisfaction per Category (Bar Chart) */}
-        <WidgetContainer title="Average Expense Satisfaction Rating per Category (1 - 5★)">
+        <WidgetContainer title="Expense Satisfaction by Category">
           <div className="w-full flex items-center justify-center pt-2">
             <VisxBarChart
               data={processedData.satisfactionData}
@@ -291,31 +305,43 @@ export function ExpenseDisciplineSection({ transactions }: ExpenseDisciplineSect
         </WidgetContainer>
 
         {/* 4. Expense Rating Breakdown (Pie Chart) */}
-        <WidgetContainer title="Expense Rating Share Breakdown (1★ to 5★ Slices)">
-          <div className="h-[240px] w-full flex items-center justify-center">
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie
-                  data={processedData.pieData}
-                  dataKey="value"
-                  nameKey="name"
-                  cx="50%"
-                  cy="50%"
-                  innerRadius={55}
-                  outerRadius={85}
-                  paddingAngle={3}
-                >
-                  {processedData.pieData.map((entry, index) => (
-                    <Cell key={`slice-${index}`} fill={entry.color} />
-                  ))}
-                </Pie>
-                <Tooltip
-                  formatter={(val: any) => [formatMoney(Number(val) || 0), 'Volume']}
-                  contentStyle={{ backgroundColor: 'var(--color-bg-primary)', borderColor: 'var(--color-border-primary)', borderRadius: '12px' }}
-                />
-                <Legend iconType="circle" wrapperStyle={{ fontSize: '11px' }} />
-              </PieChart>
-            </ResponsiveContainer>
+        <WidgetContainer title="Expense Rating Breakdown">
+          <div className="w-full flex flex-col items-center justify-center gap-4 pt-2 min-h-[220px]">
+            <VisxPieChart
+              data={processedData.pieData}
+              hoveredIndex={hoveredIndex}
+              innerRadius={55}
+              onHoverChange={setHoveredIndex}
+              size={180}
+            >
+              {processedData.pieData.map((_, i) => <PieSlice index={i} key={i} />)}
+              <PieCenter defaultLabel="Total Expense">
+                {({ value, label }) => (
+                  <div className="flex flex-col items-center justify-center text-center px-1">
+                    <span className="text-xs font-semibold text-[var(--color-text-secondary)] tracking-wide">
+                      {label}
+                    </span>
+                    <span className="text-sm sm:text-base font-bold text-[var(--color-text-primary)] tabular-nums mt-0.5">
+                      {formatMoney(value)}
+                    </span>
+                  </div>
+                )}
+              </PieCenter>
+            </VisxPieChart>
+            <Legend
+              hoveredIndex={hoveredIndex}
+              items={processedData.pieData.map(item => ({
+                label: item.label,
+                value: item.value,
+                color: item.color || '#3B82F6'
+              }))}
+              onHoverChange={setHoveredIndex}
+            >
+              <LegendItemComponent>
+                <LegendMarker />
+                <LegendLabel />
+              </LegendItemComponent>
+            </Legend>
           </div>
         </WidgetContainer>
       </div>

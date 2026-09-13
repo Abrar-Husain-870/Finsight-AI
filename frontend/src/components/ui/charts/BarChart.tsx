@@ -53,12 +53,13 @@ export function BarChart({
         nice: true,
       });
     }
-    const pad = data.length <= 2 ? 0.65 : 0.55;
+    const padInner = data.length <= 2 ? 0.35 : 0.45;
+    const padOuter = data.length <= 2 ? 0.25 : 0.35;
     return scaleBand({
       range: [0, innerWidth],
       domain: data.map((d) => String(d[xDataKey] ?? '')),
-      paddingInner: pad,
-      paddingOuter: pad,
+      paddingInner: padInner,
+      paddingOuter: padOuter,
     });
   }, [data, innerWidth, xDataKey, isHorizontal]);
 
@@ -87,6 +88,29 @@ export function BarChart({
     });
   }, [data, innerHeight, xDataKey, isHorizontal]);
 
+  // Identify Bar children to assign seriesIndex and seriesCount for multi-series grouped bar support
+  const barChildren: React.ReactElement[] = [];
+  React.Children.forEach(children, (child) => {
+    if (React.isValidElement(child) && child.props && 'dataKey' in (child.props as any)) {
+      barChildren.push(child);
+    }
+  });
+
+  const totalBars = barChildren.length || 1;
+  let currentBarIndex = 0;
+
+  const modifiedChildren = React.Children.map(children, (child) => {
+    if (React.isValidElement(child) && child.props && 'dataKey' in (child.props as any)) {
+      const barElement = React.cloneElement(child as React.ReactElement<any>, {
+        seriesIndex: currentBarIndex,
+        seriesCount: totalBars,
+      });
+      currentBarIndex++;
+      return barElement;
+    }
+    return child;
+  });
+
   return (
     <div
       ref={(node) => {
@@ -110,7 +134,7 @@ export function BarChart({
         >
           <svg width={width} height={height} className="overflow-visible">
             <g transform={`translate(${margin.left},${margin.top})`}>
-              {children}
+              {modifiedChildren}
             </g>
           </svg>
         </LineChartProvider>

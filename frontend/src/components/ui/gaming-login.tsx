@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useRef, useEffect } from 'react';
-import { Eye, EyeOff, Mail, Lock, Chrome, UserCheck, Sun, Moon } from 'lucide-react';
+import { Eye, EyeOff, Mail, Lock, Chrome, UserCheck, Sun, Moon, User, ShieldCheck } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '../../lib/utils.js';
 import { useTheme } from '../../providers/ThemeProvider.js';
@@ -9,6 +9,14 @@ import loopVideo from '../../Public/signin_page_loop_vid.mp4';
 
 interface LoginFormProps {
   onSubmit: (email: string, password: string, remember: boolean) => Promise<void>;
+  onDemoLogin?: () => Promise<void>;
+  onGoogleLogin?: () => void;
+  isLoading?: boolean;
+  error?: string | null;
+}
+
+interface RegisterFormProps {
+  onSubmit: (name: string, email: string, password: string) => Promise<void>;
   onDemoLogin?: () => Promise<void>;
   onGoogleLogin?: () => void;
   isLoading?: boolean;
@@ -26,6 +34,7 @@ interface FormInputProps {
   value: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   required?: boolean;
+  minLength?: number;
 }
 
 interface ToggleSwitchProps {
@@ -35,7 +44,7 @@ interface ToggleSwitchProps {
 }
 
 // FormInput Component with Warm Sand tokens
-export const FormInput: React.FC<FormInputProps> = ({ icon, type, placeholder, value, onChange, required }) => {
+export const FormInput: React.FC<FormInputProps> = ({ icon, type, placeholder, value, onChange, required, minLength }) => {
   return (
     <div className="relative">
       <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[var(--color-text-secondary)]">
@@ -47,6 +56,7 @@ export const FormInput: React.FC<FormInputProps> = ({ icon, type, placeholder, v
         value={value}
         onChange={onChange}
         required={required}
+        minLength={minLength}
         className="w-full pl-10 pr-4 py-2.5 bg-[var(--color-bg-secondary)] border border-[var(--color-border-primary)] rounded-xl text-[var(--color-text-primary)] placeholder-[var(--color-text-secondary)] focus:outline-none focus:border-[var(--color-border-focus)] focus:ring-2 focus:ring-[var(--color-border-focus)]/20 transition-all font-medium text-sm"
       />
     </div>
@@ -135,7 +145,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, onDemoLogin, onG
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-          className="p-2 text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] transition-colors rounded-full border border-[var(--color-border-primary)] bg-[var(--color-bg-secondary)]"
+          className="p-2 text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] transition-colors rounded-full border border-[var(--color-border-primary)] bg-[var(--color-bg-secondary)] cursor-pointer"
           aria-label="Toggle theme"
         >
           <span className="sr-only">Toggle theme</span>
@@ -189,7 +199,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, onDemoLogin, onG
           />
           <button
             type="button"
-            className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] focus:outline-none transition-colors"
+            className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] focus:outline-none transition-colors cursor-pointer"
             onClick={() => setShowPassword(!showPassword)}
             aria-label={showPassword ? "Hide password" : "Show password"}
           >
@@ -281,8 +291,177 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, onDemoLogin, onG
   );
 };
 
+// Main RegisterForm Component matching the video background page design
+export const RegisterForm: React.FC<RegisterFormProps> = ({ onSubmit, onDemoLogin, onGoogleLogin, isLoading, error }) => {
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const { theme, setTheme } = useTheme();
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    await onSubmit(name, email, password);
+  };
+
+  return (
+    <div className="relative p-6 sm:p-8 rounded-2xl backdrop-blur-xl bg-[var(--color-bg-primary)]/90 border border-[var(--color-border-primary)] shadow-2xl text-[var(--color-text-primary)]">
+      {/* Header / Brand Title & Theme Toggle */}
+      <div className="mb-6 flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <div className="h-8 w-8 rounded-lg bg-[var(--color-text-primary)] text-[var(--color-bg-primary)] flex items-center justify-center font-bold text-base shadow-xs">
+            F
+          </div>
+          <span className="font-extrabold text-xl tracking-tight text-[var(--color-text-primary)]">FinSight</span>
+        </div>
+
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+          className="p-2 text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] transition-colors rounded-full border border-[var(--color-border-primary)] bg-[var(--color-bg-secondary)] cursor-pointer"
+          aria-label="Toggle theme"
+        >
+          <span className="sr-only">Toggle theme</span>
+          <AnimatePresence mode="wait" initial={false}>
+            <motion.div
+              key={theme}
+              initial={{ y: -20, opacity: 0, rotate: -90 }}
+              animate={{ y: 0, opacity: 1, rotate: 0 }}
+              exit={{ y: 20, opacity: 0, rotate: 90 }}
+              transition={{ duration: 0.2 }}
+            >
+              {theme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+            </motion.div>
+          </AnimatePresence>
+        </motion.button>
+      </div>
+
+      <div className="mb-6 text-left space-y-1">
+        <h3 className="text-2xl font-bold tracking-tight text-[var(--color-text-primary)]">Create your account</h3>
+        <p className="text-xs text-[var(--color-text-secondary)] font-normal">
+          Start your journey to total financial clarity
+        </p>
+      </div>
+
+      {/* Submit Error Alert */}
+      {error && (
+        <div className="mb-4 p-3 rounded-xl bg-[var(--color-danger-muted)] border border-[var(--color-danger)]/30 text-xs font-medium text-[var(--color-danger)] text-center">
+          {error}
+        </div>
+      )}
+
+      {/* Main Register Form */}
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <FormInput
+          icon={<User size={18} />}
+          type="text"
+          placeholder="Full Name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          required
+        />
+
+        <FormInput
+          icon={<Mail size={18} />}
+          type="email"
+          placeholder="Email address"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        />
+
+        <div className="relative">
+          <FormInput
+            icon={<Lock size={18} />}
+            type={showPassword ? "text" : "password"}
+            placeholder="Create Password (min. 8 characters)"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+            minLength={8}
+          />
+          <button
+            type="button"
+            className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] focus:outline-none transition-colors cursor-pointer"
+            onClick={() => setShowPassword(!showPassword)}
+            aria-label={showPassword ? "Hide password" : "Show password"}
+          >
+            {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+          </button>
+        </div>
+
+        <p className="text-[11px] text-[var(--color-text-secondary)] leading-tight pt-1">
+          By registering, you agree to our{' '}
+          <span className="underline cursor-pointer hover:text-[var(--color-text-primary)] transition-colors">Terms of Service</span> and{' '}
+          <span className="underline cursor-pointer hover:text-[var(--color-text-primary)] transition-colors">Privacy Policy</span>.
+        </p>
+
+        <button
+          type="submit"
+          disabled={isLoading}
+          className="w-full py-3 px-4 rounded-xl font-semibold text-sm text-[var(--color-bg-primary)] bg-[var(--color-text-primary)] hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-md active:scale-98 cursor-pointer flex items-center justify-center gap-2 mt-2"
+        >
+          {isLoading ? (
+            <span className="inline-flex items-center gap-2">
+              <span className="animate-spin h-4 w-4 border-2 border-current border-t-transparent rounded-full" />
+              Creating account...
+            </span>
+          ) : (
+            'Create Account'
+          )}
+        </button>
+      </form>
+
+      {/* Quick Access / Demo Access */}
+      <div className="mt-6">
+        <div className="relative flex items-center justify-center">
+          <div className="border-t border-[var(--color-border-primary)] absolute w-full" />
+          <div className="bg-[var(--color-bg-primary)] px-3 relative text-[var(--color-text-secondary)] text-xs">
+            or register via
+          </div>
+        </div>
+
+        <div className="mt-4 grid grid-cols-2 gap-3">
+          {onDemoLogin && (
+            <button
+              type="button"
+              onClick={onDemoLogin}
+              disabled={isLoading}
+              className="flex items-center justify-center gap-2 py-2.5 px-3 bg-[var(--color-bg-secondary)] border border-[var(--color-border-primary)] rounded-xl text-xs font-semibold text-[var(--color-text-primary)] hover:bg-[var(--color-bg-tertiary)] transition-all cursor-pointer shadow-xs"
+            >
+              <UserCheck size={16} />
+              <span>Demo Account</span>
+            </button>
+          )}
+
+          <button
+            type="button"
+            onClick={onGoogleLogin ? onGoogleLogin : () => {
+              window.location.href = `${import.meta.env.VITE_API_URL || 'http://localhost:3000/api/v1'}/auth/google`;
+            }}
+            className="flex items-center justify-center gap-2 py-2.5 px-3 bg-[var(--color-bg-secondary)] border border-[var(--color-border-primary)] rounded-xl text-xs font-semibold text-[var(--color-text-primary)] hover:bg-[var(--color-bg-tertiary)] transition-all cursor-pointer shadow-xs"
+          >
+            <Chrome size={16} />
+            <span>Google</span>
+          </button>
+        </div>
+      </div>
+
+      {/* Sign In Link */}
+      <p className="mt-6 text-center text-xs text-[var(--color-text-secondary)]">
+        Already have an account?{' '}
+        <a href="/login" className="font-semibold text-[var(--color-text-primary)] hover:underline transition-colors">
+          Sign In
+        </a>
+      </p>
+    </div>
+  );
+};
+
 const GamingLogin = {
   LoginForm,
+  RegisterForm,
   VideoBackground,
 };
 

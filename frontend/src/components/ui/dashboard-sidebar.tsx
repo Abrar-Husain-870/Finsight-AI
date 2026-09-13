@@ -22,7 +22,11 @@ import {
   X,
   CreditCard,
   Building2,
-  UserCheck
+  UserCheck,
+  Star,
+  Layers,
+  Sparkles,
+  Wallet
 } from 'lucide-react';
 import { cn } from '../../lib/utils.js';
 import { useAuthStore } from '../../features/auth/store/auth.store.js';
@@ -48,7 +52,44 @@ export const finsightNavGroups: NavGroupData[] = [
       { id: 'search', title: 'Quick Search', icon: Search, shortcut: '⌘K' },
       { id: 'home', title: 'Dashboard', icon: LayoutDashboard, path: '/' },
       { id: 'transactions', title: 'Transactions', icon: Receipt, path: '/transactions', badge: '5' },
-      { id: 'analytics', title: 'Analytics', icon: Activity, path: '/analytics' },
+      { 
+        id: 'analytics', 
+        title: 'Analytics', 
+        icon: Activity, 
+        path: '/analytics',
+        children: [
+          { 
+            id: 'a-discipline', 
+            title: 'Expense Necessity & Discipline Analytics', 
+            icon: Star, 
+            path: '/analytics#expense-discipline' 
+          },
+          { 
+            id: 'a-health', 
+            title: 'Core Financial Health & Velocity Cards & Graphs', 
+            icon: Activity, 
+            path: '/analytics#financial-health-velocity' 
+          },
+          { 
+            id: 'a-category', 
+            title: 'Category & Merchant Deep-Dive Visualizations', 
+            icon: Layers, 
+            path: '/analytics#category-merchant-deepdive' 
+          },
+          { 
+            id: 'a-savings', 
+            title: 'Savings Goals & Financial Buffer Analytics', 
+            icon: Target, 
+            path: '/analytics#savings-goals-buffer' 
+          },
+          { 
+            id: 'a-ai', 
+            title: 'AI Insights & Financial Projections', 
+            icon: Sparkles, 
+            path: '/analytics#ai-insights-projections' 
+          },
+        ]
+      },
     ]
   },
   {
@@ -59,19 +100,14 @@ export const finsightNavGroups: NavGroupData[] = [
         title: 'Financial Health', 
         icon: ShieldCheck,
         path: '/health',
-        children: [
-          { id: 'h-score', title: 'Health Score', icon: ShieldCheck, path: '/health' },
-        ]
       },
       { 
         id: 'goals', 
         title: 'Goals & Savings', 
         icon: Target,
         path: '/goals',
-        children: [
-          { id: 'g-active', title: 'Active Milestones', icon: Target, path: '/goals' },
-        ]
       },
+      { id: 'budget', title: 'Budgets', icon: Wallet, path: '/budget' },
       { id: 'import', title: 'Import Ledgers', icon: Upload, path: '/import' },
       { id: 'simulation', title: 'Simulation', icon: Calculator, path: '/simulation' },
       { id: 'ai-coach', title: 'AI Financial Coach', icon: Bot, path: '/ai-coach', badge: 'AI' },
@@ -174,14 +210,37 @@ function NavItem({
   level?: number;
   collapsed?: boolean;
 }) {
-  const isActive = item.path ? (item.path === '/' ? activePath === '/' : activePath.startsWith(item.path)) : false;
-  const hasChildren = !!item.children;
-  const [isOpen, setIsOpen] = useState(false);
+  const isExactMatch = item.path ? activePath === item.path : false;
+  const isParentMatch = item.path && item.path !== '/' ? activePath.startsWith(item.path + '#') || activePath === item.path : false;
+  const isActive = isExactMatch || isParentMatch;
+  const hasChildren = !!item.children && item.children.length > 0;
+  
+  const isChildActive = hasChildren ? item.children!.some(child => child.path && (activePath === child.path || activePath.startsWith(child.path))) : false;
+
+  const [isFlyoutOpen, setIsFlyoutOpen] = useState(false);
+  const timeoutRef = React.useRef<NodeJS.Timeout | null>(null);
+
+  const handleMouseEnter = () => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
+    }
+    if (hasChildren) {
+      setIsFlyoutOpen(true);
+    }
+  };
+
+  const handleMouseLeave = () => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+    timeoutRef.current = setTimeout(() => {
+      setIsFlyoutOpen(false);
+    }, 200);
+  };
 
   const handleClick = () => {
-    if (hasChildren && !collapsed) {
-      setIsOpen(!isOpen);
-    } else {
+    if (item.path) {
       onSelect(item);
     }
   };
@@ -189,48 +248,120 @@ function NavItem({
   if (collapsed) {
     return (
       <div 
-        title={item.title + (item.badge ? ` (${item.badge})` : '')}
-        onClick={handleClick}
-        className={`group relative flex items-center justify-center w-10 h-10 mx-auto rounded-xl cursor-pointer transition-all duration-200 select-none
-          ${isActive 
-            ? 'bg-[var(--color-bg-secondary)] text-[var(--color-text-primary)] shadow-2xs border border-[var(--color-border-primary)] font-bold' 
-            : 'text-[var(--color-text-secondary)] hover:bg-black/5 dark:hover:bg-white/5 hover:text-[var(--color-text-primary)]'
-          }
-        `}
+        className="relative group/collapsedItem flex items-center justify-center"
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
       >
-        <item.icon className="w-[18px] h-[18px] shrink-0" strokeWidth={1.5} />
-        {item.badge && (
-          <span className="absolute top-1 right-1 w-2 h-2 rounded-full bg-amber-500 ring-2 ring-[var(--color-bg-primary)]" />
+        <div 
+          title={item.title + (item.badge ? ` (${item.badge})` : '')}
+          onClick={handleClick}
+          className={`group relative flex items-center justify-center w-10 h-10 mx-auto rounded-xl cursor-pointer transition-all duration-200 select-none
+            ${isActive 
+              ? 'bg-[var(--color-bg-secondary)] text-[var(--color-text-primary)] shadow-2xs border border-[var(--color-border-primary)] font-bold' 
+              : 'text-[var(--color-text-secondary)] hover:bg-black/5 dark:hover:bg-white/5 hover:text-[var(--color-text-primary)]'
+            }
+          `}
+        >
+          <item.icon className="w-[18px] h-[18px] shrink-0" strokeWidth={1.5} />
+          {item.badge && (
+            <span className="absolute top-1 right-1 w-2 h-2 rounded-full bg-amber-500 ring-2 ring-[var(--color-bg-primary)]" />
+          )}
+        </div>
+
+        {/* Flyout Submenu for Collapsed Mode */}
+        {hasChildren && isFlyoutOpen && (
+          <div 
+            className="absolute left-full -top-2 z-[100] w-[300px] rounded-2xl border border-[var(--color-border-primary)] bg-[var(--color-bg-primary)] shadow-[16px_0_36px_-6px_rgba(0,0,0,0.2)] dark:shadow-[16px_0_36px_-6px_rgba(0,0,0,0.6)] p-3 flex flex-col gap-1.5 animate-in fade-in slide-in-from-left-2 duration-150 before:absolute before:-left-3 before:top-0 before:bottom-0 before:w-3 before:content-['']"
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
+          >
+            <div className="flex items-center justify-between px-2 pb-2 mb-1 border-b border-[var(--color-border-primary)]">
+              <div className="flex items-center gap-2">
+                <div className="p-1 rounded-md bg-emerald-500/10 text-emerald-500 border border-emerald-500/20">
+                  <item.icon className="w-3.5 h-3.5" />
+                </div>
+                <div>
+                  <span className="text-xs font-bold text-[var(--color-text-primary)] block leading-tight">{item.title}</span>
+                  <span className="text-[10px] text-[var(--color-text-secondary)] font-medium">Extension Panel</span>
+                </div>
+              </div>
+              <span className="text-[10px] font-semibold text-emerald-500 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">
+                {item.children!.length} Sections
+              </span>
+            </div>
+
+            <div className="flex flex-col gap-0.5">
+              {item.children!.map(child => {
+                const ChildIcon = child.icon;
+                const isCurrentChild = child.path ? (activePath === child.path || activePath.startsWith(child.path)) : false;
+                return (
+                  <button
+                    key={child.id}
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setIsFlyoutOpen(false);
+                      onSelect(child);
+                    }}
+                    className={cn(
+                      "flex items-center justify-between w-full px-2.5 py-2 rounded-xl text-left transition-all cursor-pointer group/child",
+                      isCurrentChild
+                        ? "bg-[var(--color-bg-secondary)] text-[var(--color-text-primary)] font-bold shadow-2xs border border-[var(--color-border-primary)]"
+                        : "text-[var(--color-text-secondary)] hover:bg-[var(--color-bg-secondary)] hover:text-[var(--color-text-primary)]"
+                    )}
+                  >
+                    <div className="flex items-center gap-2.5 min-w-0 pr-2">
+                      <div className="p-1 rounded-md bg-[var(--color-bg-secondary)] border border-[var(--color-border-primary)] text-[var(--color-text-secondary)] group-hover/child:text-emerald-500 group-hover/child:border-emerald-500/30 transition-colors shrink-0">
+                        <ChildIcon className="w-3 h-3" />
+                      </div>
+                      <span className="text-xs font-medium group-hover/child:font-semibold text-[var(--color-text-primary)] truncate leading-tight">
+                        {child.title}
+                      </span>
+                    </div>
+                    <ChevronRight className="w-3.5 h-3.5 opacity-40 group-hover/child:opacity-100 group-hover/child:translate-x-0.5 transition-all shrink-0" />
+                  </button>
+                );
+              })}
+            </div>
+          </div>
         )}
       </div>
     );
   }
 
   return (
-    <div className="flex flex-col w-full">
+    <div 
+      className="relative flex flex-col w-full group/navItem"
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+    >
       <div 
-        className={`group flex items-center justify-between px-2.5 py-[7px] rounded-lg cursor-pointer transition-all duration-200 select-none
-          ${isActive 
-            ? 'bg-[var(--color-bg-secondary)] text-[var(--color-text-primary)] font-bold shadow-2xs border border-[var(--color-border-primary)]' 
-            : 'text-[var(--color-text-secondary)] hover:bg-black/5 dark:hover:bg-white/5 hover:text-[var(--color-text-primary)]'
-          }
-        `}
+        className={cn(
+          "group flex items-center justify-between px-2.5 py-[7px] rounded-lg cursor-pointer transition-all duration-200 select-none",
+          isFlyoutOpen && hasChildren
+            ? "bg-[var(--color-bg-secondary)] text-[var(--color-text-primary)] font-bold shadow-2xs border border-[var(--color-border-primary)]"
+            : (isExactMatch || (isActive && !hasChildren))
+            ? "bg-[var(--color-bg-secondary)] text-[var(--color-text-primary)] font-bold shadow-2xs border border-[var(--color-border-primary)]"
+            : (isActive && hasChildren)
+            ? "bg-[var(--color-bg-secondary)]/50 text-[var(--color-text-primary)] font-bold border border-[var(--color-border-primary)]/60"
+            : "text-[var(--color-text-secondary)] hover:bg-black/5 dark:hover:bg-white/5 hover:text-[var(--color-text-primary)]"
+        )}
         style={{ paddingLeft: `${level * 12 + 10}px` }}
         onClick={handleClick}
       >
-        <div className="flex items-center gap-2.5">
+        <div className="flex items-center gap-2.5 min-w-0">
           <item.icon 
-            className={`w-[16px] h-[16px] transition-colors
-              ${isActive ? 'text-[var(--color-text-primary)]' : 'text-[var(--color-text-secondary)] group-hover:text-[var(--color-text-primary)]'}
+            className={`w-[16px] h-[16px] shrink-0 transition-colors
+              ${(isActive || isFlyoutOpen) ? 'text-emerald-500' : 'text-[var(--color-text-secondary)] group-hover:text-[var(--color-text-primary)]'}
             `} 
             strokeWidth={1.5} 
           />
-          <span className="text-[13px] tracking-wide truncate">
+          <span className="text-[12.5px] tracking-wide truncate">
             {item.title}
           </span>
         </div>
         
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 shrink-0">
           {item.shortcut && (
              <kbd className="hidden group-hover:inline-flex items-center justify-center h-4 px-1.5 text-[9px] font-mono text-[var(--color-text-secondary)] bg-[var(--color-bg-primary)] border border-[var(--color-border-primary)] rounded shadow-2xs">
                {item.shortcut}
@@ -243,33 +374,92 @@ function NavItem({
           )}
           {hasChildren && (
             <ChevronRight 
-              className={`w-3.5 h-3.5 text-[var(--color-text-secondary)] transition-transform duration-200 ${isOpen ? 'rotate-90' : ''}`} 
+              className={cn(
+                "w-3.5 h-3.5 text-[var(--color-text-secondary)] transition-transform duration-200",
+                isFlyoutOpen ? "text-emerald-500 translate-x-1" : ""
+              )}
               strokeWidth={2}
             />
           )}
         </div>
       </div>
 
-      {hasChildren && (
+      {/* Graceful Sidebar Extension Blade to the Right */}
+      {hasChildren && isFlyoutOpen && (
         <div 
-          className={`grid transition-[grid-template-rows,opacity] duration-300 ease-in-out ${
-            isOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
-          }`}
+          className="absolute left-full -top-1.5 z-[100] w-[310px] sm:w-[330px] rounded-2xl border border-[var(--color-border-primary)] bg-[var(--color-bg-primary)] shadow-[16px_0_36px_-6px_rgba(0,0,0,0.12)] dark:shadow-[18px_0_40px_-6px_rgba(0,0,0,0.6)] p-3 flex flex-col gap-1.5 animate-in fade-in slide-in-from-left-2 duration-150 before:absolute before:-left-3 before:top-0 before:bottom-0 before:w-3 before:content-['']"
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
         >
-          <div className="overflow-hidden min-h-0 relative flex flex-col gap-0.5 mt-0.5">
-            <div 
-              className="absolute top-0 bottom-0 border-l border-[var(--color-border-primary)] opacity-50"
-              style={{ left: `${level * 12 + 17.5}px` }}
-            />
-            {item.children!.map(child => (
-              <NavItem 
-                key={child.id} 
-                item={child} 
-                activePath={activePath} 
-                onSelect={onSelect} 
-                level={level + 1} 
-              />
-            ))}
+          {/* Extension Header */}
+          <div className="flex items-center justify-between px-2 pb-2 mb-0.5 border-b border-[var(--color-border-primary)]">
+            <div className="flex items-center gap-2">
+              <div className="p-1.5 rounded-lg bg-emerald-500/10 text-emerald-500 border border-emerald-500/20">
+                <item.icon className="w-3.5 h-3.5" />
+              </div>
+              <div>
+                <span className="text-xs font-bold text-[var(--color-text-primary)] block leading-tight">
+                  {item.title}
+                </span>
+                <span className="text-[10px] text-[var(--color-text-secondary)] font-medium">
+                  Extended Navigation
+                </span>
+              </div>
+            </div>
+            <span className="text-[10px] font-semibold text-emerald-500 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">
+              {item.children!.length} Deep Dives
+            </span>
+          </div>
+
+          {/* Section Items List */}
+          <div className="flex flex-col gap-1">
+            {item.children!.map(child => {
+              const ChildIcon = child.icon;
+              const isCurrentChild = child.path ? (activePath === child.path || activePath.startsWith(child.path)) : false;
+              return (
+                <button
+                  key={child.id}
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setIsFlyoutOpen(false);
+                    onSelect(child);
+                  }}
+                  className={cn(
+                    "flex items-center justify-between w-full px-2.5 py-2 rounded-xl text-left transition-all cursor-pointer group/child",
+                    isCurrentChild
+                      ? "bg-[var(--color-bg-secondary)] text-[var(--color-text-primary)] font-bold shadow-2xs border border-[var(--color-border-primary)]"
+                      : "text-[var(--color-text-secondary)] hover:bg-[var(--color-bg-secondary)] hover:text-[var(--color-text-primary)]"
+                  )}
+                >
+                  <div className="flex items-center gap-2.5 min-w-0 pr-2">
+                    <div className="p-1 rounded-md bg-[var(--color-bg-secondary)] border border-[var(--color-border-primary)] text-[var(--color-text-secondary)] group-hover/child:text-emerald-500 group-hover/child:border-emerald-500/30 transition-colors shrink-0">
+                      <ChildIcon className="w-3 h-3" />
+                    </div>
+                    <span className="text-xs font-medium group-hover/child:font-semibold text-[var(--color-text-primary)] truncate leading-tight">
+                      {child.title}
+                    </span>
+                  </div>
+                  <ChevronRight className="w-3.5 h-3.5 opacity-40 group-hover/child:opacity-100 group-hover/child:translate-x-0.5 transition-all shrink-0" />
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Footer Navigation Link */}
+          <div className="mt-1 pt-2 border-t border-[var(--color-border-primary)]">
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                setIsFlyoutOpen(false);
+                onSelect(item);
+              }}
+              className="w-full flex items-center justify-between px-2.5 py-2 rounded-xl text-[11.5px] font-semibold text-emerald-500 bg-emerald-500/5 hover:bg-emerald-500/10 border border-emerald-500/15 hover:border-emerald-500/25 transition-all cursor-pointer"
+            >
+              <span>View Analytics Overview</span>
+              <ChevronRight className="w-3.5 h-3.5" />
+            </button>
           </div>
         </div>
       )}
@@ -296,7 +486,7 @@ export function SidebarNav({
   const location = useLocation();
   const clearAuth = useAuthStore(s => s.clearAuth);
 
-  const currentPath = activePath !== undefined ? activePath : location.pathname;
+  const currentPath = activePath !== undefined ? activePath : (location.pathname + location.hash);
 
   const handleDefaultSelect = (item: NavItemData) => {
     if (item.id === 'logout') {
@@ -305,7 +495,22 @@ export function SidebarNav({
       return;
     }
     if (item.path) {
-      navigate(item.path);
+      if (item.path.includes('#')) {
+        const [pathname, hash] = item.path.split('#');
+        if (location.pathname !== pathname) {
+          navigate(item.path);
+        } else {
+          navigate(item.path);
+          if (hash) {
+            const el = document.getElementById(hash);
+            if (el) {
+              el.scrollIntoView({ behavior: 'smooth' });
+            }
+          }
+        }
+      } else {
+        navigate(item.path);
+      }
     }
   };
 
@@ -319,7 +524,7 @@ export function SidebarNav({
         collapsed={collapsed}
       />
 
-      <div className="flex-1 overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] flex flex-col gap-3 mt-1 w-full items-center">
+      <div className="flex-1 flex flex-col gap-3 mt-1 w-full items-center">
         {finsightNavGroups.map((group, idx) => (
           <div key={idx} className="flex flex-col gap-1 w-full items-center">
             {!collapsed && group.heading && (

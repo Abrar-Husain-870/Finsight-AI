@@ -175,27 +175,34 @@ function TypeToggle({
   onChange: (v: 'expense' | 'income') => void;
 }) {
   return (
-    <div className="flex rounded-[var(--radius-lg)] border border-[var(--color-border-primary)] bg-[var(--color-bg-secondary)] p-1 gap-1">
-      {(['expense', 'income'] as const).map(type => (
-        <button
-          key={type}
-          type="button"
-          onClick={() => onChange(type)}
-          className={cn(
-            'flex-1 flex items-center justify-center gap-2 py-2 px-3 rounded-[var(--radius-md)] text-xs font-semibold transition-all duration-200',
-            value === type
-              ? type === 'expense'
-                ? 'bg-[var(--color-danger)] text-white shadow-xs'
-                : 'bg-[var(--color-success)] text-white shadow-xs'
-              : 'text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-bg-tertiary)]'
-          )}
-        >
-          {type === 'expense'
-            ? <ArrowDownCircle className="h-3.5 w-3.5" />
-            : <ArrowUpCircle className="h-3.5 w-3.5" />}
-          <span className="capitalize">{type}</span>
-        </button>
-      ))}
+    <div className="flex rounded-[var(--radius-lg)] border border-[var(--color-border-primary)] bg-[var(--color-bg-secondary)] p-1 gap-1.5">
+      <button
+        type="button"
+        onClick={() => onChange('expense')}
+        className={cn(
+          'flex-1 flex items-center justify-center gap-2 py-2 px-3 rounded-[var(--radius-md)] text-xs font-semibold transition-all duration-200 cursor-pointer border',
+          value === 'expense'
+            ? 'bg-red-500/15 text-red-700 dark:text-red-400 border-red-500/30 shadow-xs'
+            : 'border-transparent text-[var(--color-text-muted)] hover:text-red-600 dark:hover:text-red-400 hover:bg-red-500/10'
+        )}
+      >
+        <ArrowDownCircle className="h-3.5 w-3.5" />
+        <span>Expense (-)</span>
+      </button>
+
+      <button
+        type="button"
+        onClick={() => onChange('income')}
+        className={cn(
+          'flex-1 flex items-center justify-center gap-2 py-2 px-3 rounded-[var(--radius-md)] text-xs font-semibold transition-all duration-200 cursor-pointer border',
+          value === 'income'
+            ? 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border-emerald-500/30 shadow-xs'
+            : 'border-transparent text-[var(--color-text-muted)] hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-emerald-500/10'
+        )}
+      >
+        <ArrowUpCircle className="h-3.5 w-3.5" />
+        <span>Income (+)</span>
+      </button>
     </div>
   );
 }
@@ -442,13 +449,13 @@ export function TransactionModal({ isOpen, onClose, transaction }: TransactionMo
                       )}
                     />
                     <div className={cn(
-                      'absolute right-3 top-1/2 -translate-y-1/2',
-                      'text-[10px] font-semibold px-1.5 py-0.5 rounded-[var(--radius-sm)]',
+                      'absolute right-3 top-1/2 -translate-y-1/2 font-bold',
+                      'text-[10px] px-2 py-0.5 rounded-[var(--radius-sm)] border',
                       txType === 'expense'
-                        ? 'bg-[var(--color-danger)]/10 text-[var(--color-danger)]'
-                        : 'bg-[var(--color-success)]/10 text-[var(--color-success)]',
+                        ? 'bg-red-500/10 text-red-500 border-red-500/20'
+                        : 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20',
                     )}>
-                      {txType === 'expense' ? '− ' : '+ '}{userCurrency}
+                      {txType === 'expense' ? '- ' : '+ '}{userCurrency}
                     </div>
                   </div>
                 </Field>

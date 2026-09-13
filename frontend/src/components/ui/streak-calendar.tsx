@@ -40,14 +40,14 @@ export function StreakCalendar({
                 className={cn(
                   "size-8 sm:size-9 rounded-xl flex items-center justify-center transition-all border",
                   isActive
-                    ? "bg-amber-500/10 border-amber-500/30 text-amber-500 dark:text-amber-400 font-bold shadow-2xs"
-                    : "bg-[var(--color-bg-secondary)] border-[var(--color-border-primary)] text-[var(--color-text-secondary)] opacity-50"
+                    ? "bg-[var(--chart-2)]/10 border-[var(--chart-2)]/30 text-[var(--chart-2)] font-bold shadow-2xs"
+                    : "bg-[var(--card)] border border-[var(--border)] text-[var(--muted-foreground)] opacity-50"
                 )}
               >
                 {isActive ? (
-                  <Flame className="w-4 h-4 fill-amber-400 stroke-amber-400 dark:fill-amber-300 dark:stroke-amber-300" />
+                  <Flame className="w-4 h-4 fill-[var(--chart-2)] stroke-[var(--chart-2)]" />
                 ) : (
-                  <span className="text-xs font-semibold text-[var(--color-text-secondary)]">•</span>
+                  <span className="text-xs font-semibold text-[var(--muted-foreground)]">•</span>
                 )}
               </div>
             </div>

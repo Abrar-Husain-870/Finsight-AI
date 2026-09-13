@@ -51,3 +51,16 @@ export function useDeleteTransaction() {
     }
   });
 }
+
+export function useBulkDeleteTransactions() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (ids: string[]) => {
+      await Promise.all(ids.map(id => transactionApi.delete(id)));
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: transactionKeys.lists() });
+    }
+  });
+}

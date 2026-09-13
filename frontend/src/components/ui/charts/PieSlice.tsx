@@ -53,7 +53,7 @@ export function PieSlice({
       d={d || ''}
       fill={fill || sliceColor}
       style={{
-        transformOrigin: 'center center',
+        transformOrigin: '0px 0px',
         filter: isHovered && showGlow ? `drop-shadow(0 0 8px ${sliceColor}80)` : 'none',
       }}
       initial={animate ? { opacity: 0, scale: 0.8, x: 0, y: 0 } : false}

@@ -9,11 +9,19 @@ import { cn } from '../../../lib/utils.js';
 
 interface TransactionRowProps {
   transaction: TransactionResponse;
+  isSelected?: boolean | undefined;
+  onToggleSelect?: ((id: string) => void) | undefined;
   onEdit: (tx: TransactionResponse) => void;
   onDelete: (tx: TransactionResponse) => void;
 }
 
-export const TransactionRow = React.memo(function TransactionRow({ transaction, onEdit, onDelete }: TransactionRowProps) {
+export const TransactionRow = React.memo(function TransactionRow({
+  transaction,
+  isSelected = false,
+  onToggleSelect,
+  onEdit,
+  onDelete
+}: TransactionRowProps) {
   const { formatMoney } = useCurrency();
   const { data: tree } = useCategoryTree();
   
@@ -59,27 +67,45 @@ export const TransactionRow = React.memo(function TransactionRow({ transaction, 
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.98 }}
         transition={{ duration: 0.2 }}
-        className="hidden sm:grid grid-cols-[2fr_1fr_1.5fr_1fr_80px] gap-4 items-center px-4 py-3 rounded-[var(--radius-lg)] group hover:bg-[var(--color-bg-secondary)] transition-colors cursor-default"
+        className={cn(
+          "hidden sm:grid grid-cols-[2fr_1fr_100px_1.5fr_1fr_75px] gap-4 items-center px-4 py-3 rounded-[var(--radius-lg)] group transition-colors cursor-default border",
+          isSelected
+            ? "bg-[var(--chart-2)]/10 border-[var(--chart-2)]/30 text-[var(--foreground)]"
+            : "hover:bg-[var(--color-bg-secondary)] border-transparent text-[var(--foreground)]"
+        )}
       >
-        <div className="flex items-center gap-4 pl-2">
-          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--color-bg-tertiary)] group-hover:bg-[var(--color-bg-secondary)] transition-colors shadow-xs">
+        <div className="flex items-center gap-3 pl-1 min-w-0">
+          {onToggleSelect && (
+            <input
+              type="checkbox"
+              checked={isSelected}
+              onChange={() => onToggleSelect(transaction.id)}
+              className="h-4 w-4 rounded border-[var(--border)] bg-[var(--card)] text-[var(--chart-2)] focus:ring-[var(--chart-2)] cursor-pointer"
+              aria-label={`Select transaction ${transaction.merchant}`}
+            />
+          )}
+          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--color-bg-tertiary)] group-hover:bg-[var(--color-bg-secondary)] transition-colors shadow-xs shrink-0">
             <CategoryIcon name={categoryIcon} className="h-4 w-4 text-[var(--color-text-primary)]" colorClass="bg-transparent" />
           </div>
-          <div className="flex flex-col">
-            <div className="flex items-center gap-2">
-              <span className="font-medium text-sm text-[var(--color-text-primary)]">{transaction.merchant || 'Unknown Merchant'}</span>
-              {ratingValue && (
-                <span className="inline-flex items-center gap-0.5 text-[10px] font-semibold px-1.5 py-0.2 rounded bg-amber-500/10 text-amber-600 border border-amber-500/20">
-                  ★ {ratingValue}/5
-                </span>
-              )}
-            </div>
-            <span className="text-xs text-[var(--color-text-secondary)]">{categoryName}</span>
+          <div className="flex flex-col min-w-0">
+            <span className="font-medium text-sm text-[var(--color-text-primary)] truncate">{transaction.merchant || 'Unknown Merchant'}</span>
+            <span className="text-xs text-[var(--color-text-secondary)] truncate">{categoryName}</span>
           </div>
         </div>
         
         <div className="text-sm text-[var(--color-text-secondary)] font-medium">
           {formattedDate}
+        </div>
+
+        {/* Dedicated Rating Column */}
+        <div className="flex items-center">
+          {ratingValue ? (
+            <span className="inline-flex items-center gap-1 text-[11px] font-semibold px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20 shadow-2xs">
+              ★ {ratingValue}/5
+            </span>
+          ) : (
+            <span className="text-xs text-[var(--color-text-muted)] opacity-40">—</span>
+          )}
         </div>
         
         <div className="text-sm text-[var(--color-text-secondary)] truncate max-w-[200px]">
@@ -87,10 +113,10 @@ export const TransactionRow = React.memo(function TransactionRow({ transaction, 
         </div>
         
         <div className={cn(
-          "text-sm font-semibold tabular-nums text-right tracking-tight",
-          transaction.amount < 0 ? "text-[var(--color-danger)]" : "text-[var(--color-success)]"
+          "text-sm font-bold tabular-nums text-right tracking-tight",
+          transaction.amount < 0 ? "text-red-500 dark:text-red-400" : "text-emerald-500 dark:text-emerald-400"
         )}>
-          {formatMoney(Math.abs(transaction.amount))}
+          {transaction.amount < 0 ? '-' : '+'}{formatMoney(Math.abs(transaction.amount))}
         </div>
         
         <div className="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity focus-within:opacity-100 pr-2">
@@ -109,11 +135,25 @@ export const TransactionRow = React.memo(function TransactionRow({ transaction, 
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.98 }}
         transition={{ duration: 0.2 }}
-        className="sm:hidden flex flex-col p-4 mb-2 rounded-[var(--radius-lg)] border border-[var(--color-border-primary)] bg-[var(--color-bg-primary)] shadow-sm"
+        className={cn(
+          "sm:hidden flex flex-col p-4 mb-2 rounded-[var(--radius-lg)] border bg-[var(--color-bg-primary)] shadow-sm transition-colors",
+          isSelected
+            ? "bg-[var(--chart-2)]/10 border-[var(--chart-2)]/40"
+            : "border-[var(--color-border-primary)]"
+        )}
       >
         <div className="flex justify-between items-start mb-3">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--color-bg-tertiary)]">
+            {onToggleSelect && (
+              <input
+                type="checkbox"
+                checked={isSelected}
+                onChange={() => onToggleSelect(transaction.id)}
+                className="h-4 w-4 rounded border-[var(--border)] bg-[var(--card)] text-[var(--chart-2)] focus:ring-[var(--chart-2)] cursor-pointer"
+                aria-label={`Select transaction ${transaction.merchant}`}
+              />
+            )}
+            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--color-bg-tertiary)] shrink-0">
               <CategoryIcon name={categoryIcon} className="h-4 w-4 text-[var(--color-text-primary)]" colorClass="bg-transparent" />
             </div>
             <div className="flex flex-col">
@@ -122,10 +162,10 @@ export const TransactionRow = React.memo(function TransactionRow({ transaction, 
             </div>
           </div>
           <span className={cn(
-            "font-semibold text-sm tabular-nums tracking-tight",
-            transaction.amount < 0 ? "text-[var(--color-danger)]" : "text-[var(--color-success)]"
+            "font-bold text-sm tabular-nums tracking-tight",
+            transaction.amount < 0 ? "text-red-500 dark:text-red-400" : "text-emerald-500 dark:text-emerald-400"
           )}>
-            {formatMoney(Math.abs(transaction.amount))}
+            {transaction.amount < 0 ? '-' : '+'}{formatMoney(Math.abs(transaction.amount))}
           </span>
         </div>
         <div className="flex justify-between items-center mt-1 pt-3 border-t border-[var(--color-border-primary)]">

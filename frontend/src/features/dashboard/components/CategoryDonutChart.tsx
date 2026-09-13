@@ -14,14 +14,14 @@ import {
   LegendLabel,
 } from '../../../components/ui/charts/index.js';
 
-// High-contrast, easily distinguishable chart color palette matching app tokens
+// Single blue shade + harmonious monochrome gray scale palette matching Analytics page theme rules
 const distinctThemePalette = [
-  '#10B981', // Emerald Green
-  '#3B82F6', // Electric Blue
-  '#F59E0B', // Warm Amber
-  '#8B5CF6', // Vivid Purple
-  '#06B6D4', // Bright Cyan
-  '#EC4899', // Coral Pink
+  'var(--chart-2)',     // Signature Blue
+  'oklch(0.68 0 0)',    // Light Slate Gray
+  'oklch(0.50 0 0)',    // Mid Gray
+  'oklch(0.35 0 0)',    // Dark Gray
+  'oklch(0.82 0 0)',    // Muted Silver
+  'oklch(0.25 0 0)',    // Charcoal Gray
 ];
 
 export function CategoryDonutChart({ data }: { data: CategoryBreakdown[] }) {
@@ -31,10 +31,10 @@ export function CategoryDonutChart({ data }: { data: CategoryBreakdown[] }) {
   const pieData = React.useMemo(() => {
     if (!data || data.length === 0) {
       return [
-        { label: 'Housing', value: 25376, color: '#10B981' },
-        { label: 'Food & Dining', value: 14097, color: '#3B82F6' },
-        { label: 'Transport', value: 11278, color: '#F59E0B' },
-        { label: 'Others', value: 5639, color: '#8B5CF6' },
+        { label: 'Housing', value: 25376, color: 'var(--chart-2)' },
+        { label: 'Food & Dining', value: 14097, color: 'oklch(0.68 0 0)' },
+        { label: 'Transport', value: 11278, color: 'oklch(0.50 0 0)' },
+        { label: 'Others', value: 5639, color: 'oklch(0.35 0 0)' },
       ];
     }
 
@@ -50,7 +50,7 @@ export function CategoryDonutChart({ data }: { data: CategoryBreakdown[] }) {
   const legendItems = React.useMemo(() => {
     return pieData.map(item => ({
       label: item.label,
-      color: item.color || '#3B82F6',
+      color: item.color || 'var(--chart-2)',
     }));
   }, [pieData]);
 
@@ -115,7 +115,7 @@ export function CategoryDonutChart({ data }: { data: CategoryBreakdown[] }) {
 
       {/* Bottom Summary Footer Line */}
       <div className="pt-3 border-t border-[var(--color-border-primary)] w-full text-center text-xs font-medium text-[var(--color-text-secondary)]">
-        Trending down by <span className="text-[var(--color-success)] font-semibold">4.8%</span> this month
+        Trending down by <span className="text-[var(--chart-2)] font-semibold">4.8%</span> this month
       </div>
     </motion.div>
   );
