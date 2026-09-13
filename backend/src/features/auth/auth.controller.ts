@@ -1,13 +1,13 @@
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response, NextFunction, CookieOptions } from 'express';
 import { authService } from './auth.service.js';
 import { sendSuccess } from '../../core/utils/response.js';
 import { AuthenticationError } from '../../core/errors/app-error.js';
 import { env } from '../../core/config/env.js';
 
-const COOKIE_OPTIONS = {
+const COOKIE_OPTIONS: CookieOptions = {
   httpOnly: true,
   secure: env.NODE_ENV === 'production',
-  sameSite: 'lax' as const,
+  sameSite: env.NODE_ENV === 'production' ? 'none' : 'lax',
   maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
 };
 
@@ -63,7 +63,7 @@ export class AuthController {
       if (userId) {
         await authService.logout(userId);
       }
-      res.clearCookie('refreshToken');
+      res.clearCookie('refreshToken', COOKIE_OPTIONS);
       return sendSuccess(res, { message: 'Logged out successfully' });
     } catch (error) {
       return next(error);

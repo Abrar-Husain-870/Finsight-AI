@@ -2,8 +2,15 @@ import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios';
 import { useAuthStore } from '../features/auth/store/auth.store.js';
 import { mapHttpError, emitSystemAlert } from './errors.js';
 
-// Base URL configuration - assuming backend runs on 3001 in dev
-const baseURL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
+// Base URL configuration - normalize to always include /api
+const getBaseUrl = () => {
+  const envUrl = import.meta.env.VITE_API_URL;
+  if (!envUrl) return 'http://localhost:3001/api';
+  const trimmed = envUrl.trim().replace(/\/+$/, '');
+  return trimmed.endsWith('/api') ? trimmed : `${trimmed}/api`;
+};
+
+const baseURL = getBaseUrl();
 
 export const apiClient = axios.create({
   baseURL,

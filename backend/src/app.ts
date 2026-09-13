@@ -26,23 +26,29 @@ const app = express();
 
 app.use(helmet());
 
+const configuredFrontend = env.FRONTEND_URL ? env.FRONTEND_URL.replace(/\/+$/, '') : '';
 const allowedOrigins = [
-  env.FRONTEND_URL,
+  configuredFrontend,
   'http://localhost:5173',
   'http://localhost:5174',
   'http://localhost:5175',
   'http://127.0.0.1:5173',
   'http://127.0.0.1:5174',
   'http://127.0.0.1:5175',
-];
+].filter(Boolean);
 
 app.use(cors({
   origin: (origin, callback) => {
     if (!origin) return callback(null, true);
-    if (allowedOrigins.includes(origin) || (env.NODE_ENV === 'development' && /^http:\/\/(localhost|127\.0\.0\.1):\d+$/.test(origin))) {
+    const cleanOrigin = origin.replace(/\/+$/, '');
+    if (
+      allowedOrigins.includes(cleanOrigin) ||
+      cleanOrigin.endsWith('.vercel.app') ||
+      (env.NODE_ENV === 'development' && /^http:\/\/(localhost|127\.0\.0\.1):\d+$/.test(cleanOrigin))
+    ) {
       return callback(null, true);
     }
-    return callback(new Error('Not allowed by CORS'));
+    return callback(new Error(`Origin ${origin} not allowed by CORS`));
   },
   credentials: true,
 }));
