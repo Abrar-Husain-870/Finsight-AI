@@ -89,13 +89,24 @@ export default function AnalyticsPage() {
       {/* Page Content elevated above background pattern */}
       <div className="relative z-10 flex flex-col gap-12">
         {/* Page Header */}
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight text-[var(--color-text-primary)]">
-            Financial Intelligence & Analytics
-          </h1>
-          <p className="text-sm text-[var(--color-text-secondary)] mt-1">
-            Deep behavioral insights, health trajectories, category deep-dives, goals buffer, and scenario projections.
-          </p>
+        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+          <div>
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-xs font-semibold text-emerald-600 dark:text-emerald-400 mb-2 shadow-2xs">
+              <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+              Behavioral Telemetry & Predictive Analytics
+            </div>
+            <h1 className="text-3xl font-bold tracking-tight text-[var(--color-text-primary)]">
+              Financial Intelligence & Analytics
+            </h1>
+            <p className="text-sm text-[var(--color-text-secondary)] mt-1 font-normal leading-relaxed">
+              Deep behavioral insights, health trajectories, category deep-dives, goals buffer, and scenario projections.
+            </p>
+          </div>
+          <div className="flex items-center gap-2 shrink-0">
+            <span className="text-[11px] font-semibold px-3 py-1 rounded-full bg-[var(--color-bg-secondary)] border border-[var(--color-border-primary)] text-[var(--color-text-secondary)]">
+              Continuous Ledger Sync
+            </span>
+          </div>
         </div>
 
         {/* AI Insight Alert Badges */}

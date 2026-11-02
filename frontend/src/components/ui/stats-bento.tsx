@@ -59,27 +59,27 @@ export function StatsBento({
     <section className={cn("w-full py-4 bg-transparent text-[var(--color-text-primary)]", className)}>
       <div className="grid grid-cols-1 md:grid-cols-6 gap-4 max-w-7xl mx-auto">
         
-        {/* Left Column: Financial Health - FORCED WHITE THEME */}
-        <div className="md:col-span-3 !bg-white !text-slate-900 border border-slate-200 rounded-3xl p-6 sm:p-8 flex flex-col justify-between overflow-hidden relative shadow-sm group hover:shadow-md transition-all">
-          <div className="absolute bottom-0 left-0 right-0 top-0 bg-[repeating-linear-gradient(45deg,#000000_0px_1px,transparent_1px_10px)] opacity-[0.03] pointer-events-none" />
+        {/* Left Column: Primary Stat (Financial Health) - follows stats-bento rule */}
+        <div className="md:col-span-3 bg-primary text-primary-foreground rounded-3xl p-6 sm:p-8 flex flex-col justify-between overflow-hidden relative shadow-xs">
+          <div className="absolute bottom-0 left-0 right-0 top-0 bg-[repeating-linear-gradient(45deg,#808080_0px_1px,transparent_1px_10px)] opacity-30 mask-[radial-gradient(ellipse_80%_50%_at_100%_0%,#000_70%,transparent_110%)] [mask-image:radial-gradient(ellipse_80%_50%_at_100%_0%,#000_70%,transparent_110%)] [-webkit-mask-image:radial-gradient(ellipse_80%_50%_at_100%_0%,#000_70%,transparent_110%)] pointer-events-none" />
           
           <div className="relative z-10 space-y-3">
             <div className="flex items-center gap-2">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-slate-100 border border-slate-200 rounded-full text-[10px] font-bold text-slate-700 uppercase tracking-widest">
-                <ShieldCheck className="w-3 h-3 text-[var(--chart-2)]" />
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-primary-foreground/10 rounded-full text-[10px] font-semibold text-primary-foreground/70 uppercase tracking-widest">
+                <ShieldCheck className="w-3 h-3 text-primary-foreground" />
                 Financial Health
               </span>
             </div>
             
             <div className="flex items-baseline gap-2 pt-1">
-              <h3 className="text-6xl sm:text-7xl font-bold tracking-tighter text-slate-900 tabular-nums">
+              <h3 className="text-6xl sm:text-7xl font-bold tracking-tighter text-primary-foreground tabular-nums">
                 {healthScore}
               </h3>
-              <span className="text-2xl font-bold text-slate-500">/100</span>
+              <span className="text-2xl font-bold text-primary-foreground/60">/100</span>
             </div>
           </div>
 
-          <p className="relative z-10 text-slate-600 text-sm max-w-sm leading-relaxed pt-2 font-medium">
+          <p className="relative z-10 text-primary-foreground/60 text-sm max-w-sm leading-relaxed pt-2 font-medium">
             A clear snapshot of your overall financial position.
           </p>
         </div>
@@ -87,7 +87,7 @@ export function StatsBento({
         {/* Right Column: Net Cash Flow (Compact Natural Height) + StreakCard */}
         <div className="md:col-span-3 flex flex-col gap-4">
           {/* Net Cash Flow Card */}
-          <div className="bg-[var(--card)] rounded-3xl px-6 sm:px-8 py-3.5 sm:py-4 border border-[var(--border)] flex items-center justify-between shadow-sm hover:border-[var(--border)] transition-all shrink-0">
+          <div className="bg-[var(--color-bg-primary)] rounded-3xl px-6 sm:px-8 py-3.5 sm:py-4 border border-[var(--color-border-primary)] flex items-center justify-between shadow-xs hover:border-[var(--color-border-hover)] transition-all shrink-0">
             <div className="space-y-0.5">
               <p className="text-[11px] font-bold uppercase tracking-widest text-[var(--muted-foreground)] flex items-center gap-1.5">
                 <TrendingUp className="w-3 h-3 text-[var(--foreground)]" />

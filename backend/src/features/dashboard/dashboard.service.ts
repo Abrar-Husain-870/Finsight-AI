@@ -10,7 +10,7 @@ export class DashboardService {
 
     const [transactions, recentRaw] = await Promise.all([
       dashboardRepository.getTransactionsSince(userId, sixMonthsAgo),
-      dashboardRepository.getRecentTransactions(userId, 5)
+      dashboardRepository.getRecentTransactions(userId, 15)
     ]);
 
     let totalIncome = 0;

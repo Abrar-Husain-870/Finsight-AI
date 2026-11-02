@@ -90,10 +90,15 @@ export function CategoryMerchantDeepDiveSection({ analyticsData, transactions }:
     <div className="space-y-6 pt-4">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-xl font-bold tracking-tight text-[var(--foreground)] flex items-center gap-2">
-            <Layers className="h-5 w-5 text-[var(--chart-2)]" />
-            3. Category & Merchant Deep-Dive Visualizations
-          </h2>
+          <div className="flex items-center gap-2.5">
+            <h2 className="text-xl font-bold tracking-tight text-[var(--foreground)] flex items-center gap-2">
+              <Layers className="h-5 w-5 text-[var(--chart-2)]" />
+              3. Category & Merchant Deep-Dive Visualizations
+            </h2>
+            <span className="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-slate-100/80 dark:bg-white/[0.04] border border-slate-200/60 dark:border-white/[0.08] text-[var(--color-text-secondary)]">
+              Outflow Composition
+            </span>
+          </div>
           <p className="text-xs text-[var(--muted-foreground)] mt-0.5">
             Granular breakdown across subcategories, vendor spend volume, and concentration risk monitoring.
           </p>
@@ -108,7 +113,15 @@ export function CategoryMerchantDeepDiveSection({ analyticsData, transactions }:
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* 1. Parent Category vs Subcategory Breakdown (Bar Chart) */}
-        <WidgetContainer title="Category & Subcategory Breakdown">
+        <WidgetContainer 
+          title="Category & Subcategory Breakdown"
+          subtitle="Hierarchy of primary spending clusters and nested line items."
+          badge={
+            <span className="text-[11px] font-medium text-[var(--color-text-secondary)] bg-slate-100/80 dark:bg-white/[0.04] border border-slate-200/60 dark:border-white/[0.08] px-2.5 py-0.5 rounded-full">
+              Categorical Allocation
+            </span>
+          }
+        >
           <div className="h-[260px] w-full pt-1">
             <BarChart
               data={categoryData}
@@ -126,7 +139,15 @@ export function CategoryMerchantDeepDiveSection({ analyticsData, transactions }:
         </WidgetContainer>
 
         {/* 2. Top Merchant Frequency & Spend (Bar Chart) */}
-        <WidgetContainer title="Top Merchant Spend">
+        <WidgetContainer 
+          title="Top Merchant Spend"
+          subtitle="Vendor-level concentration highlighting highest volume counterparties."
+          badge={
+            <span className="text-[11px] font-medium text-[var(--color-text-secondary)] bg-slate-100/80 dark:bg-white/[0.04] border border-slate-200/60 dark:border-white/[0.08] px-2.5 py-0.5 rounded-full">
+              Vendor Volume
+            </span>
+          }
+        >
           <div className="h-[260px] w-full pt-1">
             <BarChart
               data={merchantData}
@@ -146,7 +167,15 @@ export function CategoryMerchantDeepDiveSection({ analyticsData, transactions }:
       </div>
 
       {/* 3. Category Concentration Risk (Funnel Chart) */}
-      <WidgetContainer title="Category Concentration Risk">
+      <WidgetContainer 
+        title="Category Concentration Risk"
+        subtitle="Funnel layers identifying over-reliance or exposure in individual expense buckets."
+        badge={
+          <span className="text-[11px] font-medium text-[var(--color-text-secondary)] bg-slate-100/80 dark:bg-white/[0.04] border border-slate-200/60 dark:border-white/[0.08] px-2.5 py-0.5 rounded-full">
+            Concentration Exposure
+          </span>
+        }
+      >
         <div className="h-[260px] w-full flex items-center justify-center pt-2">
           <FunnelChart
             color="var(--chart-2)"

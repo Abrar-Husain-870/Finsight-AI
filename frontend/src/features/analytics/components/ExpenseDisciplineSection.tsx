@@ -207,14 +207,19 @@ export function ExpenseDisciplineSection({ transactions }: ExpenseDisciplineSect
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
-          <h2 className="text-xl font-bold tracking-tight text-[var(--foreground)] flex items-center gap-2">
-            <Star className="h-5 w-5 text-[var(--chart-2)] fill-[var(--chart-2)]" />
-            1. Expense Necessity & Discipline Analytics
-          </h2>
+          <div className="flex items-center gap-2.5">
+            <h2 className="text-xl font-bold tracking-tight text-[var(--foreground)] flex items-center gap-2">
+              <Star className="h-5 w-5 text-[var(--chart-2)] fill-[var(--chart-2)]" />
+              1. Expense Necessity & Discipline Analytics
+            </h2>
+            <span className="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-slate-100/80 dark:bg-white/[0.04] border border-slate-200/60 dark:border-white/[0.08] text-[var(--color-text-secondary)]">
+              Subjective Utility
+            </span>
+          </div>
           <p className="text-xs text-[var(--muted-foreground)] mt-0.5">
-            Behavioral analysis based on user 1-to-5 star purchase necessity ratings.
+            Behavioral analysis based on user 1-to-5 star purchase necessity ratings to evaluate emotional vs rational spending.
           </p>
         </div>
         <div className="flex items-center gap-3">
@@ -231,7 +236,15 @@ export function ExpenseDisciplineSection({ transactions }: ExpenseDisciplineSect
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* 1. Regret vs. Wise Spending Trend */}
-        <WidgetContainer title="Regret vs. Wise Spend Trend">
+        <WidgetContainer 
+          title="Regret vs. Wise Spend Trend"
+          subtitle="Historical ratio of high-utility (4-5★) purchases versus impulse buys."
+          badge={
+            <span className="text-[11px] font-medium text-[var(--color-text-secondary)] bg-slate-100/80 dark:bg-white/[0.04] border border-slate-200/60 dark:border-white/[0.08] px-2.5 py-0.5 rounded-full">
+              Behavioral Trajectory
+            </span>
+          }
+        >
           <div className="flex items-center justify-end gap-4 mb-1 text-xs font-medium">
             <div className="flex items-center gap-1.5 text-[var(--chart-2)]">
               <span className="h-2.5 w-2.5 rounded-full bg-[var(--chart-2)]" />
@@ -274,7 +287,15 @@ export function ExpenseDisciplineSection({ transactions }: ExpenseDisciplineSect
         </WidgetContainer>
 
         {/* 2. Essential Purchase Ratio (Bar Chart) */}
-        <WidgetContainer title="Essential vs. Non-Essential Ratio">
+        <WidgetContainer 
+          title="Essential vs. Non-Essential Ratio"
+          subtitle="Proportional split of essential commitments versus discretionary lifestyle expenses."
+          badge={
+            <span className="text-[11px] font-medium text-[var(--color-text-secondary)] bg-slate-100/80 dark:bg-white/[0.04] border border-slate-200/60 dark:border-white/[0.08] px-2.5 py-0.5 rounded-full">
+              Discipline Split
+            </span>
+          }
+        >
           <div className="w-full min-h-[220px] flex items-center justify-center pt-2">
             <VisxBarChart margin={{ top: 8, right: 12, bottom: 40, left: 45 }} data={processedData.essentialRatioData} xDataKey="month">
               <Background pattern="dots" opacity={0.85} />
@@ -287,7 +308,15 @@ export function ExpenseDisciplineSection({ transactions }: ExpenseDisciplineSect
         </WidgetContainer>
 
         {/* 3. Average Expense Satisfaction per Category (Bar Chart) */}
-        <WidgetContainer title="Expense Satisfaction by Category">
+        <WidgetContainer 
+          title="Expense Satisfaction by Category"
+          subtitle="Average satisfaction score across major category expenditure buckets."
+          badge={
+            <span className="text-[11px] font-medium text-[var(--color-text-secondary)] bg-slate-100/80 dark:bg-white/[0.04] border border-slate-200/60 dark:border-white/[0.08] px-2.5 py-0.5 rounded-full">
+              Category Ratings
+            </span>
+          }
+        >
           <div className="w-full flex items-center justify-center pt-2">
             <VisxBarChart
               data={processedData.satisfactionData}
@@ -305,7 +334,15 @@ export function ExpenseDisciplineSection({ transactions }: ExpenseDisciplineSect
         </WidgetContainer>
 
         {/* 4. Expense Rating Breakdown (Pie Chart) */}
-        <WidgetContainer title="Expense Rating Breakdown">
+        <WidgetContainer 
+          title="Expense Rating Breakdown"
+          subtitle="Distribution of total expense volume across 1★ (Regret) to 5★ (Essential) ratings."
+          badge={
+            <span className="text-[11px] font-medium text-[var(--color-text-secondary)] bg-slate-100/80 dark:bg-white/[0.04] border border-slate-200/60 dark:border-white/[0.08] px-2.5 py-0.5 rounded-full">
+              Volume Distribution
+            </span>
+          }
+        >
           <div className="w-full flex flex-col items-center justify-center gap-4 pt-2 min-h-[220px]">
             <VisxPieChart
               data={processedData.pieData}

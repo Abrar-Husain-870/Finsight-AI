@@ -141,10 +141,15 @@ export function FinancialHealthVelocitySection({ healthData, analyticsData }: Fi
   return (
     <div className="space-y-6 pt-4">
       <div>
-        <h2 className="text-xl font-bold tracking-tight text-[var(--foreground)] flex items-center gap-2">
-          <Activity className="h-5 w-5 text-[var(--foreground)]" />
-          2. Core Financial Health & Velocity Cards & Graphs
-        </h2>
+        <div className="flex items-center gap-2.5">
+          <h2 className="text-xl font-bold tracking-tight text-[var(--foreground)] flex items-center gap-2">
+            <Activity className="h-5 w-5 text-[var(--foreground)]" />
+            2. Core Financial Health & Velocity Cards & Graphs
+          </h2>
+          <span className="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-slate-100/80 dark:bg-white/[0.04] border border-slate-200/60 dark:border-white/[0.08] text-[var(--color-text-secondary)]">
+            Solvency & Velocity
+          </span>
+        </div>
         <p className="text-xs text-[var(--muted-foreground)] mt-0.5">
           Macro health trajectory, daily burn velocity pace, savings benchmarks, and cash flow dual area trends.
         </p>
@@ -152,7 +157,15 @@ export function FinancialHealthVelocitySection({ healthData, analyticsData }: Fi
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* 1. Financial Health Score Card (Line Chart) */}
-        <WidgetContainer title="Financial Health Score">
+        <WidgetContainer 
+          title="Financial Health Score"
+          subtitle="Composite solvency, liquidity, and debt-service stability trajectory over time."
+          badge={
+            <span className="text-[11px] font-medium text-[var(--color-text-secondary)] bg-slate-100/80 dark:bg-white/[0.04] border border-slate-200/60 dark:border-white/[0.08] px-2.5 py-0.5 rounded-full">
+              Solvency Index
+            </span>
+          }
+        >
           <div className="flex items-center justify-between mb-2">
             <div className="flex items-baseline gap-2">
               <span className="text-4xl font-extrabold text-[var(--foreground)] tabular-nums">
@@ -175,7 +188,15 @@ export function FinancialHealthVelocitySection({ healthData, analyticsData }: Fi
         </WidgetContainer>
 
         {/* 2. Daily Burn Rate (Velocity) (Line Chart) */}
-        <WidgetContainer title="Daily Burn Velocity">
+        <WidgetContainer 
+          title="Daily Burn Velocity"
+          subtitle="Actual daily burn rate pace tracking against monthly budget ceiling."
+          badge={
+            <span className="text-[11px] font-medium text-[var(--color-text-secondary)] bg-slate-100/80 dark:bg-white/[0.04] border border-slate-200/60 dark:border-white/[0.08] px-2.5 py-0.5 rounded-full">
+              Velocity Pace
+            </span>
+          }
+        >
           <div className="h-[260px] w-full">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={dailyBurnData}>
@@ -195,7 +216,15 @@ export function FinancialHealthVelocitySection({ healthData, analyticsData }: Fi
         </WidgetContainer>
 
         {/* 3. Savings Rate vs 20% Benchmark (Bar Chart) */}
-        <WidgetContainer title="Savings Rate vs. 20% Target">
+        <WidgetContainer 
+          title="Savings Rate vs. 20% Target"
+          subtitle="Monthly retention percentage compared against the 20% golden rule benchmark."
+          badge={
+            <span className="text-[11px] font-medium text-[var(--color-text-secondary)] bg-slate-100/80 dark:bg-white/[0.04] border border-slate-200/60 dark:border-white/[0.08] px-2.5 py-0.5 rounded-full">
+              Benchmark Target
+            </span>
+          }
+        >
           <div className="h-[240px] w-full pt-1">
             <VisxBarChart margin={{ top: 8, right: 8, bottom: 40, left: 45 }} data={savingsBenchmarkData} xDataKey="month">
               <Grid horizontal />
@@ -224,7 +253,15 @@ export function FinancialHealthVelocitySection({ healthData, analyticsData }: Fi
         </WidgetContainer>
 
         {/* 4. Income vs Expense Velocity (Area Chart) */}
-        <WidgetContainer title="Income vs. Expense Velocity">
+        <WidgetContainer 
+          title="Income vs. Expense Velocity"
+          subtitle="Dual-area spread showing earned revenue volume outpacing operating outflow."
+          badge={
+            <span className="text-[11px] font-medium text-[var(--color-text-secondary)] bg-slate-100/80 dark:bg-white/[0.04] border border-slate-200/60 dark:border-white/[0.08] px-2.5 py-0.5 rounded-full">
+              Cash Spread
+            </span>
+          }
+        >
           <div className="flex items-center justify-end gap-4 mb-1 text-xs font-medium">
             <div className="flex items-center gap-1.5 text-[var(--chart-2)]">
               <span className="h-2.5 w-2.5 rounded-full bg-[var(--chart-2)]" />

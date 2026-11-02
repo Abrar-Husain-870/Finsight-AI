@@ -2,10 +2,8 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FeatureShowcase, type TabMedia, type ShowcaseStep } from '../components/ui/feature-showcase.js';
 import { SaasTemplateSection } from '../components/ui/saa-s-template.js';
-import Hero10 from '../components/ui/hero-10.js';
 import { FeatureSections } from '../components/ui/feature-sections.js';
 import { FeaturedCrmDemoSection } from '../components/ui/featured-crm-demo-section.js';
-import { Stats2 } from '../components/ui/stats-2.js';
 import { Compare2 } from '../components/ui/compare-2.js';
 import { TestimonialsSection } from '../components/ui/testimonials-3.js';
 import FAQs from '../components/ui/text-reveal-faqs.js';
@@ -169,53 +167,19 @@ export default function LandingPage() {
           <IntelligenceFlowSection />
         </div>
 
-        {/* Hero Section 3: Hero10 Fan Showcase */}
-        <Hero10
-          title="A clearer view of your finances"
-          titleLine2Prefix="for"
-          titleHighlight="better financial decisions"
-          description="See where your money goes, track your financial health, and stay in control without the noise."
-          socialProof="Everything you need. Nothing you don't."
-          images={[
-            'https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?q=80&w=900&auto=format&fit=crop',
-            'https://images.unsplash.com/photo-1559526324-4b87b5e36e44?q=80&w=900&auto=format&fit=crop',
-            'https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=900&auto=format&fit=crop',
-          ]}
-          imageAlts={['Financial calculations', 'Digital banking interface', 'Growth & analytics dashboard']}
-          animation="subtle"
-          primaryCTA={{
-            ctaEnabled: true,
-            text: 'Get Started',
-            onClick: () => navigate('/register'),
-            variant: 'default',
-            size: 'lg',
-          }}
-          secondaryCTA={{
-            ctaEnabled: true,
-            text: isLoading ? 'Logging in...' : 'See how it works',
-            onClick: handleDemoLogin,
-            variant: 'outline',
-            size: 'lg',
-          }}
-          variant="standard"
-        />
-
-        {/* Hero Section 3.5: FeatureSections (Powerful Features & Showcase) */}
-        <FeatureSections />
-
-        {/* Hero Section 4: Video Demo & Feature Showcase Section */}
+        {/* Video Demo & Feature Showcase Section ("Plan what comes next") */}
         <FeaturedCrmDemoSection />
 
-        {/* Hero Section 5: Feature Comparison Section ("Why Us") */}
-        <Compare2 />
+        {/* Powerful Features & Multi-Vault Showcase */}
+        <FeatureSections />
 
-        {/* Hero Section 6: Testimonials Section */}
+        {/* Ratings & Testimonials Section */}
         <TestimonialsSection />
 
-        {/* Hero Section 7: Stats2 Capability & Trust Showcase */}
-        <Stats2 onPrimaryAction={() => navigate('/register')} />
+        {/* Feature Comparison Section ("Why Us") */}
+        <Compare2 />
 
-        {/* Hero Section 6: FAQs Section */}
+        {/* Hero Section 7: FAQs Section */}
         <FAQs />
       </main>
 

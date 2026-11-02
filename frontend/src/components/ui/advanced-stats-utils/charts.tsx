@@ -35,6 +35,9 @@ export function ClippedAreaChart() {
           <h3 className="text-2xl font-bold tracking-tight text-[var(--color-text-primary)] mt-1">
             Cash Flow & Net Worth Growth
           </h3>
+          <p className="text-xs text-[var(--color-text-secondary)] font-normal mt-0.5">
+            Consolidated asset accumulation trajectory vs operational costs with quarterly projection.
+          </p>
         </div>
 
         <div className="flex items-center gap-3 bg-[var(--color-bg-primary)] px-3.5 py-1.5 rounded-full border border-[var(--color-border-primary)] shadow-2xs">

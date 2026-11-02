@@ -83,7 +83,7 @@ const StreakCard = React.forwardRef<HTMLDivElement, StreakCardProps>(
         ref={ref}
         aria-label="Streak summary card"
         className={cn(
-          "bg-[var(--color-bg-secondary)] rounded-3xl border border-[var(--color-border-primary)] p-6 sm:p-8 shadow-xs text-[var(--color-text-primary)] transition-all hover:border-[var(--color-border-hover)]",
+          "bg-[var(--color-bg-primary)] rounded-3xl border border-[var(--color-border-primary)] p-6 sm:p-8 shadow-xs text-[var(--color-text-primary)] transition-all hover:border-[var(--color-border-hover)]",
           className
         )}
         {...props}

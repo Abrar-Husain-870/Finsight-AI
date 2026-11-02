@@ -70,10 +70,15 @@ export function SavingsGoalsBufferSection({ goalSummary, analyticsData }: Saving
     <div className="space-y-6 pt-4">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-xl font-bold tracking-tight text-[var(--foreground)] flex items-center gap-2">
-            <Target className="h-5 w-5 text-[var(--chart-2)]" />
-            4. Savings Goals & Financial Buffer Analytics
-          </h2>
+          <div className="flex items-center gap-2.5">
+            <h2 className="text-xl font-bold tracking-tight text-[var(--foreground)] flex items-center gap-2">
+              <Target className="h-5 w-5 text-[var(--chart-2)]" />
+              4. Savings Goals & Financial Buffer Analytics
+            </h2>
+            <span className="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-slate-100/80 dark:bg-white/[0.04] border border-slate-200/60 dark:border-white/[0.08] text-[var(--color-text-secondary)]">
+              Target Feasibility
+            </span>
+          </div>
           <p className="text-xs text-[var(--muted-foreground)] mt-0.5">
             Real-time tracking of goals target vs. actuals, monthly commitments, and emergency runway buffer.
           </p>
@@ -88,7 +93,15 @@ export function SavingsGoalsBufferSection({ goalSummary, analyticsData }: Saving
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* 1. Goal Progress & Feasibility Matrix (Bar Chart) */}
-        <WidgetContainer title="Goal Progress & Feasibility Matrix">
+        <WidgetContainer 
+          title="Goal Progress & Feasibility Matrix"
+          subtitle="Current capital accumulations mapped against target milestone values."
+          badge={
+            <span className="text-[11px] font-medium text-[var(--color-text-secondary)] bg-slate-100/80 dark:bg-white/[0.04] border border-slate-200/60 dark:border-white/[0.08] px-2.5 py-0.5 rounded-full">
+              Milestone Tracking
+            </span>
+          }
+        >
           <div className="flex items-center justify-end gap-4 mb-1 text-xs font-medium">
             <div className="flex items-center gap-1.5 text-[var(--color-text-primary)]">
               <span className="h-2.5 w-2.5 rounded-full bg-[var(--primary)]" />
@@ -134,7 +147,15 @@ export function SavingsGoalsBufferSection({ goalSummary, analyticsData }: Saving
         </WidgetContainer>
 
         {/* 2. Total Monthly Goal Commitment (Bar Chart) */}
-        <WidgetContainer title="Total Monthly Goal Commitment">
+        <WidgetContainer 
+          title="Total Monthly Goal Commitment"
+          subtitle="Required monthly allocation compared against available surplus liquidity."
+          badge={
+            <span className="text-[11px] font-medium text-[var(--color-text-secondary)] bg-slate-100/80 dark:bg-white/[0.04] border border-slate-200/60 dark:border-white/[0.08] px-2.5 py-0.5 rounded-full">
+              Commitment Feasibility
+            </span>
+          }
+        >
           <div className="flex items-center justify-end gap-4 mb-1 text-xs font-medium">
             <div className="flex items-center gap-1.5 text-[var(--chart-2)]">
               <span className="h-2.5 w-2.5 rounded-full bg-[var(--chart-2)]" />
@@ -181,7 +202,15 @@ export function SavingsGoalsBufferSection({ goalSummary, analyticsData }: Saving
       </div>
 
       {/* 3. Emergency Reserve Runway (Linear Gauge Chart) */}
-      <WidgetContainer title="Emergency Reserve Runway">
+      <WidgetContainer 
+        title="Emergency Reserve Runway"
+        subtitle="Linear month buffer gauge tracking liquid living expense cushions against 6-month target."
+        badge={
+          <span className="text-[11px] font-medium text-[var(--color-text-secondary)] bg-slate-100/80 dark:bg-white/[0.04] border border-slate-200/60 dark:border-white/[0.08] px-2.5 py-0.5 rounded-full">
+            Runway Cushion
+          </span>
+        }
+      >
         <div className="w-full flex items-center justify-center pt-0 pb-1">
           <Gauge
             orientation="linear"

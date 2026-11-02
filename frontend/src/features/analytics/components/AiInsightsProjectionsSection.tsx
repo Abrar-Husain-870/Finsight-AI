@@ -57,10 +57,15 @@ export function AiInsightsProjectionsSection({ analyticsData }: AiInsightsProjec
   return (
     <div className="space-y-6 pt-4">
       <div>
-        <h2 className="text-xl font-bold tracking-tight text-[var(--foreground)] flex items-center gap-2">
-          <Sparkles className="h-5 w-5 text-[var(--chart-2)]" />
-          5. AI Insights & Financial Projections
-        </h2>
+        <div className="flex items-center gap-2.5">
+          <h2 className="text-xl font-bold tracking-tight text-[var(--foreground)] flex items-center gap-2">
+            <Sparkles className="h-5 w-5 text-[var(--chart-2)]" />
+            5. AI Insights & Financial Projections
+          </h2>
+          <span className="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-slate-100/80 dark:bg-white/[0.04] border border-slate-200/60 dark:border-white/[0.08] text-[var(--color-text-secondary)]">
+            Predictive Modeling
+          </span>
+        </div>
         <p className="text-xs text-[var(--muted-foreground)] mt-0.5">
           Anomaly detection spikes line chart and interactive scenario what-if wealth projection area chart.
         </p>
@@ -68,7 +73,15 @@ export function AiInsightsProjectionsSection({ analyticsData }: AiInsightsProjec
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* 1. AI Smart Insights Anomaly Tracking (Line Chart) */}
-        <WidgetContainer title="AI Smart Insights Anomaly Tracking (Spending Spikes & Variance Over Time)">
+        <WidgetContainer 
+          title="Smart Anomaly & Spike Tracking"
+          subtitle="Spending spikes, volatility detection, and variance alerts exceeding threshold."
+          badge={
+            <span className="text-[11px] font-medium text-[var(--color-text-secondary)] bg-slate-100/80 dark:bg-white/[0.04] border border-slate-200/60 dark:border-white/[0.08] px-2.5 py-0.5 rounded-full">
+              Anomaly Risk
+            </span>
+          }
+        >
           <div className="h-[260px] w-full">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={anomalyTrackingData}>
@@ -90,7 +103,15 @@ export function AiInsightsProjectionsSection({ analyticsData }: AiInsightsProjec
         </WidgetContainer>
 
         {/* 2. What-If Scenario Simulator Preview (Area Chart) */}
-        <WidgetContainer title="What-If Scenario Simulator Preview (Baseline vs. Projected Cash Flow Trajectory)">
+        <WidgetContainer 
+          title="What-If Scenario Simulator"
+          subtitle="Interactive stress-testing of income and expense adjustments on multi-month wealth accumulation."
+          badge={
+            <span className="text-[11px] font-medium text-[var(--color-text-secondary)] bg-slate-100/80 dark:bg-white/[0.04] border border-slate-200/60 dark:border-white/[0.08] px-2.5 py-0.5 rounded-full">
+              Dynamic Projections
+            </span>
+          }
+        >
           <div className="space-y-3">
             {/* Interactive Sliders */}
             <div className="grid grid-cols-2 gap-4 p-3 bg-[var(--muted)]/50 rounded-xl border border-[var(--border)] text-xs">
