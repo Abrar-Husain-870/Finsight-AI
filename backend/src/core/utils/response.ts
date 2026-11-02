@@ -3,6 +3,10 @@ import { ApiSuccessResponse, ApiErrorResponse } from '@finsight/shared';
 import { getRequestId } from '../middleware/request-id.js';
 
 export const sendSuccess = <T>(res: Response, data: T, statusCode = 200, meta?: Record<string, unknown>) => {
+  if (statusCode === 204) {
+    return res.status(204).end();
+  }
+
   const response: ApiSuccessResponse<T> = {
     success: true,
     data,

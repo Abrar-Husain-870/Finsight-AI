@@ -1,10 +1,10 @@
 import { Router } from 'express';
-// force reload
 import passport from 'passport';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import { authController } from './auth.controller.js';
 import { requireAuth } from '../../core/middleware/auth.middleware.js';
 import { validateRequest } from '../../core/middleware/validate.middleware.js';
+import { authRateLimiter } from '../../core/middleware/rate-limiter.js';
 import { loginSchema, registerSchema, updateProfileSchema } from '@finsight/shared';
 import { env } from '../../core/config/env.js';
 import { authService } from './auth.service.js';
@@ -27,10 +27,13 @@ if (env.GOOGLE_CLIENT_ID && env.GOOGLE_CLIENT_SECRET) {
   }));
 }
 
-router.post('/register', validateRequest(registerSchema), authController.register);
-router.post('/login', validateRequest(loginSchema), authController.login);
-router.post('/demo', authController.demoLogin);
-router.post('/refresh', authController.refresh);
+// Authentication endpoints with strict rate limiting to defeat brute force and credential stuffing
+router.post('/register', authRateLimiter, validateRequest(registerSchema), authController.register);
+router.post('/login', authRateLimiter, validateRequest(loginSchema), authController.login);
+router.post('/demo', authRateLimiter, authController.demoLogin);
+router.post('/refresh', authRateLimiter, authController.refresh);
+
+// Authenticated user routes
 router.post('/logout', requireAuth, authController.logout);
 router.get('/me', requireAuth, authController.getMe);
 router.patch('/me', requireAuth, validateRequest(updateProfileSchema), authController.updateProfile);

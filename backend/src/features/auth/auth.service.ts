@@ -10,10 +10,19 @@ import { Profile } from 'passport-google-oauth20';
 const ACCESS_TOKEN_EXPIRY = '15m';
 const REFRESH_TOKEN_EXPIRY = '7d';
 
+// Valid precomputed bcrypt hash used to equalize timing during invalid email lookups
+const DUMMY_BCRYPT_HASH = '$2a$12$e80yq9gq7xZ8K0Ue1Z.Yde1u0l8/q5n2X0K6bT7P0fM3pE9y4O.qG';
+
 export class AuthService {
   private generateTokens(userId: string) {
-    const accessToken = jwt.sign({ userId }, env.JWT_SECRET, { expiresIn: ACCESS_TOKEN_EXPIRY });
-    const refreshToken = jwt.sign({ userId }, env.JWT_REFRESH_SECRET, { expiresIn: REFRESH_TOKEN_EXPIRY });
+    const accessToken = jwt.sign({ userId }, env.JWT_SECRET, {
+      expiresIn: ACCESS_TOKEN_EXPIRY,
+      algorithm: 'HS256'
+    });
+    const refreshToken = jwt.sign({ userId }, env.JWT_REFRESH_SECRET, {
+      expiresIn: REFRESH_TOKEN_EXPIRY,
+      algorithm: 'HS256'
+    });
     return { accessToken, refreshToken };
   }
 
@@ -50,7 +59,10 @@ export class AuthService {
 
   async login(data: LoginInput) {
     const user = await authRepository.findByEmail(data.email);
+    
+    // Constant-time defense against user enumeration / timing attacks (CWE-208)
     if (!user || !user.passwordHash) {
+      await bcrypt.compare(data.password, DUMMY_BCRYPT_HASH);
       throw new AuthenticationError('Invalid email or password');
     }
 
@@ -84,7 +96,10 @@ export class AuthService {
 
   async refresh(token: string) {
     try {
-      const decoded = jwt.verify(token, env.JWT_REFRESH_SECRET) as { userId: string };
+      const decoded = jwt.verify(token, env.JWT_REFRESH_SECRET, {
+        algorithms: ['HS256']
+      }) as { userId: string };
+      
       const user = await authRepository.findById(decoded.userId);
       
       if (!user || user.refreshToken !== token) {

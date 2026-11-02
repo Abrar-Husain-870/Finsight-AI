@@ -6,6 +6,7 @@ import { env } from './core/config/env.js';
 import { requestIdMiddleware } from './core/middleware/request-id.js';
 import { loggerMiddleware } from './core/middleware/logger.middleware.js';
 import { globalRateLimiter } from './core/middleware/rate-limiter.js';
+import { securitySanitizerMiddleware } from './core/middleware/sanitize.middleware.js';
 import { errorHandler } from './core/middleware/error.middleware.js';
 import { NotFoundError } from './core/errors/app-error.js';
 import { prisma } from '../prisma/index.js';
@@ -24,7 +25,24 @@ import { demoRouter } from './features/demo/demo.routes.js';
 
 const app = express();
 
-app.use(helmet());
+// Defend against technology profiling / banner grabbing
+app.disable('x-powered-by');
+
+// Defense-in-depth HTTP security headers
+app.use(helmet({
+  contentSecurityPolicy: true,
+  crossOriginResourcePolicy: { policy: 'same-origin' },
+  crossOriginOpenerPolicy: { policy: 'same-origin' },
+  hsts: {
+    maxAge: 31536000,
+    includeSubDomains: true,
+    preload: true
+  },
+  frameguard: {
+    action: 'deny'
+  },
+  noSniff: true
+}));
 
 const configuredFrontend = env.FRONTEND_URL ? env.FRONTEND_URL.replace(/\/+$/, '') : '';
 const allowedOrigins = [
@@ -41,23 +59,56 @@ app.use(cors({
   origin: (origin, callback) => {
     if (!origin) return callback(null, true);
     const cleanOrigin = origin.replace(/\/+$/, '');
-    if (
-      allowedOrigins.includes(cleanOrigin) ||
-      cleanOrigin.endsWith('.vercel.app') ||
-      (env.NODE_ENV === 'development' && /^http:\/\/(localhost|127\.0\.0\.1):\d+$/.test(cleanOrigin))
-    ) {
+    
+    // Strict origin whitelist: Only pre-approved frontend domains & dev local ports
+    const isExplicit = allowedOrigins.includes(cleanOrigin);
+    const isDevLocalhost = env.NODE_ENV === 'development' && /^http:\/\/(localhost|127\.0\.0\.1):\d+$/.test(cleanOrigin);
+    
+    if (isExplicit || isDevLocalhost) {
       return callback(null, true);
     }
-    return callback(new Error(`Origin ${origin} not allowed by CORS`));
+    return callback(null, false);
   },
   credentials: true,
 }));
 
+// Global baseline rate limiter
 app.use(globalRateLimiter);
-app.use(express.json());
+
+// Payload size defense against buffer allocation DoS attacks
+app.use(express.json({ limit: '1mb' }));
+app.use(express.urlencoded({ extended: true, limit: '1mb' }));
+
+// Input sanitization middleware: strips null bytes, XSS scripts, prototype pollution
+app.use(securitySanitizerMiddleware);
+
 app.use(cookieParser());
 app.use(requestIdMiddleware);
 app.use(loggerMiddleware as express.RequestHandler);
+
+// Root API Endpoint
+app.get('/api', (req, res) => {
+  sendSuccess(res, {
+    name: 'FinSight API',
+    version: '1.0.0',
+    status: 'online',
+    documentation: '/docs',
+    endpoints: {
+      health: '/api/health',
+      auth: '/api/auth',
+      transactions: '/api/transactions',
+      categories: '/api/categories',
+      dashboard: '/api/dashboard',
+      analytics: '/api/analytics',
+      healthScore: '/api/health-score',
+      goals: '/api/goals',
+      simulation: '/api/simulation',
+      ai: '/api/ai',
+      import: '/api/import',
+      demo: '/api/demo'
+    }
+  });
+});
 
 // Routes
 app.use('/api/auth', authRouter);
@@ -95,4 +146,5 @@ app.use((req, res, next) => {
 
 app.use(errorHandler);
 
+export default app;
 export { app };

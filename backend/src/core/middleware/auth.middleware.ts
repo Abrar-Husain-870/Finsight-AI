@@ -21,8 +21,17 @@ export const requireAuth = (req: Request, res: Response, next: NextFunction) => 
   if (!token) {
     return next(new AuthenticationError('Missing token'));
   }
+
   try {
-    const decoded = jwt.verify(token, env.JWT_SECRET as string) as unknown as { userId: string };
+    // Explicitly pin algorithm to HS256 to prevent algorithm confusion attacks
+    const decoded = jwt.verify(token, env.JWT_SECRET as string, {
+      algorithms: ['HS256']
+    }) as unknown as { userId: string };
+
+    if (!decoded || !decoded.userId) {
+      return next(new AuthenticationError('Malformed token payload'));
+    }
+
     (req as AuthenticatedRequest).user = { id: decoded.userId };
     next();
   } catch {
