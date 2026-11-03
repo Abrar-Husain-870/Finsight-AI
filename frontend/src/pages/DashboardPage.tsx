@@ -25,7 +25,7 @@ import { cn } from '../lib/utils.js';
 export default function DashboardPage() {
   const { data: summary, isLoading, isError, error, refetch } = useDashboardSummary();
   const queryClient = useQueryClient();
-  const { formatMoney } = useCurrency();
+  const { formatMoney, symbol } = useCurrency();
 
   useEffect(() => {
     if (summary) {
@@ -50,7 +50,7 @@ export default function DashboardPage() {
 
   const formattedCashFlow = summary?.netCashFlow !== undefined
     ? `${summary.netCashFlow >= 0 ? '+' : ''}${formatMoney(summary.netCashFlow)}`
-    : "+₹11,936.96";
+    : `+${symbol}11,936.96`;
 
   const sparklineHeights = summary?.monthlyTrend && summary.monthlyTrend.length > 0
     ? summary.monthlyTrend.map(t => {

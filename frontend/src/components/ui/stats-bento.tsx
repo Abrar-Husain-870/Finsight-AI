@@ -27,11 +27,11 @@ export function StatsBento({
   className,
   isLoading = false,
 }: StatsBentoProps) {
-  const { formatMoney } = useCurrency();
+  const { formatMoney, symbol } = useCurrency();
 
   const formattedCashFlow = netCashFlow !== undefined
     ? `${netCashFlow >= 0 ? '+' : ''}${formatMoney(netCashFlow)}`
-    : "+₹11,936.96";
+    : `+${symbol}11,936.96`;
 
   const isPositive = netCashFlow !== undefined ? netCashFlow >= 0 : true;
 

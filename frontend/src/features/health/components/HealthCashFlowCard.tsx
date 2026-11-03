@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Info } from 'lucide-react';
 import { cn } from '../../../lib/utils.js';
+import { useCurrency } from '../../../lib/hooks/useCurrency.js';
 
 interface DataPoint {
   label: string;
@@ -10,6 +11,7 @@ interface DataPoint {
 }
 
 export function HealthCashFlowCard() {
+  const { symbol } = useCurrency();
   const [hoveredPoint, setHoveredPoint] = useState<DataPoint | null>(null);
 
   // SVG dimensions
@@ -60,7 +62,7 @@ export function HealthCashFlowCard() {
         {/* Large figure */}
         <div className="mt-3">
           <div className="text-2xl sm:text-3xl font-bold tracking-tight text-[var(--color-text-primary)] tabular-nums">
-            +₹48,265.75
+            +{symbol}48,265.75
           </div>
           <span className="text-[11px] font-medium text-[var(--color-text-secondary)]">
             Net Cash Flow
@@ -71,9 +73,9 @@ export function HealthCashFlowCard() {
       {/* Interactive Spline Chart */}
       <div className="mt-4 relative">
         <div className="flex justify-between items-center text-[10px] text-[var(--color-text-secondary)]/70 pb-1">
-          <span>+₹50k</span>
-          <span>₹0</span>
-          <span>-₹20k</span>
+          <span>+{symbol}50k</span>
+          <span>{symbol}0</span>
+          <span>-{symbol}20k</span>
         </div>
 
         <div className="relative w-full h-36">
@@ -135,7 +137,7 @@ export function HealthCashFlowCard() {
                 top: `${(hoveredPoint.y / height) * 100 - 8}%`,
               }}
             >
-              {hoveredPoint.label}: {hoveredPoint.value > 0 ? `+₹${hoveredPoint.value}` : `-₹${Math.abs(hoveredPoint.value)}`}
+              {hoveredPoint.label}: {hoveredPoint.value > 0 ? `+${symbol}${hoveredPoint.value}` : `-${symbol}${Math.abs(hoveredPoint.value)}`}
             </div>
           )}
         </div>

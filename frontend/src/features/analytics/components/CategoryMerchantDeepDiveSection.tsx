@@ -23,7 +23,7 @@ interface CategoryMerchantDeepDiveSectionProps {
 const CATEGORY_COLORS = ['#3B82F6', '#F59E0B', '#10B981', '#EC4899', '#8B5CF6', '#6366F1', '#14B8A6'];
 
 export function CategoryMerchantDeepDiveSection({ analyticsData, transactions }: CategoryMerchantDeepDiveSectionProps) {
-  const { formatMoney } = useCurrency();
+  const { formatMoney, formatMajor } = useCurrency();
 
   // 1. Parent Category vs Subcategory Breakdown (Bar Chart Data)
   const categoryData = useMemo(() => {

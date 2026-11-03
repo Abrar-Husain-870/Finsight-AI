@@ -6,6 +6,7 @@ import { localPoint } from '@visx/event';
 import { bisector } from 'd3-array';
 import { useLineChart } from './LineChartContext.js';
 import { Line } from '@visx/shape';
+import { useCurrency } from '../../../lib/hooks/useCurrency.js';
 
 export interface ChartTooltipProps {
   showCrosshair?: boolean;
@@ -33,6 +34,7 @@ export function ChartTooltip({
   indicatorColor = 'var(--color-text-primary)',
   content
 }: ChartTooltipProps) {
+  const { symbol } = useCurrency();
   const { 
     data, 
     xScale, 
@@ -188,6 +190,13 @@ export function ChartTooltip({
               </div>
               {Object.keys(tooltipData).map(k => {
                 if (k !== xDataKey && k !== 'fill' && typeof tooltipData[k] === 'number') {
+                  const val = tooltipData[k];
+                  const lowerK = k.toLowerCase();
+                  const isNonMonetary = ['score', 'rating', 'satisfaction', 'users', 'count', 'pct', 'percent', 'percentage', 'ratio', 'rank'].some(w => lowerK.includes(w));
+                  const formattedVal = isNonMonetary
+                    ? (lowerK.includes('pct') || lowerK.includes('percent') ? `${val}%` : val.toLocaleString())
+                    : (val >= 1000 ? `${symbol}${val.toLocaleString()}` : `${symbol}${val}`);
+
                   return (
                     <div key={k} className="flex items-center justify-between gap-4 font-medium text-[var(--color-text-primary)]">
                       <div className="flex items-center gap-1.5 text-[var(--color-text-secondary)]">
@@ -197,7 +206,7 @@ export function ChartTooltip({
                         <span className="capitalize">{k}</span>
                       </div>
                       <span className="font-bold tabular-nums">
-                        {tooltipData[k] >= 1000 ? `$${tooltipData[k].toLocaleString()}` : `$${tooltipData[k]}`}
+                        {formattedVal}
                       </span>
                     </div>
                   );

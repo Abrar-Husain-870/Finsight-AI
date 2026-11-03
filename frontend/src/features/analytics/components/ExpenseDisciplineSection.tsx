@@ -51,7 +51,7 @@ interface ExpenseDisciplineSectionProps {
 const RATING_COLORS = ['#EF4444', '#F97316', '#F59E0B', '#10B981', '#3B82F6'];
 
 export function ExpenseDisciplineSection({ transactions }: ExpenseDisciplineSectionProps) {
-  const { formatMoney } = useCurrency();
+  const { formatMoney, formatMajor } = useCurrency();
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
   // Process rating data from transaction notes
@@ -225,11 +225,11 @@ export function ExpenseDisciplineSection({ transactions }: ExpenseDisciplineSect
         <div className="flex items-center gap-3">
           <div className="px-3 py-1.5 rounded-xl border border-[var(--border)] bg-[var(--muted)]/50 text-xs font-semibold text-[var(--muted-foreground)] flex items-center gap-1.5">
             <ThumbsDown className="h-3.5 w-3.5" />
-            Regret Total: {formatMoney(processedData.regretTotal)}
+            Regret Total: {formatMajor(processedData.regretTotal)}
           </div>
           <div className="px-3 py-1.5 rounded-xl border border-[var(--chart-2)]/20 bg-[var(--chart-2)]/10 text-xs font-semibold text-[var(--chart-2)] flex items-center gap-1.5">
             <ThumbsUp className="h-3.5 w-3.5" />
-            Essential Total: {formatMoney(processedData.essentialTotal)}
+            Essential Total: {formatMajor(processedData.essentialTotal)}
           </div>
         </div>
       </div>
@@ -273,11 +273,11 @@ export function ExpenseDisciplineSection({ transactions }: ExpenseDisciplineSect
                     </div>
                     <div className="flex items-center justify-between gap-4 text-[var(--chart-2)] font-medium">
                       <span>Wise Spend (4-5★):</span>
-                      <span className="font-semibold tabular-nums">+{formatMoney(activeData.revenue)}</span>
+                      <span className="font-semibold tabular-nums">+{formatMajor(activeData.revenue)}</span>
                     </div>
                     <div className="flex items-center justify-between gap-4 text-[var(--muted-foreground)] font-medium">
                       <span>Regret Spend (1-2★):</span>
-                      <span className="font-semibold tabular-nums">-{formatMoney(activeData.costs)}</span>
+                      <span className="font-semibold tabular-nums">-{formatMajor(activeData.costs)}</span>
                     </div>
                   </div>
                 )}
@@ -359,7 +359,7 @@ export function ExpenseDisciplineSection({ transactions }: ExpenseDisciplineSect
                       {label}
                     </span>
                     <span className="text-sm sm:text-base font-bold text-[var(--color-text-primary)] tabular-nums mt-0.5">
-                      {formatMoney(value)}
+                      {formatMajor(value)}
                     </span>
                   </div>
                 )}

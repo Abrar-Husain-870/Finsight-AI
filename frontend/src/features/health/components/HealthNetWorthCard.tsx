@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Info, ArrowUpRight } from 'lucide-react';
 import { cn } from '../../../lib/utils.js';
+import { useCurrency } from '../../../lib/hooks/useCurrency.js';
 
 interface DataPoint {
   label: string;
@@ -11,17 +12,19 @@ interface DataPoint {
 
 export function HealthNetWorthCard() {
   const [hoveredPoint, setHoveredPoint] = useState<DataPoint | null>(null);
+  const { symbol, currency } = useCurrency();
+  const isINR = currency === 'INR';
 
   const width = 340;
   const height = 140;
 
-  const points: DataPoint[] = [
-    { label: 'Sep 1', value: '₹9.40L', x: 20, y: 125 },
-    { label: 'Sep 7', value: '₹10.15L', x: 95, y: 95 },
-    { label: 'Sep 14', value: '₹11.20L', x: 170, y: 55 },
-    { label: 'Sep 21', value: '₹11.85L', x: 245, y: 35 },
-    { label: 'Sep 30', value: '₹12.45L', x: 320, y: 15 },
-  ];
+  const points: DataPoint[] = useMemo(() => [
+    { label: 'Sep 1', value: isINR ? '₹9.40L' : `${symbol}94.0k`, x: 20, y: 125 },
+    { label: 'Sep 7', value: isINR ? '₹10.15L' : `${symbol}101.5k`, x: 95, y: 95 },
+    { label: 'Sep 14', value: isINR ? '₹11.20L' : `${symbol}112.0k`, x: 170, y: 55 },
+    { label: 'Sep 21', value: isINR ? '₹11.85L' : `${symbol}118.5k`, x: 245, y: 35 },
+    { label: 'Sep 30', value: isINR ? '₹12.45L' : `${symbol}124.5k`, x: 320, y: 15 },
+  ], [isINR, symbol]);
 
   const pathD = `M 20 125 Q 60 115, 95 95 T 170 55 T 245 35 T 320 15`;
   const fillD = `${pathD} L 320 135 L 20 135 Z`;
@@ -54,7 +57,7 @@ export function HealthNetWorthCard() {
         {/* Large figure */}
         <div className="mt-3 flex items-baseline gap-2.5">
           <span className="text-2xl sm:text-3xl font-bold tracking-tight text-[var(--color-text-primary)] tabular-nums">
-            ₹12,45,075
+            {isINR ? '₹12,45,075' : `${symbol}124,500`}
           </span>
           <span className="inline-flex items-center gap-0.5 text-xs font-semibold text-emerald-500">
             <ArrowUpRight className="h-3.5 w-3.5" />
@@ -66,9 +69,9 @@ export function HealthNetWorthCard() {
       {/* Interactive Trend Chart */}
       <div className="mt-4 relative">
         <div className="flex justify-between items-center text-[10px] text-[var(--color-text-secondary)]/70 pb-1">
-          <span>₹13.0L</span>
-          <span>₹9.0L</span>
-          <span>₹4.0L</span>
+          <span>{isINR ? '₹13.0L' : `${symbol}130k`}</span>
+          <span>{isINR ? '₹9.0L' : `${symbol}90k`}</span>
+          <span>{isINR ? '₹4.0L' : `${symbol}40k`}</span>
         </div>
 
         <div className="relative w-full h-36">
