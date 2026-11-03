@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { cn } from '../../../lib/utils.js';
 import { Flame, ArrowDownRight, TrendingDown } from 'lucide-react';
+import { useCurrency } from '../../../lib/hooks/useCurrency.js';
 
 interface DayBar {
   day: string;
@@ -9,6 +10,7 @@ interface DayBar {
 }
 
 export function HealthDailyBurnCard() {
+  const { symbol } = useCurrency();
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
   // 14 days outflow velocity
@@ -50,9 +52,9 @@ export function HealthDailyBurnCard() {
         {/* Bar Chart Area */}
         <div className="mt-3.5 relative">
           <div className="flex justify-between items-center text-[10px] text-[var(--color-text-secondary)]/70 pb-1">
-            <span>₹2.5k (Cap)</span>
-            <span>₹1.2k (Target)</span>
-            <span>₹0</span>
+            <span>{symbol}2.5k (Cap)</span>
+            <span>{symbol}1.2k (Target)</span>
+            <span>{symbol}0</span>
           </div>
 
           <div className="relative h-36 flex items-end justify-between gap-1.5 pt-2 pb-1 border-b border-[var(--color-border-primary)]/50">
@@ -73,7 +75,7 @@ export function HealthDailyBurnCard() {
                   {/* Floating tooltip */}
                   {isHovered && (
                     <div className="absolute -top-7 left-1/2 -translate-x-1/2 px-2 py-0.5 rounded bg-[var(--color-bg-primary)] border border-[var(--color-border-primary)] text-[10px] font-semibold text-[var(--color-text-primary)] whitespace-nowrap shadow-md z-20 pointer-events-none">
-                      {item.day}: ₹{item.amount}
+                      {item.day}: {symbol}{item.amount}
                     </div>
                   )}
 
@@ -99,7 +101,7 @@ export function HealthDailyBurnCard() {
         <div className="mt-3 grid grid-cols-2 gap-2">
           <div className="p-2 rounded-lg bg-[var(--color-bg-primary)] border border-[var(--color-border-primary)]/60">
             <span className="text-[10px] text-[var(--color-text-secondary)] font-medium block">7-Day Run Pace</span>
-            <span className="text-xs font-bold text-[var(--color-text-primary)] tabular-nums">₹1,180 / day</span>
+            <span className="text-xs font-bold text-[var(--color-text-primary)] tabular-nums">{symbol}1,180 / day</span>
           </div>
           <div className="p-2 rounded-lg bg-[var(--color-bg-primary)] border border-[var(--color-border-primary)]/60">
             <span className="text-[10px] text-[var(--color-text-secondary)] font-medium block">Burn Velocity</span>
@@ -115,7 +117,7 @@ export function HealthDailyBurnCard() {
           Average Outflow
         </span>
         <span className="font-semibold text-emerald-500 tabular-nums">
-          ₹1,260 / day <span className="text-[var(--color-text-secondary)] font-normal">(Within Limit)</span>
+          {symbol}1,260 / day <span className="text-[var(--color-text-secondary)] font-normal">(Within Limit)</span>
         </span>
       </div>
     </div>

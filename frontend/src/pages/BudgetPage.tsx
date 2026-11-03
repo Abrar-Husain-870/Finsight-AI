@@ -85,7 +85,7 @@ const INITIAL_BUDGETS: CategoryBudget[] = [
 ];
 
 export default function BudgetPage() {
-  const { formatMoney } = useCurrency();
+  const { formatMoney, symbol, formatCompact } = useCurrency();
   const { data: analyticsData } = useAnalyticsSummary();
 
   const [customLimits, setCustomLimits] = useState<Record<string, number>>(() => {
@@ -468,7 +468,7 @@ export default function BudgetPage() {
                   tick={{ fontSize: 11, fill: 'var(--color-text-secondary)' }} 
                   axisLine={false} 
                   tickLine={false} 
-                  tickFormatter={v => `$${v}`}
+                  tickFormatter={v => formatCompact(v, false)}
                 />
                 <Tooltip
                   cursor={{ fill: 'var(--color-bg-secondary)', opacity: 0.5 }}
@@ -579,7 +579,7 @@ export default function BudgetPage() {
 
               <div className="flex flex-col gap-1.5">
                 <label className="text-xs font-bold text-[var(--color-text-secondary)] uppercase tracking-wider">
-                  Monthly Target Limit ($)
+                  Monthly Target Limit ({symbol})
                 </label>
                 <input 
                   type="number"

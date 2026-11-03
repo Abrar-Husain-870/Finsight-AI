@@ -49,36 +49,6 @@ export type StockPortfolioCardProps = {
   className?: string;
 };
 
-const defaultOverviewItems: FinancialOverviewItem[] = [
-  {
-    id: "income",
-    name: "Monthly Income",
-    subtitle: "Total credited earnings",
-    value: "₹68,328.86",
-    change: "↑ 8.2% vs Last Month",
-    isPositive: true,
-    type: "income",
-  },
-  {
-    id: "expenses",
-    name: "Monthly Expenses",
-    subtitle: "Total spending & outgoings",
-    value: "₹56,391.90",
-    change: "↓ 4.1% vs Last Month",
-    isPositive: true, // Reduced expenses is positive for personal finance
-    type: "expense",
-  },
-  {
-    id: "savings",
-    name: "Savings Rate",
-    subtitle: "64.8% of Income",
-    value: "64.8%",
-    change: "↑ 6.3% vs Last Month",
-    isPositive: true,
-    type: "savings",
-  },
-];
-
 const defaultInsights: InsightCardItem[] = [
   {
     category: "SPENDING • THIS MONTH",
@@ -100,11 +70,45 @@ export function StockPortfolioCard({
   totalNetSavings = 124720.76,
   savingsChangePercent = 12.6,
   periodLabel = "This Month, " + new Date().toLocaleDateString('en-US', { month: 'short', year: 'numeric' }),
-  overviewItems = defaultOverviewItems,
+  overviewItems,
   insights = defaultInsights,
   className,
 }: StockPortfolioCardProps) {
-  const { formatMoney } = useCurrency();
+  const { formatMoney, symbol, currency } = useCurrency();
+  const isINR = currency === 'INR';
+
+  const defaultOverviewItems: FinancialOverviewItem[] = [
+    {
+      id: "income",
+      name: "Monthly Income",
+      subtitle: "Total credited earnings",
+      value: isINR ? "₹68,328.86" : `${symbol}6,832.86`,
+      change: "↑ 8.2% vs Last Month",
+      isPositive: true,
+      type: "income",
+    },
+    {
+      id: "expenses",
+      name: "Monthly Expenses",
+      subtitle: "Total spending & outgoings",
+      value: isINR ? "₹56,391.90" : `${symbol}5,639.90`,
+      change: "↓ 4.1% vs Last Month",
+      isPositive: true,
+      type: "expense",
+    },
+    {
+      id: "savings",
+      name: "Savings Rate",
+      subtitle: "64.8% of Income",
+      value: "64.8%",
+      change: "↑ 6.3% vs Last Month",
+      isPositive: true,
+      type: "savings",
+    },
+  ];
+
+  const effectiveOverviewItems = overviewItems ?? defaultOverviewItems;
+
   const newsScrollRef = React.useRef<HTMLDivElement>(null);
 
   const scrollNews = (direction: 'left' | 'right') => {
@@ -169,7 +173,7 @@ export function StockPortfolioCard({
           <h3 className="text-base font-bold text-[var(--color-text-primary)]">Your Financial Overview</h3>
         </div>
         <div className="space-y-1">
-          {overviewItems.map((item) => (
+          {effectiveOverviewItems.map((item) => (
             <div 
               key={item.id}
               className="flex items-center justify-between py-3.5 border-b border-[var(--color-border-primary)] last:border-0 hover:bg-[var(--color-bg-secondary)]/50 px-2 rounded-xl transition-colors"
@@ -185,82 +189,70 @@ export function StockPortfolioCard({
                   {item.subtitle && <p className="text-xs text-[var(--color-text-secondary)]">{item.subtitle}</p>}
                 </div>
               </div>
-
               <div className="text-right">
-                <p className={cn(
-                  "font-bold text-sm tabular-nums",
-                  item.type === 'income' ? "text-emerald-500 dark:text-emerald-400" :
-                  item.type === 'expense' ? "text-red-500 dark:text-red-400" :
-                  "text-[var(--color-text-primary)]"
+                <p className="font-bold text-sm tabular-nums text-[var(--color-text-primary)]">{item.value}</p>
+                <span className={cn(
+                  "text-xs font-bold inline-flex items-center gap-0.5 tabular-nums",
+                  item.isPositive ? "text-emerald-600 dark:text-emerald-400" : "text-red-500"
                 )}>
-                  {item.value}
-                </p>
-                <div className={cn(
-                  "flex items-center justify-end gap-1 text-xs font-semibold tabular-nums mt-0.5",
-                  item.type === 'income' ? "text-emerald-500 dark:text-emerald-400" :
-                  item.type === 'expense' ? "text-red-500 dark:text-red-400" :
-                  "text-[var(--color-text-primary)]"
-                )}>
-                  <span>{item.change}</span>
-                </div>
+                  {item.change}
+                </span>
               </div>
             </div>
           ))}
         </div>
       </motion.div>
 
-      {/* FinSight Intelligence Bottom Section */}
-      <motion.div variants={itemVariants} className="pt-2 border-t border-[var(--color-border-primary)]">
-        <div className="flex justify-between items-center mb-4">
-          <h3 className="text-base font-bold text-[var(--color-text-primary)] flex items-center gap-2">
+      {/* Recommended Actionable Insights Carousel */}
+      <motion.div variants={itemVariants} className="pt-2">
+        <div className="flex justify-between items-center mb-3">
+          <div className="flex items-center gap-2">
             <Sparkles className="w-4 h-4 text-[var(--chart-2)]" />
-            FinSight Intelligence
-          </h3>
+            <h3 className="text-base font-bold text-[var(--color-text-primary)]">Actionable Insights</h3>
+          </div>
           <div className="flex gap-1.5">
             <button
-              type="button"
               onClick={() => scrollNews('left')}
-              className="p-1.5 rounded-xl border border-[var(--color-border-primary)] bg-[var(--color-bg-secondary)] hover:bg-[var(--color-bg-tertiary)] text-[var(--color-text-primary)] transition-colors cursor-pointer"
-              aria-label="Scroll left"
+              className="p-1.5 rounded-full border border-[var(--color-border-primary)] bg-[var(--color-bg-secondary)] text-[var(--color-text-primary)] hover:bg-[var(--color-bg-primary)] hover:border-[var(--color-border-hover)] transition-colors cursor-pointer"
+              aria-label="Scroll insights left"
             >
-              <ChevronLeft className="h-4 w-4" />
+              <ChevronLeft className="w-4 h-4" />
             </button>
             <button
-              type="button"
               onClick={() => scrollNews('right')}
-              className="p-1.5 rounded-xl border border-[var(--color-border-primary)] bg-[var(--color-bg-secondary)] hover:bg-[var(--color-bg-tertiary)] text-[var(--color-text-primary)] transition-colors cursor-pointer"
-              aria-label="Scroll right"
+              className="p-1.5 rounded-full border border-[var(--color-border-primary)] bg-[var(--color-bg-secondary)] text-[var(--color-text-primary)] hover:bg-[var(--color-bg-primary)] hover:border-[var(--color-border-hover)] transition-colors cursor-pointer"
+              aria-label="Scroll insights right"
             >
-              <ChevronRight className="h-4 w-4" />
+              <ChevronRight className="w-4 h-4" />
             </button>
           </div>
         </div>
 
         <div
           ref={newsScrollRef}
-          className="flex gap-4 overflow-x-auto pb-2 scrollbar-none"
+          className="flex gap-4 overflow-x-auto pb-2 scrollbar-none snap-x"
+          style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
         >
-          {insights.map((card, index) => (
-            <div
+          {insights.map((insight, index) => (
+            <Link
               key={index}
-              className="flex-shrink-0 w-[250px] sm:w-[270px] p-4 bg-[var(--color-bg-secondary)]/70 border border-[var(--color-border-primary)] rounded-2xl hover:border-[var(--color-border-hover)] transition-all flex flex-col justify-between"
+              to={insight.link}
+              className="min-w-[280px] sm:min-w-[320px] max-w-[340px] flex-shrink-0 p-4.5 rounded-2xl border border-[var(--color-border-primary)] bg-[var(--color-bg-secondary)]/50 hover:bg-[var(--color-bg-secondary)] hover:border-[var(--color-border-hover)] transition-all snap-start flex flex-col justify-between group shadow-2xs"
             >
-              <div>
-                <div className="flex items-center gap-2 text-[11px] font-bold text-[var(--color-text-secondary)] uppercase tracking-wider mb-2">
-                  {card.icon}
-                  <span>{card.category}</span>
-                </div>
-                <p className="font-semibold text-xs sm:text-sm text-[var(--color-text-primary)] leading-snug mb-3">
-                  {card.title}
+              <div className="space-y-2">
+                <span className="text-[10px] font-bold text-[var(--color-text-secondary)] tracking-wider uppercase flex items-center gap-1.5">
+                  {insight.icon}
+                  {insight.category}
+                </span>
+                <p className="text-sm font-semibold text-[var(--color-text-primary)] line-clamp-2 group-hover:text-[var(--chart-2)] transition-colors">
+                  {insight.title}
                 </p>
               </div>
-              <Link
-                to={card.link}
-                className="inline-flex items-center text-xs font-bold text-[var(--color-text-primary)] hover:underline pt-2 border-t border-[var(--color-border-primary)]/50"
-              >
-                {card.actionText} <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
-              </Link>
-            </div>
+              <div className="mt-4 pt-3 border-t border-[var(--color-border-primary)] flex items-center justify-between text-xs font-bold text-[var(--chart-2)]">
+                <span>{insight.actionText}</span>
+                <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+              </div>
+            </Link>
           ))}
         </div>
       </motion.div>

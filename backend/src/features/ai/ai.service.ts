@@ -5,6 +5,7 @@ import { SaveAiConfigInput, AiConfigResponse } from '@finsight/shared';
 import { analyticsService } from '../analytics/analytics.service.js';
 import { healthService } from '../health/health.service.js';
 import { goalService } from '../goals/goal.service.js';
+import { prisma } from '../../../prisma/index.js';
 import { Response } from 'express';
 import { isSafeOutboundUrl } from '../../core/utils/ssrf.util.js';
 import { ValidationError } from '../../core/errors/app-error.js';
@@ -50,17 +51,35 @@ export class AiService {
     const health = healthService.calculateScoreFromAnalytics(analytics);
     const goals = await goalService.getEngineSummary(userId);
 
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { currency: true },
+    });
+    const userCurrency = user?.currency || 'USD';
+    const currencySymbols: Record<string, string> = {
+      USD: '$',
+      INR: '₹',
+      EUR: '€',
+      GBP: '£',
+      CAD: '$',
+      AUD: '$',
+      JPY: '¥',
+    };
+    const symbol = currencySymbols[userCurrency.toUpperCase()] || '$';
+
     return `You are FinSight AI, a highly analytical and deterministic financial coach.
 Your job is to analyze the user's explicit metrics and provide explainable guidance.
 DO NOT hallucinate transactions, calculations, or models. Use ONLY the data provided below.
 Provide short, actionable, and structured advice formatted in markdown.
+Always express monetary figures using the user's chosen currency: ${userCurrency} (${symbol}).
 
 [CONTEXT DATA]
-- Net Cash Flow (30 days): $${(analytics.cashFlow.total / 100).toFixed(2)}
+- User Currency: ${userCurrency} (${symbol})
+- Net Cash Flow (30 days): ${symbol}${(analytics.cashFlow.total / 100).toFixed(2)} (${userCurrency})
 - Top Expense Category: ${analytics.categoryAnalysis[0]?.categoryName || 'None'} (${analytics.categoryAnalysis[0]?.percentage || 0}%)
 - Health Score: ${health.overallScore}/100
 - Goal Feasibility: ${goals.overallFeasibility}
-- Total Required Monthly Goal Savings: $${(goals.totalRequiredMonthly / 100).toFixed(2)}`;
+- Total Required Monthly Goal Savings: ${symbol}${(goals.totalRequiredMonthly / 100).toFixed(2)} (${userCurrency})`;
   }
 
   async handleChatStream(userId: string, content: string, res: Response, sessionId?: string) {

@@ -34,7 +34,7 @@ export function FunnelChart({
   height = 260,
   valueFormatter,
 }: FunnelChartProps) {
-  const { formatMoney } = useCurrency();
+  const { formatMoney, symbol } = useCurrency();
   const [ref, bounds] = useMeasure();
   const rawId = useId();
   const patternId = `funnel-pattern-${rawId.replace(/:/g, '')}`;
@@ -187,7 +187,7 @@ export function FunnelChart({
           const xMid = px + (i + 0.5) * dx;
           const val = Number(item.value || item.amount) || 0;
           const pct = item.percent !== undefined ? item.percent : Math.round((val / totalValue) * 100);
-          const formattedVal = valueFormatter ? valueFormatter(val) : formatMoney(val);
+          const formattedVal = valueFormatter ? valueFormatter(val) : (val >= 100 ? `${symbol}${val.toLocaleString()}` : `${symbol}${val}`);
           const name = item.name || item.label || '';
           const isHovered = hoveredIndex === i;
 

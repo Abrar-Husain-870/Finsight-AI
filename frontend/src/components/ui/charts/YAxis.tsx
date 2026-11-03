@@ -2,6 +2,7 @@
 import React from 'react';
 import { AxisLeft } from '@visx/axis';
 import { useLineChart } from './LineChartContext.js';
+import { useCurrency } from '../../../lib/hooks/useCurrency.js';
 
 export interface YAxisProps {
   numTicks?: number;
@@ -16,15 +17,11 @@ export function YAxis({
   hideAxisLine = true,
 }: YAxisProps) {
   const { yScale } = useLineChart();
+  const { formatCompact } = useCurrency();
 
   const defaultFormat = (val: any) => {
     if (typeof val === 'number') {
-      if (val === 0) return '$0';
-      if (val >= 1000) {
-        const kVal = val / 1000;
-        return kVal % 1 === 0 ? `$${kVal}k` : `$${kVal.toFixed(1)}k`;
-      }
-      return `$${val}`;
+      return formatCompact(val, false);
     }
     return String(val);
   };

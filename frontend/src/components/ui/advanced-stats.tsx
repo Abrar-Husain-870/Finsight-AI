@@ -1,10 +1,11 @@
-'use client';
+"use client";
 
 import React, { useRef } from 'react';
-import { cn } from '../../lib/utils.js';
-import { ClippedAreaChart } from './advanced-stats-utils/charts.js';
 import { TimelineAnimation } from './advanced-stats-utils/timeline-animation.js';
-import { Wallet, TrendingUp, TrendingDown, Target, ShieldCheck } from 'lucide-react';
+import { ClippedAreaChart } from './advanced-stats-utils/charts.js';
+import { cn } from '../../lib/utils.js';
+import { useCurrency } from '../../lib/hooks/useCurrency.js';
+import { Target, TrendingUp, TrendingDown, ShieldCheck } from 'lucide-react';
 
 export interface KPIItem {
   label: string;
@@ -22,21 +23,26 @@ export interface AdvancedStatsProps {
   className?: string;
 }
 
-const defaultKpis: KPIItem[] = [
-  { label: 'Total Net Position', value: '₹12,47,208', change: '+12.5%', status: 'up', description: 'Liquid & invested capital minus debt' },
-  { label: 'Monthly Income', value: '₹68,328', change: '+4.2%', status: 'up', description: 'Verified recurring payroll & dividends' },
-  { label: 'Monthly Expenses', value: '₹56,391', change: '-8.1%', status: 'down', description: 'Total operational living outlays' },
-  { label: 'Savings Rate', value: '17.5%', change: '+2.4%', status: 'up', description: 'Net retained capital (Benchmark: 15%+)' },
-];
-
 export function AdvancedStats({
-  kpis = defaultKpis,
+  kpis,
   primaryGoalName = 'Emergency Reserve Fund',
   primaryGoalProgress = 82,
-  primaryGoalTarget = '₹1,00,000',
+  primaryGoalTarget,
   className,
 }: AdvancedStatsProps) {
   const timelineRef = useRef<HTMLDivElement>(null);
+  const { symbol, currency } = useCurrency();
+  const isINR = currency === 'INR';
+
+  const defaultKpis: KPIItem[] = [
+    { label: 'Total Net Position', value: isINR ? '₹12,47,208' : `${symbol}124,720`, change: '+12.5%', status: 'up', description: 'Liquid & invested capital minus debt' },
+    { label: 'Monthly Income', value: isINR ? '₹68,328' : `${symbol}6,832`, change: '+4.2%', status: 'up', description: 'Verified recurring payroll & dividends' },
+    { label: 'Monthly Expenses', value: isINR ? '₹56,391' : `${symbol}5,639`, change: '-8.1%', status: 'down', description: 'Total operational living outlays' },
+    { label: 'Savings Rate', value: '17.5%', change: '+2.4%', status: 'up', description: 'Net retained capital (Benchmark: 15%+)' },
+  ];
+
+  const effectiveKpis = kpis ?? defaultKpis;
+  const effectiveTarget = primaryGoalTarget ?? (isINR ? '₹1,00,000' : `${symbol}10,000`);
 
   return (
     <section
@@ -54,28 +60,30 @@ export function AdvancedStats({
             <ClippedAreaChart />
           </TimelineAnimation>
 
-          {/* Breakdown Section */}
-          <div className="flex flex-col gap-6 h-full justify-between">
-            {/* Primary Goal Card */}
+          {/* Side Performance Cards */}
+          <div className="flex flex-col gap-4 justify-between">
+            {/* Primary Goal Target Progress */}
             <TimelineAnimation
               animationNum={2}
               timelineRef={timelineRef}
-              className="p-6 rounded-3xl h-full bg-[var(--color-bg-primary)] text-[var(--color-text-primary)] flex flex-col justify-between shadow-xs border border-[var(--color-border-primary)] min-h-[160px]"
+              className="p-6 rounded-3xl bg-[var(--color-bg-primary)] border border-[var(--color-border-primary)] shadow-xs flex flex-col justify-between"
             >
               <div>
-                <div className="flex items-center justify-between mb-1">
-                  <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--color-text-secondary)] flex items-center gap-1.5">
-                    <Target className="w-3.5 h-3.5 text-[var(--chart-2)]" />
-                    Primary Savings Goal
-                  </p>
-                  <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
-                    High Priority
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center gap-2">
+                    <div className="size-8 rounded-xl bg-[var(--color-bg-tertiary)] border border-[var(--color-border-primary)] flex items-center justify-center text-[var(--color-text-primary)]">
+                      <Target className="w-4 h-4 text-[var(--chart-2)]" />
+                    </div>
+                    <div>
+                      <h4 className="font-bold text-sm text-[var(--color-text-primary)] leading-tight">{primaryGoalName}</h4>
+                      <span className="text-[10px] text-[var(--color-text-secondary)] font-medium">Primary Goal</span>
+                    </div>
+                  </div>
+                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
+                    On Track
                   </span>
                 </div>
-                <h4 className="text-xl font-bold tracking-tight text-[var(--color-text-primary)] mt-1">
-                  {primaryGoalName}
-                </h4>
-                <p className="text-xs text-[var(--color-text-secondary)] mt-0.5">
+                <p className="text-xs text-[var(--color-text-secondary)] mt-2">
                   Liquid buffer protecting against unexpected obligations.
                 </p>
               </div>
@@ -86,7 +94,7 @@ export function AdvancedStats({
                     {primaryGoalProgress}%
                   </span>
                   <span className="text-xs font-semibold text-[var(--color-text-secondary)] mb-1">
-                    Target: {primaryGoalTarget}
+                    Target: {effectiveTarget}
                   </span>
                 </div>
                 <div className="w-full h-2 bg-[var(--color-bg-tertiary)] rounded-full overflow-hidden p-0.5 border border-[var(--color-border-primary)]">
@@ -126,7 +134,7 @@ export function AdvancedStats({
 
         {/* 4 KPI Row Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 pt-1">
-          {kpis.map((kpi, index) => (
+          {effectiveKpis.map((kpi, index) => (
             <TimelineAnimation
               animationNum={4 + index}
               timelineRef={timelineRef}
@@ -139,25 +147,25 @@ export function AdvancedStats({
                 <p className="text-[11px] font-bold text-[var(--color-text-secondary)] uppercase tracking-wider mb-2 truncate">
                   {kpi.label}
                 </p>
-                <div className="flex items-center justify-between gap-2 min-w-0 w-full">
-                  <p className="text-base sm:text-lg md:text-xl font-extrabold text-[var(--color-text-primary)] tracking-tight tabular-nums truncate min-w-0 flex-1">
+                <div className="flex items-baseline justify-between gap-1">
+                  <p className="text-xl sm:text-2xl font-black text-[var(--color-text-primary)] tracking-tight tabular-nums truncate">
                     {kpi.value}
                   </p>
                   <span
                     className={cn(
-                      'text-xs font-bold px-2 py-0.5 rounded-full flex items-center gap-0.5 shrink-0 whitespace-nowrap',
+                      'text-xs font-bold flex items-center gap-0.5 shrink-0 tabular-nums px-1.5 py-0.5 rounded-md',
                       kpi.status === 'up'
-                        ? 'text-[var(--chart-2)] bg-[var(--chart-2)]/10 border border-[var(--chart-2)]/20'
-                        : 'text-[var(--color-text-secondary)] bg-[var(--color-bg-tertiary)] border border-[var(--color-border-primary)]'
+                        ? 'text-emerald-600 dark:text-emerald-400 bg-emerald-500/10'
+                        : 'text-rose-600 dark:text-rose-400 bg-rose-500/10',
                     )}
                   >
-                    {kpi.status === 'up' ? <TrendingUp className="w-3 h-3 shrink-0 text-[var(--chart-2)]" /> : <TrendingDown className="w-3 h-3 shrink-0" />}
+                    {kpi.status === 'up' ? <TrendingUp className="size-3" /> : <TrendingDown className="size-3" />}
                     {kpi.change}
                   </span>
                 </div>
               </div>
               {kpi.description && (
-                <p className="text-[11px] text-[var(--color-text-secondary)] font-normal leading-relaxed mt-2 pt-2 border-t border-[var(--color-border-primary)]/50">
+                <p className="text-[11px] font-medium text-[var(--color-text-secondary)] mt-3 pt-2.5 border-t border-[var(--color-border-primary)] line-clamp-1">
                   {kpi.description}
                 </p>
               )}

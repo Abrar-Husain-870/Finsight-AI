@@ -22,7 +22,7 @@ interface AiInsightsProjectionsSectionProps {
 }
 
 export function AiInsightsProjectionsSection({ analyticsData }: AiInsightsProjectionsSectionProps) {
-  const { formatMoney } = useCurrency();
+  const { formatMoney, formatMajor, symbol, formatCompact } = useCurrency();
   const [incomeAdj, setIncomeAdj] = useState(10); // +10%
   const [expenseAdj, setExpenseAdj] = useState(-15); // -15%
 
@@ -90,13 +90,13 @@ export function AiInsightsProjectionsSection({ analyticsData }: AiInsightsProjec
                 <YAxis yAxisId="left" tick={{ fontSize: 11, fill: 'var(--muted-foreground)' }} />
                 <YAxis yAxisId="right" orientation="right" domain={[0, 100]} tick={{ fontSize: 11, fill: 'var(--muted-foreground)' }} unit="%" />
                 <Tooltip
-                  formatter={(val: any, name: any) => [name === 'spendVariance' ? formatMoney(Number(val) || 0) : `${val}%`, name === 'spendVariance' ? 'Spend Variance' : 'Anomaly Risk']}
+                  formatter={(val: any, name: any) => [name === 'spendVariance' ? formatMajor(Number(val) || 0) : `${val}%`, name === 'spendVariance' ? 'Spend Variance' : 'Anomaly Risk']}
                   contentStyle={{ backgroundColor: 'var(--card)', borderColor: 'var(--border)', color: 'var(--card-foreground)', borderRadius: '12px' }}
                 />
                 <Legend wrapperStyle={{ fontSize: '11px', color: 'var(--foreground)' }} />
                 <ReferenceLine yAxisId="right" y={60} stroke="var(--muted-foreground)" strokeDasharray="3 3" label={{ value: 'Anomaly Risk Alert Threshold', fill: 'var(--muted-foreground)', fontSize: 10 }} />
                 <Line yAxisId="right" type="monotone" name="Anomaly Risk Index (%)" dataKey="anomalyScore" stroke="var(--chart-2)" strokeWidth={2.5} dot={{ r: 5, fill: 'var(--chart-2)' }} />
-                <Line yAxisId="left" type="monotone" name="Spend Variance ($)" dataKey="spendVariance" stroke="var(--primary)" strokeWidth={2} strokeDasharray="4 4" dot={false} />
+                <Line yAxisId="left" type="monotone" name={`Spend Variance (${symbol})`} dataKey="spendVariance" stroke="var(--primary)" strokeWidth={2} strokeDasharray="4 4" dot={false} />
               </LineChart>
             </ResponsiveContainer>
           </div>

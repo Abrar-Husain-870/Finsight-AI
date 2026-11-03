@@ -1,8 +1,12 @@
 import React from 'react';
 import { Zap, AlertTriangle, ArrowUpRight, ShieldCheck, Flame, TrendingUp } from 'lucide-react';
 import { cn } from '../../../lib/utils.js';
+import { useCurrency } from '../../../lib/hooks/useCurrency.js';
 
 export function HealthStressTestMatrix() {
+  const { symbol, currency } = useCurrency();
+  const isINR = currency === 'INR';
+
   const scenarios = [
     {
       id: 'income-shock',
@@ -12,19 +16,21 @@ export function HealthStressTestMatrix() {
       badge: '100% Protected',
       badgeColor: 'text-emerald-500 bg-emerald-500/10 border-emerald-500/20',
       runway: '5.8 Months Buffer',
-      impactMetric: '₹0 Liquidation Required',
+      impactMetric: `${symbol}0 Liquidation Required`,
       description: 'Liquid cash reserves sustain all baseline fixed costs, utilities, and debt payments for 174 days without touching long-term investments.',
     },
     {
       id: 'emergency-expense',
       icon: Flame,
-      title: '₹1,00,000 Major Expense',
+      title: isINR ? '₹1,00,000 Major Expense' : `${symbol}10,000 Major Expense`,
       subtitle: 'Unplanned medical/repair shock',
       badge: 'Instant Absorption',
       badgeColor: 'text-emerald-400 bg-emerald-500/10 border-emerald-500/20',
-      runway: '₹2.02L Buffer Left',
+      runway: isINR ? '₹2.02L Buffer Left' : `${symbol}20.2k Buffer Left`,
       impactMetric: '18-Day Goal Shift',
-      description: 'Emergency reserve absorbs the full ₹1.0L expense instantly. Core wealth and monthly surplus recover the buffer within 3 pay cycles.',
+      description: isINR
+        ? 'Emergency reserve absorbs the full ₹1.0L expense instantly. Core wealth and monthly surplus recover the buffer within 3 pay cycles.'
+        : `Emergency reserve absorbs the full ${symbol}10k expense instantly. Core wealth and monthly surplus recover the buffer within 3 pay cycles.`,
     },
     {
       id: 'inflation-surge',
@@ -33,8 +39,8 @@ export function HealthStressTestMatrix() {
       subtitle: 'Macro food & energy inflation',
       badge: 'Surplus Intact',
       badgeColor: 'text-emerald-500 bg-emerald-500/10 border-emerald-500/20',
-      runway: '+₹44.2k/mo Surplus',
-      impactMetric: '+₹7.8k Monthly Shift',
+      runway: `+${symbol}44.2k/mo Surplus`,
+      impactMetric: `+${symbol}7.8k Monthly Shift`,
       description: 'High capital retention rate comfortably absorbs the higher expense load while maintaining positive monthly wealth accumulation.',
     },
   ];

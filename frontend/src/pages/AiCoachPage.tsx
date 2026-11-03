@@ -11,6 +11,7 @@ import { Button } from '../components/ui/Button.js';
 import { Input as CustomInput } from '../components/ui/Input.js';
 
 import { useAuthStore } from '../features/auth/store/auth.store.js';
+import { useCurrency } from '../lib/hooks/useCurrency.js';
 import { apiClient } from '../lib/axios.js';
 
 const AiMessageRow = React.memo(({ message }: { message: { role: string; content: string } }) => {
@@ -46,6 +47,9 @@ const AiMessageRow = React.memo(({ message }: { message: { role: string; content
 });
 
 export default function AiCoachPage() {
+  const { symbol, currency } = useCurrency();
+  const isINR = currency === 'INR';
+  const saveExampleAmount = isINR ? '₹10,000' : `${symbol}1,000`;
   const queryClient = useQueryClient();
   const { data: config, isLoading: configLoading } = useAiConfig();
   const { data: sessions } = useChatSessions();
@@ -308,9 +312,9 @@ export default function AiCoachPage() {
                     <span className="text-[var(--color-text-secondary)] group-hover:text-[var(--color-accent-primary)] transition-colors"><Activity className="h-4 w-4" /></span>
                     "How healthy are my finances?"
                   </button>
-                  <button onClick={() => setInput("How can I save ₹10,000 in three months?")} className="p-4 text-sm rounded-xl bg-[var(--color-bg-primary)] border border-[var(--color-border-primary)]/50 text-left hover:border-[var(--color-accent-primary)]/50 hover:shadow-md transition-all font-medium text-[var(--color-text-primary)] group flex flex-col gap-2">
+                  <button onClick={() => setInput(`How can I save ${saveExampleAmount} in three months?`)} className="p-4 text-sm rounded-xl bg-[var(--color-bg-primary)] border border-[var(--color-border-primary)]/50 text-left hover:border-[var(--color-accent-primary)]/50 hover:shadow-md transition-all font-medium text-[var(--color-text-primary)] group flex flex-col gap-2">
                     <span className="text-[var(--color-text-secondary)] group-hover:text-[var(--color-accent-primary)] transition-colors"><Target className="h-4 w-4" /></span>
-                    "How can I save ₹10,000 in three months?"
+                    {"How can I save " + saveExampleAmount + " in three months?"}
                   </button>
                   <button onClick={() => setInput("What categories increased this month?")} className="p-4 text-sm rounded-xl bg-[var(--color-bg-primary)] border border-[var(--color-border-primary)]/50 text-left hover:border-[var(--color-accent-primary)]/50 hover:shadow-md transition-all font-medium text-[var(--color-text-primary)] group flex flex-col gap-2">
                     <span className="text-[var(--color-text-secondary)] group-hover:text-[var(--color-accent-primary)] transition-colors"><Activity className="h-4 w-4" /></span>

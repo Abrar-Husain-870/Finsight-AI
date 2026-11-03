@@ -17,7 +17,7 @@ import {
 import { useCurrency } from '../../../lib/hooks/useCurrency.js';
 
 export function MonthlyTrendChart({ data = [] }: { data?: MonthlyTrend[] }) {
-  const { formatMoney } = useCurrency();
+  const { formatMajor } = useCurrency();
 
   const chartData = useMemo(() => {
     if (!data || data.length === 0) {
@@ -101,11 +101,11 @@ export function MonthlyTrendChart({ data = [] }: { data?: MonthlyTrend[] }) {
                 </div>
                 <div className="flex items-center justify-between gap-4 text-emerald-500 dark:text-emerald-400 font-semibold">
                   <span>Income:</span>
-                  <span className="tabular-nums">+{formatMoney(activeData.revenue)}</span>
+                  <span className="tabular-nums">+{formatMajor(activeData.revenue)}</span>
                 </div>
                 <div className="flex items-center justify-between gap-4 text-rose-500 dark:text-rose-400 font-semibold">
                   <span>Expenses:</span>
-                  <span className="tabular-nums">-{formatMoney(activeData.costs)}</span>
+                  <span className="tabular-nums">-{formatMajor(activeData.costs)}</span>
                 </div>
               </div>
             )}
