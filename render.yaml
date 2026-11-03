@@ -22,7 +22,7 @@ services:
       - key: ENCRYPTION_KEY
         generateValue: true
       - key: FRONTEND_URL
-        value: http://localhost:5173
+        value: https://finsight-ai-updated.vercel.app
       - key: GOOGLE_CLIENT_ID
         sync: false
       - key: GOOGLE_CLIENT_SECRET

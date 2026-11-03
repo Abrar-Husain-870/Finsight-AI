@@ -21,7 +21,7 @@ import abstractImg from '../Public/Abstract.jpg';
 
 export default function LandingPage() {
   const [isLoading, setIsLoading] = useState(false);
-  const { theme, setTheme } = useTheme();
+  const { resolvedTheme, toggleTheme } = useTheme();
   const setAuth = useAuthStore(s => s.setAuth);
   const navigate = useNavigate();
 
@@ -92,20 +92,20 @@ export default function LandingPage() {
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-              className="p-2 text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] transition-colors rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-border-focus)]"
+              onClick={toggleTheme}
+              className="p-2 text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] transition-colors rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-border-focus)] cursor-pointer"
               aria-label="Toggle theme"
             >
               <span className="sr-only">Toggle theme</span>
               <AnimatePresence mode="wait" initial={false}>
                 <motion.div
-                  key={theme}
+                  key={resolvedTheme}
                   initial={{ y: -20, opacity: 0, rotate: -90 }}
                   animate={{ y: 0, opacity: 1, rotate: 0 }}
                   exit={{ y: 20, opacity: 0, rotate: 90 }}
                   transition={{ duration: 0.2 }}
                 >
-                  {theme === 'dark' ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+                  {resolvedTheme === 'dark' ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
                 </motion.div>
               </AnimatePresence>
             </motion.button>

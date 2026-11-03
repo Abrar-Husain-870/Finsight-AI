@@ -123,7 +123,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, onDemoLogin, onG
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [remember, setRemember] = useState(false);
-  const { theme, setTheme } = useTheme();
+  const { resolvedTheme, toggleTheme } = useTheme();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -144,20 +144,20 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, onDemoLogin, onG
         <motion.button
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
-          onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+          onClick={toggleTheme}
           className="p-2 text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] transition-colors rounded-full border border-[var(--color-border-primary)] bg-[var(--color-bg-secondary)] cursor-pointer"
           aria-label="Toggle theme"
         >
           <span className="sr-only">Toggle theme</span>
           <AnimatePresence mode="wait" initial={false}>
             <motion.div
-              key={theme}
+              key={resolvedTheme}
               initial={{ y: -20, opacity: 0, rotate: -90 }}
               animate={{ y: 0, opacity: 1, rotate: 0 }}
               exit={{ y: 20, opacity: 0, rotate: 90 }}
               transition={{ duration: 0.2 }}
             >
-              {theme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+              {resolvedTheme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
             </motion.div>
           </AnimatePresence>
         </motion.button>
@@ -297,7 +297,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({ onSubmit, onDemoLogi
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const { theme, setTheme } = useTheme();
+  const { resolvedTheme, toggleTheme } = useTheme();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -318,20 +318,20 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({ onSubmit, onDemoLogi
         <motion.button
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
-          onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+          onClick={toggleTheme}
           className="p-2 text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] transition-colors rounded-full border border-[var(--color-border-primary)] bg-[var(--color-bg-secondary)] cursor-pointer"
           aria-label="Toggle theme"
         >
           <span className="sr-only">Toggle theme</span>
           <AnimatePresence mode="wait" initial={false}>
             <motion.div
-              key={theme}
+              key={resolvedTheme}
               initial={{ y: -20, opacity: 0, rotate: -90 }}
               animate={{ y: 0, opacity: 1, rotate: 0 }}
               exit={{ y: 20, opacity: 0, rotate: 90 }}
               transition={{ duration: 0.2 }}
             >
-              {theme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+              {resolvedTheme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
             </motion.div>
           </AnimatePresence>
         </motion.button>

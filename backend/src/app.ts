@@ -31,7 +31,7 @@ app.disable('x-powered-by');
 // Defense-in-depth HTTP security headers
 app.use(helmet({
   contentSecurityPolicy: true,
-  crossOriginResourcePolicy: { policy: 'same-origin' },
+  crossOriginResourcePolicy: { policy: 'cross-origin' },
   crossOriginOpenerPolicy: { policy: 'same-origin' },
   hsts: {
     maxAge: 31536000,
@@ -47,6 +47,8 @@ app.use(helmet({
 const configuredFrontend = env.FRONTEND_URL ? env.FRONTEND_URL.replace(/\/+$/, '') : '';
 const allowedOrigins = [
   configuredFrontend,
+  'https://finsight-ai-updated.vercel.app',
+  'https://finsight-ai-frontend-sigma.vercel.app',
   'http://localhost:5173',
   'http://localhost:5174',
   'http://localhost:5175',
@@ -60,11 +62,12 @@ app.use(cors({
     if (!origin) return callback(null, true);
     const cleanOrigin = origin.replace(/\/+$/, '');
     
-    // Strict origin whitelist: Only pre-approved frontend domains & dev local ports
+    // Strict origin whitelist: approved frontend domains, Vercel deployments, & dev local ports
     const isExplicit = allowedOrigins.includes(cleanOrigin);
+    const isVercel = /^https:\/\/[a-zA-Z0-9-]+\.vercel\.app$/.test(cleanOrigin) || cleanOrigin.endsWith('.vercel.app');
     const isDevLocalhost = env.NODE_ENV === 'development' && /^http:\/\/(localhost|127\.0\.0\.1):\d+$/.test(cleanOrigin);
     
-    if (isExplicit || isDevLocalhost) {
+    if (isExplicit || isVercel || isDevLocalhost) {
       return callback(null, true);
     }
     return callback(null, false);

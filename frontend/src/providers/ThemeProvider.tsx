@@ -1,19 +1,28 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState, useCallback, useMemo } from 'react';
 
 type Theme = 'dark' | 'light' | 'system';
 type Density = 'compact' | 'comfortable';
 
 interface ThemeProviderState {
   theme: Theme;
+  resolvedTheme: 'dark' | 'light';
   density: Density;
   setTheme: (theme: Theme) => void;
+  toggleTheme: () => void;
   setDensity: (density: Density) => void;
 }
 
+const getSystemTheme = (): 'dark' | 'light' => {
+  if (typeof window === 'undefined') return 'dark';
+  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+};
+
 const initialState: ThemeProviderState = {
   theme: 'system',
+  resolvedTheme: 'dark',
   density: 'comfortable',
   setTheme: () => null,
+  toggleTheme: () => null,
   setDensity: () => null,
 };
 
@@ -28,33 +37,75 @@ export function ThemeProvider({
   defaultTheme?: Theme;
   storageKey?: string;
 }) {
-  const [theme, setTheme] = useState<Theme>(
-    () => (localStorage.getItem(storageKey) as Theme) || defaultTheme
-  );
+  const [theme, setThemeState] = useState<Theme>(() => {
+    if (typeof window !== 'undefined') {
+      const stored = localStorage.getItem(storageKey) as Theme | null;
+      if (stored === 'dark' || stored === 'light' || stored === 'system') {
+        return stored;
+      }
+    }
+    return defaultTheme;
+  });
+
+  const [resolvedTheme, setResolvedTheme] = useState<'dark' | 'light'>(() => {
+    const initial =
+      (typeof window !== 'undefined' ? (localStorage.getItem(storageKey) as Theme | null) : null) || defaultTheme;
+    return initial === 'system' ? getSystemTheme() : (initial === 'light' ? 'light' : 'dark');
+  });
+
   const [density, setDensity] = useState<Density>('comfortable');
 
   useEffect(() => {
     const root = window.document.documentElement;
-    root.classList.remove('light', 'dark');
+
+    const applyTheme = () => {
+      const active = theme === 'system' ? getSystemTheme() : theme;
+      root.classList.remove('light', 'dark');
+      root.classList.add(active);
+      setResolvedTheme(active);
+    };
+
+    applyTheme();
 
     if (theme === 'system') {
-      const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-      root.classList.add(systemTheme);
-      return;
+      const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+      const listener = () => applyTheme();
+      mediaQuery.addEventListener('change', listener);
+      return () => {
+        mediaQuery.removeEventListener('change', listener);
+      };
     }
 
-    root.classList.add(theme);
+    return undefined;
   }, [theme]);
 
-  const value = {
-    theme,
-    density,
-    setTheme: (theme: Theme) => {
-      localStorage.setItem(storageKey, theme);
-      setTheme(theme);
+  const setTheme = useCallback(
+    (newTheme: Theme) => {
+      if (typeof window !== 'undefined') {
+        localStorage.setItem(storageKey, newTheme);
+      }
+      setThemeState(newTheme);
     },
-    setDensity,
-  };
+    [storageKey]
+  );
+
+  const toggleTheme = useCallback(() => {
+    const currentEffective = theme === 'system' ? getSystemTheme() : theme;
+    const nextTheme = currentEffective === 'dark' ? 'light' : 'dark';
+    setTheme(nextTheme);
+  }, [theme, setTheme]);
+
+  const value = useMemo(
+    () => ({
+      theme,
+      resolvedTheme,
+      density,
+      setTheme,
+      toggleTheme,
+      setDensity,
+    }),
+    [theme, resolvedTheme, density, setTheme, toggleTheme]
+  );
 
   return (
     <ThemeProviderContext.Provider value={value}>
