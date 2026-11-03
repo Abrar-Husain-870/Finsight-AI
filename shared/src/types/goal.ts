@@ -1,12 +1,11 @@
-
 import { z } from 'zod';
 
 export const CreateGoalSchema = z.object({
-  name: z.string().min(1, "Name is required"),
-  targetAmount: z.number().int().positive("Target amount must be positive"),
-  currentAmount: z.number().int().min(0).default(0),
+  name: z.string().min(1, "Name is required").max(100, "Name cannot exceed 100 characters"),
+  targetAmount: z.number().int().positive("Target amount must be positive").max(2147483647, "Target amount exceeds maximum supported limit"),
+  currentAmount: z.number().int().min(0).max(2147483647, "Current amount exceeds maximum supported limit").default(0),
   targetDate: z.string().datetime(),
-  color: z.string().optional()
+  color: z.string().max(20).optional()
 });
 
 export const UpdateGoalSchema = CreateGoalSchema.partial();

@@ -1,4 +1,3 @@
-
 import { prisma } from '../../../prisma/index.js';
 import { CreateGoalInput, UpdateGoalInput } from '@finsight/shared';
 
@@ -37,9 +36,18 @@ export class GoalRepository {
     if (data.targetDate) payload.targetDate = new Date(data.targetDate);
     if (data.color) payload.color = data.color;
 
-    return prisma.goal.update({
-      where: { id },
+    // Atomically update with userId constraint to defeat BOLA / IDOR at the database level
+    const result = await prisma.goal.updateMany({
+      where: { id, userId },
       data: payload
+    });
+
+    if (result.count === 0) {
+      return null;
+    }
+
+    return prisma.goal.findFirst({
+      where: { id, userId }
     });
   }
 

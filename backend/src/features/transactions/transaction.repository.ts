@@ -72,6 +72,12 @@ export class TransactionRepository {
       if (filters.endDate) {
         rawConditions.push(Prisma.sql`t."date" <= ${new Date(filters.endDate)}`);
       }
+      if (filters.minAmount !== undefined) {
+        rawConditions.push(Prisma.sql`t."amount" >= ${filters.minAmount}`);
+      }
+      if (filters.maxAmount !== undefined) {
+        rawConditions.push(Prisma.sql`t."amount" <= ${filters.maxAmount}`);
+      }
 
       const whereClause = Prisma.sql`WHERE ${Prisma.join(rawConditions, ' AND ')}`;
       const orderDirection = filters.sortOrder === 'asc' ? Prisma.sql`ASC` : Prisma.sql`DESC`;
@@ -87,10 +93,10 @@ export class TransactionRepository {
       ]);
 
       const ids = rawRows.map(r => r.id);
-      const fetchedTxs = await prisma.transaction.findMany({
+      const fetchedTxs = ids.length > 0 ? await prisma.transaction.findMany({
         where: { id: { in: ids } },
         include: { category: true }
-      });
+      }) : [];
       
       const txMap = new Map(fetchedTxs.map(t => [t.id, t]));
       const transactions = ids.map(id => txMap.get(id)!).filter(Boolean);

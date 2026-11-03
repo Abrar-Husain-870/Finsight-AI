@@ -1,4 +1,3 @@
-
 import { goalRepository } from './goal.repository.js';
 import { analyticsService } from '../analytics/analytics.service.js';
 import { CreateGoalInput, UpdateGoalInput, GoalEngineSummary, GoalResponse } from '@finsight/shared';
@@ -7,7 +6,6 @@ import { Goal } from '@prisma/client';
 import crypto from 'crypto';
 
 export class GoalService {
-  
   public calculateGoalEngine(goal: Goal, averageMonthlyCashFlow: number): GoalResponse {
     const now = new Date();
     const target = new Date(goal.targetDate);
@@ -22,7 +20,6 @@ export class GoalService {
     let status: 'ON_TRACK' | 'BEHIND' | 'AHEAD' | 'COMPLETED' = 'ON_TRACK';
     if (progress >= 100) status = 'COMPLETED';
     else {
-      // Mock determination based on required vs average
       if (requiredMonthlySavings > averageMonthlyCashFlow * 1.5) status = 'BEHIND';
       else if (requiredMonthlySavings < averageMonthlyCashFlow * 0.5) status = 'AHEAD';
     }
@@ -52,7 +49,7 @@ export class GoalService {
     const rawGoals = await goalRepository.findAll(userId);
     const analytics = await analyticsService.getSummary(userId);
     
-    const averageMonthlyCashFlow = Math.max(0, analytics.cashFlow.total); // Only count positive cashflow capacity
+    const averageMonthlyCashFlow = Math.max(0, analytics.cashFlow.total);
 
     const goals = rawGoals.map(g => this.calculateGoalEngine(g, averageMonthlyCashFlow));
     
@@ -108,6 +105,7 @@ export class GoalService {
     const existing = await goalRepository.findById(id, userId);
     if (!existing) throw new NotFoundError('Goal not found');
     const goal = await goalRepository.update(id, userId, data);
+    if (!goal) throw new NotFoundError('Goal not found or unauthorized');
     const analytics = await analyticsService.getSummary(userId);
     return this.calculateGoalEngine(goal, Math.max(0, analytics.cashFlow.total));
   }

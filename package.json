@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "pnpm --parallel --filter frontend --filter backend dev",
     "build": "pnpm -r build",
+    "test": "pnpm --filter @finsight/backend test",
     "lint": "eslint .",
     "typecheck": "pnpm -r typecheck",
     "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md,css}\""

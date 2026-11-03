@@ -6,9 +6,20 @@ import { analyticsService } from '../analytics/analytics.service.js';
 import { healthService } from '../health/health.service.js';
 import { goalService } from '../goals/goal.service.js';
 import { Response } from 'express';
+import { isSafeOutboundUrl } from '../../core/utils/ssrf.util.js';
+import { ValidationError } from '../../core/errors/app-error.js';
 
 export class AiService {
   async saveConfig(userId: string, data: SaveAiConfigInput): Promise<AiConfigResponse> {
+    // SSRF Prevention: Enforce strict outbound URL validation on custom endpoints
+    if (data.customUrl) {
+      const isDev = process.env.NODE_ENV === 'development';
+      const ssrfCheck = isSafeOutboundUrl(data.customUrl, isDev);
+      if (!ssrfCheck.safe) {
+        throw new ValidationError(`Invalid AI provider endpoint: ${ssrfCheck.reason}`);
+      }
+    }
+
     const encrypted = encrypt(data.apiKey);
     const config = await aiRepository.saveConfig(userId, data, encrypted);
     const result: AiConfigResponse = {
@@ -53,21 +64,44 @@ Provide short, actionable, and structured advice formatted in markdown.
   }
 
   async handleChatStream(userId: string, content: string, res: Response, sessionId?: string) {
+    // 1. Authorization / BOLA Defense: Validate session ownership FIRST before any downstream checks
+    let activeSessionId = sessionId;
+    if (activeSessionId && activeSessionId !== 'new') {
+      const existing = await aiRepository.getSession(activeSessionId, userId);
+      if (!existing) {
+        res.setHeader('Content-Type', 'text/event-stream');
+        res.setHeader('Cache-Control', 'no-cache');
+        res.setHeader('Connection', 'keep-alive');
+        res.write(`data: ${JSON.stringify({ type: 'error', message: 'Chat session not found or unauthorized' })}\n\n`);
+        res.end();
+        return;
+      }
+    }
+
+    // 2. AI Provider Configuration Check
     const config = await aiRepository.getConfig(userId);
     if (!config || !config.apiKey) {
       res.setHeader('Content-Type', 'text/event-stream');
+      res.setHeader('Cache-Control', 'no-cache');
+      res.setHeader('Connection', 'keep-alive');
       res.write(`data: ${JSON.stringify({ type: 'error', message: 'AI Provider not configured. Please set your API key in Settings.' })}\n\n`);
       res.end();
       return;
     }
 
     const apiKey = decrypt(config.apiKey);
+    if (!apiKey) {
+      res.setHeader('Content-Type', 'text/event-stream');
+      res.setHeader('Cache-Control', 'no-cache');
+      res.setHeader('Connection', 'keep-alive');
+      res.write(`data: ${JSON.stringify({ type: 'error', message: 'Failed to decrypt AI API key. Please update your key in Settings.' })}\n\n`);
+      res.end();
+      return;
+    }
+
     let baseURL = config.customUrl || undefined;
     if (config.provider === 'groq') baseURL = 'https://api.groq.com/openai/v1';
-    
-    const client = new OpenAI({ apiKey, baseURL });
 
-    let activeSessionId = sessionId;
     if (!activeSessionId || activeSessionId === 'new') {
       const session = await aiRepository.createSession(userId, content.substring(0, 30) + '...');
       activeSessionId = session.id;
@@ -88,6 +122,7 @@ Provide short, actionable, and structured advice formatted in markdown.
     res.write(`data: ${JSON.stringify({ type: 'session_id', sessionId: activeSessionId })}\n\n`);
 
     try {
+      const client = new OpenAI({ apiKey, baseURL });
       const stream = await client.chat.completions.create({
         model: config.selectedModel,
         messages: messages as import('openai').OpenAI.Chat.ChatCompletionMessageParam[],

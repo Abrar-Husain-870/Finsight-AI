@@ -14,7 +14,16 @@ export class ImportController {
       const mappingStr = req.body.mapping;
       if (!mappingStr) throw new ValidationError('No column mapping provided');
       
-      const mapping = JSON.parse(mappingStr);
+      let mapping: any;
+      try {
+        mapping = typeof mappingStr === 'string' ? JSON.parse(mappingStr) : mappingStr;
+      } catch {
+        throw new ValidationError('Malformed JSON in column mapping payload');
+      }
+
+      if (typeof mapping !== 'object' || mapping === null) {
+        throw new ValidationError('Column mapping must be a valid JSON object');
+      }
 
       const result = await importService.processPreview(authReq.user!.id, file.buffer, mapping);
       sendSuccess(res, result);

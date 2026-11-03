@@ -8,7 +8,11 @@
     "build": "tsc",
     "start": "node dist/src/server.js",
     "typecheck": "tsc --noEmit",
-    "postinstall": "prisma generate"
+    "test": "tsx src/test-suite.ts && tsx src/stress-and-edge-test.ts && tsx src/security-audit-test.ts",
+    "postinstall": "prisma generate",
+    "test:functional": "tsx src/test-suite.ts",
+    "test:stress": "tsx src/stress-and-edge-test.ts",
+    "test:security": "tsx src/security-audit-test.ts"
   },
   "dependencies": {
     "@finsight/shared": "workspace:*",

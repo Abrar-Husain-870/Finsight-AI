@@ -74,35 +74,49 @@ const categories = [
 async function main() {
   console.log('Start seeding categories...');
   
-  // Clear existing categories
-  await prisma.category.deleteMany();
+  const existingCount = await prisma.category.count();
+  if (existingCount > 0) {
+    console.log(`Found ${existingCount} existing categories. Ensuring all standard categories are present...`);
+  }
   
   for (const parent of categories) {
-    const parentRecord = await prisma.category.create({
-      data: {
-        name: parent.name,
-        type: parent.type,
-        icon: parent.icon,
-        color: parent.color,
-      }
+    let parentRecord = await prisma.category.findFirst({
+      where: { name: parent.name, type: parent.type }
     });
+
+    if (!parentRecord) {
+      parentRecord = await prisma.category.create({
+        data: {
+          name: parent.name,
+          type: parent.type,
+          icon: parent.icon,
+          color: parent.color,
+        }
+      });
+    }
     
     if (parent.children && parent.children.length > 0) {
       for (const child of parent.children) {
-        await prisma.category.create({
-          data: {
-            name: child.name,
-            type: parent.type, // inherit type
-            icon: child.icon,
-            color: child.color,
-            parentId: parentRecord.id
-          }
+        const existingChild = await prisma.category.findFirst({
+          where: { name: child.name, type: parent.type }
         });
+
+        if (!existingChild) {
+          await prisma.category.create({
+            data: {
+              name: child.name,
+              type: parent.type,
+              icon: child.icon,
+              color: child.color,
+              parentId: parentRecord.id
+            }
+          });
+        }
       }
     }
   }
   
-  console.log('Seeding finished.');
+  console.log('Seeding finished successfully.');
 }
 
 main()

@@ -14,13 +14,17 @@ export class ImportService {
 
     const headers = parseResult.meta.fields || [];
     const rows = parseResult.data as Record<string, string>[];
-    const parsedRows: ParsedRow[] = [];
+    
+    // DoS / Memory Exhaustion Defense: Limit maximum rows per import file
+    if (rows.length > 5000) {
+      throw new ValidationError('File contains too many rows. Maximum allowed is 5,000 rows per import.');
+    }
 
+    const parsedRows: ParsedRow[] = [];
     let validRowsCount = 0;
     let duplicateRowsCount = 0;
 
-    // Fetch existing categories for suggestions
-        // Fetch last 100 transactions to find merchant-category patterns
+    // Fetch last 100 transactions to find merchant-category patterns
     const recentTx = await prisma.transaction.findMany({
       where: { userId },
       orderBy: { date: 'desc' },
@@ -35,13 +39,21 @@ export class ImportService {
       }
     }
 
-    // Prepare duplicate check constraints (could be large, ideally optimized, but for MVP we check dates and amounts)
     const thirtyDaysAgo = new Date();
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 90);
     const recentDbTx = await prisma.transaction.findMany({
       where: { userId, date: { gte: thirtyDaysAgo }, deletedAt: null },
       select: { date: true, amount: true, merchant: true }
     });
+
+    const sanitizeCell = (str: string): string => {
+      const trimmed = str.trim();
+      // Neutralize CSV Formula Injection (DDE injection in Excel/Sheets): prefix dangerous formula triggers
+      if (/^[=+\-@\t\r]/.test(trimmed)) {
+        return "'" + trimmed;
+      }
+      return trimmed;
+    };
 
     for (let i = 0; i < rows.length; i++) {
       const row = rows[i] || {};
@@ -90,12 +102,11 @@ export class ImportService {
         }
       }
 
-      mappedData.merchant = rawMerchant ? String(rawMerchant).trim() : '';
-      mappedData.description = rawDesc ? String(rawDesc).trim() : '';
+      mappedData.merchant = rawMerchant ? sanitizeCell(String(rawMerchant)) : '';
+      mappedData.description = rawDesc ? sanitizeCell(String(rawDesc)) : '';
 
       // Check Duplicates
       if (isValid && parsedDate) {
-        // Compare with DB (exact date match and amount)
         const isDbDup = recentDbTx.some(tx => 
           tx.date.toISOString().split('T')[0] === parsedDate!.toISOString().split('T')[0] &&
           tx.amount === parsedAmountMinor &&
@@ -136,44 +147,42 @@ export class ImportService {
     }
 
     const session = await importRepository.createSession(userId, {
-      status: 'PENDING',
       totalRows: rows.length,
-      parsedData: JSON.stringify(parsedRows),
-      mapping: JSON.stringify(mapping)
+      parsedData: JSON.stringify(parsedRows)
     });
 
     return {
       sessionId: session.id,
       headers,
-      rows: parsedRows,
       totalRows: rows.length,
       validRows: validRowsCount,
-      duplicateRows: duplicateRowsCount
+      duplicateRows: duplicateRowsCount,
+      rows: parsedRows
     };
   }
 
   async commitSession(userId: string, sessionId: string, categoryMapping: Record<number, string>) {
     const session = await importRepository.getSession(sessionId, userId);
-    if (!session) throw new NotFoundError('Import session not found');
-    if (session.status !== 'PENDING') throw new ValidationError('Session is already processed');
+    if (!session) {
+      throw new NotFoundError('Import session not found or unauthorized');
+    }
+
+    if (session.status === 'COMPLETED') {
+      throw new ValidationError('Import session already committed');
+    }
 
     const parsedRows = (typeof session.parsedData === 'string' ? JSON.parse(session.parsedData) : session.parsedData) as ParsedRow[] || [];
-    
     let successCount = 0;
-    
-
     const txToCreate = [];
 
     for (const row of parsedRows) {
       if (!row.isValid || row.isDuplicate) {
-        
         continue;
       }
 
       const categoryId = categoryMapping[row.index];
       if (!categoryId) {
-        
-        continue; // Cannot import without a category
+        continue;
       }
 
       txToCreate.push({
