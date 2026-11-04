@@ -1,5 +1,7 @@
 'use client';
 
+import { getBaseUrl } from '../../lib/axios.js';
+
 import React, { useState, useRef, useEffect } from 'react';
 import { Eye, EyeOff, Mail, Lock, Chrome, UserCheck, Sun, Moon, User, ShieldCheck } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -269,7 +271,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, onDemoLogin, onG
           <button
             type="button"
             onClick={onGoogleLogin ? onGoogleLogin : () => {
-              window.location.href = `${import.meta.env.VITE_API_URL || 'http://localhost:3000/api/v1'}/auth/google`;
+              window.location.href = `${getBaseUrl()}/auth/google`;
             }}
             className="flex items-center justify-center gap-2 py-2.5 px-3 bg-[var(--color-bg-secondary)] border border-[var(--color-border-primary)] rounded-xl text-xs font-semibold text-[var(--color-text-primary)] hover:bg-[var(--color-bg-tertiary)] transition-all cursor-pointer shadow-xs"
           >
@@ -435,7 +437,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({ onSubmit, onDemoLogi
           <button
             type="button"
             onClick={onGoogleLogin ? onGoogleLogin : () => {
-              window.location.href = `${import.meta.env.VITE_API_URL || 'http://localhost:3000/api/v1'}/auth/google`;
+              window.location.href = `${getBaseUrl()}/auth/google`;
             }}
             className="flex items-center justify-center gap-2 py-2.5 px-3 bg-[var(--color-bg-secondary)] border border-[var(--color-border-primary)] rounded-xl text-xs font-semibold text-[var(--color-text-primary)] hover:bg-[var(--color-bg-tertiary)] transition-all cursor-pointer shadow-xs"
           >

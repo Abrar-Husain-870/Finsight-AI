@@ -1,4 +1,4 @@
-import { apiClient } from '../../../lib/axios.js';
+import { apiClient, getBaseUrl } from '../../../lib/axios.js';
 import { LoginInput, RegisterInput, AuthResponse, UserResponse, UpdateProfileInput } from '@finsight/shared';
 
 export const authApi = {
@@ -32,7 +32,6 @@ export const authApi = {
   },
   
   getGoogleAuthUrl: () => {
-    const baseURL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
-    return `${baseURL}/auth/google`;
+    return `${getBaseUrl()}/auth/google`;
   }
 };

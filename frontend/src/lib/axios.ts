@@ -3,7 +3,7 @@ import { useAuthStore } from '../features/auth/store/auth.store.js';
 import { mapHttpError, emitSystemAlert } from './errors.js';
 
 // Base URL configuration - normalize to always include /api
-const getBaseUrl = () => {
+export const getBaseUrl = () => {
   const envUrl = import.meta.env.VITE_API_URL;
   if (!envUrl) return 'http://localhost:3001/api';
   const trimmed = envUrl.trim().replace(/\/+$/, '');

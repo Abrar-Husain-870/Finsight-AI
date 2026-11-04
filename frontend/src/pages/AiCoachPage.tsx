@@ -12,7 +12,7 @@ import { FinSightLogo } from '../components/ui/FinSightLogo.js';
 
 import { useAuthStore } from '../features/auth/store/auth.store.js';
 import { useCurrency } from '../lib/hooks/useCurrency.js';
-import { apiClient } from '../lib/axios.js';
+import { apiClient, getBaseUrl } from '../lib/axios.js';
 
 export default function AiCoachPage() {
   const { symbol, currency } = useCurrency();
@@ -138,7 +138,7 @@ export default function AiCoachPage() {
 
     try {
       let token = useAuthStore.getState().accessToken;
-      const baseURL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
+      const baseURL = getBaseUrl();
 
       let response = await fetch(`${baseURL}/ai/chat`, {
         method: 'POST',

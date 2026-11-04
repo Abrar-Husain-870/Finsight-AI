@@ -113,20 +113,31 @@ app.get('/api', (req, res) => {
   });
 });
 
-// Routes
+// Routes - mounted both with /api and directly for route resiliency
 app.use('/api/auth', authRouter);
+app.use('/auth', authRouter);
 app.use('/api/categories', categoryRouter);
+app.use('/categories', categoryRouter);
 app.use('/api/transactions', transactionRouter);
+app.use('/transactions', transactionRouter);
 app.use('/api/dashboard', dashboardRouter);
+app.use('/dashboard', dashboardRouter);
 app.use('/api/import', importRouter);
+app.use('/import', importRouter);
 app.use('/api/analytics', analyticsRouter);
+app.use('/analytics', analyticsRouter);
 app.use('/api/health-score', healthRouter);
+app.use('/health-score', healthRouter);
 app.use('/api/goals', goalRouter);
+app.use('/goals', goalRouter);
 app.use('/api/simulation', simulationRouter);
+app.use('/simulation', simulationRouter);
 app.use('/api/ai', aiRouter);
+app.use('/ai', aiRouter);
 app.use('/api/demo', demoRouter);
+app.use('/demo', demoRouter);
 
-app.get('/api/health', async (req, res, next) => {
+app.get(['/api/health', '/health'], async (req, res, next) => {
   try {
     await prisma.$queryRaw`SELECT 1`;
     
