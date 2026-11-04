@@ -6,6 +6,7 @@ import { useAuthStore } from '../../features/auth/store/auth.store.js';
 import { useUiStore } from '../../store/uiStore.js';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
+import { FinSightLogo } from '../ui/FinSightLogo.js';
 
 export function Header() {
   const clearAuth = useAuthStore(s => s.clearAuth);
@@ -73,7 +74,17 @@ export function Header() {
           )}
         </button>
 
-        <span className="text-lg font-bold tracking-tight text-[var(--color-text-primary)] lg:hidden">FinSight</span>
+        {sidebarCollapsed && (
+          <div className="hidden lg:flex items-center gap-2 ml-2">
+            <FinSightLogo className="h-7 w-7 rounded-lg shadow-xs" />
+            <span className="text-base font-bold tracking-tight text-[var(--color-text-primary)]">FinSight</span>
+          </div>
+        )}
+
+        <div className="flex items-center gap-2 lg:hidden">
+          <FinSightLogo className="h-7 w-7 rounded-lg shadow-xs" />
+          <span className="text-lg font-bold tracking-tight text-[var(--color-text-primary)]">FinSight</span>
+        </div>
       </div>
 
       <div className="flex items-center gap-x-4 lg:gap-x-6">

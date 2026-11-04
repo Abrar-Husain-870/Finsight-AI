@@ -12,12 +12,13 @@ import { authApi } from '../features/auth/api/auth.api.js';
 import { useAuthStore } from '../features/auth/store/auth.store.js';
 import { useTheme } from '../providers/ThemeProvider.js';
 import { Button } from '../components/ui/Button.js';
+import { FinSightLogo } from '../components/ui/FinSightLogo.js';
 import { ShieldCheck, TrendingUp, PieChart, Wallet, Sun, Moon } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 import overviewImg from '../Public/Overview.webp';
 import incomeImg from '../Public/Income.jpg';
-import abstractImg from '../Public/Abstract.jpg';
+import abstractImg from '../Public/Abstract.png';
 
 export default function LandingPage() {
   const [isLoading, setIsLoading] = useState(false);
@@ -60,7 +61,7 @@ export default function LandingPage() {
     {
       value: "overview",
       label: "Overview",
-      src: overviewImg,
+      src: abstractImg,
       alt: "FinSight Overview",
     },
     {
@@ -72,7 +73,7 @@ export default function LandingPage() {
     {
       value: "analytics",
       label: "Analytics",
-      src: abstractImg,
+      src: overviewImg,
       alt: "FinSight Analytics",
     }
   ];
@@ -83,9 +84,7 @@ export default function LandingPage() {
       <header className="border-b border-[var(--color-border-primary)] px-6 py-4">
         <div className="max-w-7xl mx-auto w-full flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <div className="h-9 w-9 rounded-xl bg-[var(--color-text-primary)] text-[var(--color-bg-primary)] flex items-center justify-center font-bold text-xl shadow-xs">
-              F
-            </div>
+            <FinSightLogo className="h-9 w-9 rounded-xl shadow-xs" />
             <span className="font-bold text-xl tracking-tight">FinSight</span>
           </div>
           <div className="flex items-center gap-3">
@@ -135,6 +134,7 @@ export default function LandingPage() {
             steps={steps}
             tabs={tabs}
             defaultTab="overview"
+            autoChangeInterval={4000}
             panelMinHeight={520}
             primaryActionLabel="Get started with FinSight"
             primaryActionTo="/register"
@@ -186,7 +186,10 @@ export default function LandingPage() {
       {/* Footer */}
       <footer className="border-t border-[var(--color-border-primary)] py-6 text-xs text-[var(--color-text-secondary)]">
         <div className="max-w-7xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <span>© {new Date().getFullYear()} FinSight. All rights reserved.</span>
+          <div className="flex items-center gap-2">
+            <FinSightLogo className="h-5 w-5 rounded-md" />
+            <span>© {new Date().getFullYear()} FinSight. All rights reserved.</span>
+          </div>
           <div className="flex items-center gap-2">
             <ShieldCheck className="h-4 w-4 text-[var(--color-text-secondary)]" />
             <span>Bank-grade privacy & local data encryption</span>

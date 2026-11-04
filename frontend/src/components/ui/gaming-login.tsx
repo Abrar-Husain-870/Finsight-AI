@@ -5,6 +5,7 @@ import { Eye, EyeOff, Mail, Lock, Chrome, UserCheck, Sun, Moon, User, ShieldChec
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '../../lib/utils.js';
 import { useTheme } from '../../providers/ThemeProvider.js';
+import { FinSightLogo } from './FinSightLogo.js';
 import loopVideo from '../../Public/signin_page_loop_vid.mp4';
 
 interface LoginFormProps {
@@ -134,10 +135,8 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, onDemoLogin, onG
     <div className="relative p-6 sm:p-8 rounded-2xl backdrop-blur-xl bg-[var(--color-bg-primary)]/90 border border-[var(--color-border-primary)] shadow-2xl text-[var(--color-text-primary)]">
       {/* Header / Brand Title & Theme Toggle */}
       <div className="mb-6 flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <div className="h-8 w-8 rounded-lg bg-[var(--color-text-primary)] text-[var(--color-bg-primary)] flex items-center justify-center font-bold text-base shadow-xs">
-            F
-          </div>
+        <div className="flex items-center gap-2.5">
+          <FinSightLogo className="h-8 w-8 rounded-lg shadow-xs" />
           <span className="font-extrabold text-xl tracking-tight text-[var(--color-text-primary)]">FinSight</span>
         </div>
 
@@ -308,10 +307,8 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({ onSubmit, onDemoLogi
     <div className="relative p-6 sm:p-8 rounded-2xl backdrop-blur-xl bg-[var(--color-bg-primary)]/90 border border-[var(--color-border-primary)] shadow-2xl text-[var(--color-text-primary)]">
       {/* Header / Brand Title & Theme Toggle */}
       <div className="mb-6 flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <div className="h-8 w-8 rounded-lg bg-[var(--color-text-primary)] text-[var(--color-bg-primary)] flex items-center justify-center font-bold text-base shadow-xs">
-            F
-          </div>
+        <div className="flex items-center gap-2.5">
+          <FinSightLogo className="h-8 w-8 rounded-lg shadow-xs" />
           <span className="font-extrabold text-xl tracking-tight text-[var(--color-text-primary)]">FinSight</span>
         </div>
 

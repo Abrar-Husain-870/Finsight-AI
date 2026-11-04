@@ -12,4 +12,7 @@ export const env = cleanEnv(process.env, {
   GOOGLE_CLIENT_SECRET: str({ default: '' }),
   ENCRYPTION_KEY: str(),
   FRONTEND_URL: url(),
+  GROQ_API_KEY: str({ default: '' }),
+  DEFAULT_AI_PROVIDER: str({ default: 'groq' }),
+  DEFAULT_AI_MODEL: str({ default: 'qwen/qwen3.8-27b' }),
 });

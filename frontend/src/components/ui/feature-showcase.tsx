@@ -49,6 +49,10 @@ export type FeatureShowcaseProps = {
   secondaryActionLabel?: string;
   onPrimaryAction?: () => void;
   onSecondaryAction?: () => void;
+  /** Whether the tabs auto-advance cyclically */
+  autoChange?: boolean;
+  /** Interval in milliseconds between auto-changes (default: 4000ms / 4s) */
+  autoChangeInterval?: number;
 };
 
 export function FeatureShowcase({
@@ -86,8 +90,37 @@ export function FeatureShowcase({
   secondaryActionLabel = "View transactions",
   onPrimaryAction,
   onSecondaryAction,
+  autoChange = true,
+  autoChangeInterval = 4000,
 }: FeatureShowcaseProps) {
   const initial = defaultTab ?? (tabs[0]?.value ?? "tab-0");
+  const [activeTab, setActiveTab] = React.useState<string>(initial);
+  const [isPaused, setIsPaused] = React.useState<boolean>(false);
+
+  // Sync activeTab if defaultTab or tabs change
+  React.useEffect(() => {
+    if (defaultTab) {
+      setActiveTab(defaultTab);
+    } else if (tabs[0]?.value) {
+      setActiveTab(tabs[0].value);
+    }
+  }, [defaultTab, tabs]);
+
+  // Auto-advance photos every 4 seconds (pauses on card hover)
+  React.useEffect(() => {
+    if (!autoChange || tabs.length <= 1 || isPaused) return;
+
+    const timer = setInterval(() => {
+      setActiveTab((prevTab) => {
+        const currentIndex = tabs.findIndex((t) => t.value === prevTab);
+        const nextIndex = currentIndex === -1 ? 0 : (currentIndex + 1) % tabs.length;
+        const nextTab = tabs[nextIndex];
+        return nextTab ? nextTab.value : prevTab;
+      });
+    }, autoChangeInterval);
+
+    return () => clearInterval(timer);
+  }, [autoChange, autoChangeInterval, tabs, isPaused]);
 
   return (
     <section className={cn("w-full bg-background text-foreground", className)}>
@@ -124,51 +157,64 @@ export function FeatureShowcase({
 
             {/* Steps (Accordion) */}
             <div className="mt-8 max-w-xl">
-              <Accordion type="single" collapsible className="w-full" defaultValue={steps[0]?.id || "step-1"}>
-                {steps.map((step) => (
-                  <AccordionItem key={step.id} value={step.id}>
-                    <AccordionTrigger className="text-left text-base font-medium">
-                      {step.title}
-                    </AccordionTrigger>
-                    <AccordionContent className="text-sm text-muted-foreground leading-relaxed">
-                      {step.text}
-                    </AccordionContent>
-                  </AccordionItem>
-                ))}
-              </Accordion>
+                <Accordion
+                  type="single"
+                  collapsible
+                  className="w-full"
+                  defaultValue={steps[0]?.id || "step-1"}
+                  onValueChange={(val) => {
+                    if (!val) return;
+                    const stepIdx = steps.findIndex((s) => s.id === val);
+                    const targetTab = stepIdx !== -1 ? tabs[stepIdx] : undefined;
+                    if (targetTab) {
+                      setActiveTab(targetTab.value);
+                    }
+                  }}
+                >
+                  {steps.map((step) => (
+                    <AccordionItem key={step.id} value={step.id}>
+                      <AccordionTrigger className="text-left text-base font-medium">
+                        {step.title}
+                      </AccordionTrigger>
+                      <AccordionContent className="text-sm text-muted-foreground leading-relaxed">
+                        {step.text}
+                      </AccordionContent>
+                    </AccordionItem>
+                  ))}
+                </Accordion>
 
-              {/* CTAs */}
-              <div className="mt-8 flex flex-wrap gap-3">
-                {onPrimaryAction ? (
-                  <Button size="lg" onClick={onPrimaryAction}>
-                    {primaryActionLabel}
-                  </Button>
-                ) : (
-                  <Button asChild size="lg">
-                    <Link to={primaryActionTo}>{primaryActionLabel}</Link>
-                  </Button>
-                )}
+                {/* CTAs */}
+                <div className="mt-8 flex flex-wrap gap-3">
+                  {onPrimaryAction ? (
+                    <Button size="lg" onClick={onPrimaryAction}>
+                      {primaryActionLabel}
+                    </Button>
+                  ) : (
+                    <Button asChild size="lg">
+                      <Link to={primaryActionTo}>{primaryActionLabel}</Link>
+                    </Button>
+                  )}
 
-                {onSecondaryAction ? (
-                  <Button
-                    size="lg"
-                    variant="secondary"
-                    className="border border-border bg-transparent"
-                    onClick={onSecondaryAction}
-                  >
-                    {secondaryActionLabel}
-                  </Button>
-                ) : (
-                  <Button
-                    asChild
-                    size="lg"
-                    variant="secondary"
-                    className="border border-border bg-transparent"
-                  >
-                    <Link to={secondaryActionTo}>{secondaryActionLabel}</Link>
-                  </Button>
-                )}
-              </div>
+                  {onSecondaryAction ? (
+                    <Button
+                      size="lg"
+                      variant="secondary"
+                      className="border border-border bg-transparent"
+                      onClick={onSecondaryAction}
+                    >
+                      {secondaryActionLabel}
+                    </Button>
+                  ) : (
+                    <Button
+                      asChild
+                      size="lg"
+                      variant="secondary"
+                      className="border border-border bg-transparent"
+                    >
+                      <Link to={secondaryActionTo}>{secondaryActionLabel}</Link>
+                    </Button>
+                  )}
+                </div>
             </div>
           </div>
         </div>
@@ -178,49 +224,64 @@ export function FeatureShowcase({
           <Card
             noPadding
             className="relative overflow-hidden rounded-2xl border border-[var(--color-border-primary)] bg-[var(--color-bg-secondary)] shadow-sm"
-            style={{ height: typeof panelMinHeight === 'number' ? `${panelMinHeight}px` : panelMinHeight, minHeight: typeof panelMinHeight === 'number' ? `${panelMinHeight}px` : panelMinHeight }}
+            style={{
+              height: typeof panelMinHeight === 'number' ? `${panelMinHeight}px` : panelMinHeight,
+              minHeight: typeof panelMinHeight === 'number' ? `${panelMinHeight}px` : panelMinHeight,
+            }}
+            onMouseEnter={() => setIsPaused(true)}
+            onMouseLeave={() => setIsPaused(false)}
           >
-            <Tabs defaultValue={initial} className="relative h-full w-full">
-              {/* Absolute-fill media container */}
-              <div className="relative h-full w-full min-h-[500px]">
-                {tabs.map((t, idx) => (
-                  <TabsContent
-                    key={t.value}
-                    value={t.value}
-                    className={cn(
-                      "absolute inset-0 m-0 h-full w-full",
-                      "data-[state=inactive]:hidden"
-                    )}
-                  >
-                    {t.content ? (
-                      t.content
-                    ) : (
-                      <img
-                        src={t.src}
-                        alt={t.alt ?? t.label}
-                        className="h-full w-full object-cover"
-                        loading={idx === 0 ? "eager" : "lazy"}
-                      />
-                    )}
-                  </TabsContent>
-                ))}
-              </div>
+              <Tabs
+                value={activeTab}
+                onValueChange={setActiveTab}
+                className="relative h-full w-full"
+              >
+                {/* Absolute-fill media container */}
+                <div className="relative h-full w-full min-h-[500px]">
+                  {tabs.map((t) => {
+                    const isActive = t.value === activeTab;
+                    return (
+                      <TabsContent
+                        key={t.value}
+                        value={t.value}
+                        forceMount
+                        className={cn(
+                          "absolute inset-0 m-0 h-full w-full transition-opacity duration-700 ease-in-out",
+                          isActive
+                            ? "opacity-100 z-10 pointer-events-auto"
+                            : "opacity-0 z-0 pointer-events-none"
+                        )}
+                      >
+                        {t.content ? (
+                          t.content
+                        ) : (
+                          <img
+                            src={t.src}
+                            alt={t.alt ?? t.label}
+                            className="h-full w-full object-cover"
+                            loading="eager"
+                          />
+                        )}
+                      </TabsContent>
+                    );
+                  })}
+                </div>
 
-              {/* Tab controls (pill) */}
-              <div className="pointer-events-auto absolute inset-x-0 bottom-4 z-10 flex w-full justify-center px-4">
-                <TabsList className="flex flex-wrap gap-2 rounded-xl border border-[var(--color-border-primary)] bg-[var(--color-bg-primary)]/80 p-1.5 backdrop-blur-md shadow-md">
-                  {tabs.map((t) => (
-                    <TabsTrigger
-                      key={t.value}
-                      value={t.value}
-                      className="rounded-lg px-4 py-2 text-xs sm:text-sm font-medium data-[state=active]:bg-[var(--color-text-primary)] data-[state=active]:text-[var(--color-bg-primary)] transition-all cursor-pointer"
-                    >
-                      {t.label}
-                    </TabsTrigger>
-                  ))}
-                </TabsList>
-              </div>
-            </Tabs>
+                {/* Tab controls (pill) */}
+                  <div className="pointer-events-auto absolute inset-x-0 bottom-4 z-20 flex w-full justify-center px-4">
+                    <TabsList className="flex flex-wrap gap-2 rounded-xl border border-[var(--color-border-primary)] bg-[var(--color-bg-primary)]/80 p-1.5 backdrop-blur-md shadow-md">
+                      {tabs.map((t) => (
+                        <TabsTrigger
+                          key={t.value}
+                          value={t.value}
+                          className="rounded-lg px-4 py-2 text-xs sm:text-sm font-medium data-[state=active]:bg-[var(--color-text-primary)] data-[state=active]:text-[var(--color-bg-primary)] transition-all cursor-pointer"
+                        >
+                          {t.label}
+                        </TabsTrigger>
+                      ))}
+                    </TabsList>
+                  </div>
+              </Tabs>
           </Card>
         </div>
       </div>

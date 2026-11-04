@@ -5,6 +5,7 @@ import { useFocusTrap } from '../../hooks/useFocusTrap.js';
 import { X, Compass } from 'lucide-react';
 import { useProductTour } from '../../features/tour/useProductTour.js';
 import { GradientCard } from './gradient-card.js';
+import { FinSightLogo } from './FinSightLogo.js';
 
 export function AboutModal() {
   const { isAboutModalOpen, setAboutModalOpen } = useUiStore();
@@ -81,9 +82,12 @@ export function AboutModal() {
       >
         {/* Modal Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-[var(--color-border-primary)] shrink-0">
-          <div>
-            <h2 id="about-modal-title" className="text-xl font-bold text-[var(--color-text-primary)] tracking-tight">About FinSight</h2>
-            <p className="text-xs text-[var(--color-text-secondary)] mt-0.5">Intelligent Financial Analytics & Architecture Pillars</p>
+          <div className="flex items-center gap-3">
+            <FinSightLogo className="h-9 w-9 rounded-xl shadow-xs" />
+            <div>
+              <h2 id="about-modal-title" className="text-xl font-bold text-[var(--color-text-primary)] tracking-tight">About FinSight</h2>
+              <p className="text-xs text-[var(--color-text-secondary)] mt-0.5">Intelligent Financial Analytics & Architecture Pillars</p>
+            </div>
           </div>
           <button 
             onClick={() => setAboutModalOpen(false)}

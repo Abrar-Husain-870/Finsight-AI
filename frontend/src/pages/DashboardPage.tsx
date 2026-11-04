@@ -30,9 +30,9 @@ export default function DashboardPage() {
   useEffect(() => {
     if (summary) {
       const prefetch = () => {
-        queryClient.prefetchQuery({ 
-          queryKey: ['transactions', { page: 1, limit: 15, sortBy: 'date', sortOrder: 'desc' }], 
-          queryFn: () => transactionApi.getAll({ page: 1, limit: 15, sortBy: 'date', sortOrder: 'desc' }) 
+        queryClient.prefetchQuery({
+          queryKey: ['transactions', { page: 1, limit: 15, sortBy: 'date', sortOrder: 'desc' }],
+          queryFn: () => transactionApi.getAll({ page: 1, limit: 15, sortBy: 'date', sortOrder: 'desc' })
         });
         queryClient.prefetchQuery({ queryKey: ['health', 'score'], queryFn: healthApi.getScore });
         queryClient.prefetchQuery({ queryKey: ['goals', 'summary'], queryFn: goalApi.getSummary });
@@ -54,10 +54,10 @@ export default function DashboardPage() {
 
   const sparklineHeights = summary?.monthlyTrend && summary.monthlyTrend.length > 0
     ? summary.monthlyTrend.map(t => {
-        const net = fromMinor(t.income - t.expense);
-        const max = Math.max(...summary.monthlyTrend.map(m => Math.abs(fromMinor(m.income - m.expense))), 1);
-        return Math.max(15, Math.min(100, Math.round((Math.abs(net) / max) * 100)));
-      })
+      const net = fromMinor(t.income - t.expense);
+      const max = Math.max(...summary.monthlyTrend.map(m => Math.abs(fromMinor(m.income - m.expense))), 1);
+      return Math.max(15, Math.min(100, Math.round((Math.abs(net) / max) * 100)));
+    })
     : [20, 35, 45, 30, 60, 50, 75, 65, 85, 90, 100];
 
   const velocityConfig = {
@@ -73,12 +73,12 @@ export default function DashboardPage() {
   const velocityData = React.useMemo(() => {
     // 14 bi-weekly velocity periods demonstrating realistic financial momentum & dynamic variance
     const velocityPattern = [
-      0.38, 0.65, 0.48, 0.78, 0.58, 0.88, 0.72, 
+      0.38, 0.65, 0.48, 0.78, 0.58, 0.88, 0.72,
       0.62, 0.95, 0.82, 1.12, 0.90, 1.18, 1.05
     ];
-    
+
     const now = new Date();
-    
+
     // Scale baseline to current net cash flow or standard authentic baseline
     const baseFlow = summary?.netCashFlow && summary.netCashFlow !== 0
       ? Math.max(1200, Math.round(fromMinor(Math.abs(summary.netCashFlow)) / 2.5))
@@ -88,7 +88,7 @@ export default function DashboardPage() {
       const weeksAgo = (velocityPattern.length - 1 - idx) * 2;
       const pointDate = new Date(now.getTime() - weeksAgo * 7 * 24 * 60 * 60 * 1000);
       const period = pointDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-      
+
       const velocity = Math.round(baseFlow * multiplier);
       return {
         period,
@@ -99,9 +99,9 @@ export default function DashboardPage() {
 
   return (
     <div className="flex flex-col gap-6 p-4 sm:p-6 lg:p-8 max-w-[1440px] mx-auto w-full">
-      
+
       {isError ? (
-        <ErrorState 
+        <ErrorState
           title="Failed to load dashboard"
           description={error instanceof Error ? error.message : 'An unexpected error occurred while loading your summary.'}
           onRetry={refetch}
@@ -119,7 +119,7 @@ export default function DashboardPage() {
               {isLoading ? (
                 <div className="h-10 w-48 bg-[var(--color-bg-secondary)] rounded-xl animate-pulse mt-0.5" />
               ) : (
-                <h1 
+                <h1
                   className={cn(
                     "text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight leading-none tabular-nums transition-colors mt-0.5",
                     isPositiveCashFlow ? "text-[var(--color-text-primary)]" : "text-[var(--color-danger)]"
@@ -137,16 +137,16 @@ export default function DashboardPage() {
                   <span className="text-[11px] font-semibold uppercase tracking-wider text-[var(--color-text-secondary)]">Income</span>
                   <span className="text-sm font-semibold tabular-nums text-emerald-500 dark:text-emerald-400">+{formatMoney(summary.totalIncome)}</span>
                 </div>
-                
+
                 <div className="hidden sm:block h-4 w-px bg-[var(--color-border-primary)]" />
-                
+
                 <div className="flex items-center gap-2">
                   <span className="text-[11px] font-semibold uppercase tracking-wider text-[var(--color-text-secondary)]">Expenses</span>
                   <span className="text-sm font-semibold tabular-nums text-red-500 dark:text-red-400">-{formatMoney(Math.abs(summary.totalExpenses))}</span>
                 </div>
-                
+
                 <div className="hidden sm:block h-4 w-px bg-[var(--color-border-primary)]" />
-                
+
                 <div className="flex items-center gap-2">
                   <span className="text-[11px] font-semibold uppercase tracking-wider text-[var(--color-text-secondary)]">Net Savings</span>
                   <span className="text-sm font-semibold tabular-nums text-[var(--color-text-primary)]">{formatMoney(summary.savings)}</span>
@@ -181,7 +181,7 @@ export default function DashboardPage() {
               {/* Card 1: Financial Health - Primary Stat following stats-bento rule */}
               <div className="bg-primary text-primary-foreground rounded-3xl p-6 sm:p-7 flex flex-col justify-between overflow-hidden relative shadow-xs h-full min-h-[190px]">
                 <div className="absolute bottom-0 left-0 right-0 top-0 bg-[repeating-linear-gradient(45deg,#808080_0px_1px,transparent_1px_10px)] opacity-30 mask-[radial-gradient(ellipse_80%_50%_at_100%_0%,#000_70%,transparent_110%)] [mask-image:radial-gradient(ellipse_80%_50%_at_100%_0%,#000_70%,transparent_110%)] [-webkit-mask-image:radial-gradient(ellipse_80%_50%_at_100%_0%,#000_70%,transparent_110%)] pointer-events-none" />
-                
+
                 <div className="relative z-10 space-y-2">
                   <div className="flex items-center justify-between">
                     <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-primary-foreground/10 rounded-full text-[10px] font-semibold text-primary-foreground/70 uppercase tracking-widest">
@@ -192,7 +192,7 @@ export default function DashboardPage() {
                       Top 15% Tier
                     </span>
                   </div>
-                  
+
                   <div className="flex items-baseline gap-2 pt-0.5">
                     <h3 className="text-5xl sm:text-6xl font-bold tracking-tighter text-primary-foreground tabular-nums">
                       84
@@ -260,26 +260,26 @@ export default function DashboardPage() {
                 {/* Integrated shadcn Bar Chart */}
                 <div className="w-full flex-1 flex flex-col justify-end pt-3 sm:pt-4 relative z-10 min-h-[110px]">
                   <Chart className="h-28 sm:h-32 w-full aspect-auto" config={velocityConfig}>
-                    <BarChart 
-                      accessibilityLayer 
-                      data={velocityData} 
+                    <BarChart
+                      accessibilityLayer
+                      data={velocityData}
                       margin={{ top: 8, right: 2, left: 2, bottom: 0 }}
                       barCategoryGap="16%"
                     >
                       <YAxis hide domain={[0, 'dataMax + 800']} />
-                      <ChartTooltip 
-                        cursor={false} 
+                      <ChartTooltip
+                        cursor={false}
                         content={
-                          <ChartTooltipContent 
-                            hideLabel 
-                            formatter={(val) => [formatMoney(toMinor(Number(val))), 'Velocity']} 
+                          <ChartTooltipContent
+                            hideLabel
+                            formatter={(val) => [formatMoney(toMinor(Number(val))), 'Velocity']}
                           />
-                        } 
+                        }
                       />
-                      <Bar 
-                        dataKey="velocity" 
-                        fill="var(--color-velocity)" 
-                        radius={[3, 3, 0, 0]} 
+                      <Bar
+                        dataKey="velocity"
+                        fill="var(--color-velocity)"
+                        radius={[3, 3, 0, 0]}
                         maxBarSize={16}
                       />
                     </BarChart>
@@ -287,9 +287,9 @@ export default function DashboardPage() {
                 </div>
               </div>
 
-              {/* Card 3: Financial Tracking Streak Card */}
+              {/* Card 3: Tracking Streak Card */}
               <div className="h-full">
-                <StreakCard className="h-full" showHowItWorks={false} />
+                <StreakCard title="Tracking Streak" className="h-full" showHowItWorks={false} />
               </div>
             </div>
           </div>
@@ -333,7 +333,7 @@ export default function DashboardPage() {
             </div>
             <div className="grid grid-cols-1 gap-5 lg:grid-cols-12 lg:gap-6 items-stretch">
               <div className="lg:col-span-8 flex flex-col h-full">
-                <WidgetContainer 
+                <WidgetContainer
                   title="Cash Flow Trend"
                   subtitle="Net cash trajectory comparing earned receipts against operational living costs."
                   badge={
@@ -350,7 +350,7 @@ export default function DashboardPage() {
                 </WidgetContainer>
               </div>
               <div className="lg:col-span-4 flex flex-col h-full">
-                <WidgetContainer 
+                <WidgetContainer
                   title="Expense Breakdown"
                   subtitle="Categorical breakdown of spending to isolate essential vs discretionary drivers."
                   badge={
@@ -404,12 +404,12 @@ export default function DashboardPage() {
                     <ArrowRight className="h-3.5 w-3.5" />
                   </Link>
                 </div>
-                
+
                 <div className="rounded-[var(--radius-xl)] border border-[var(--color-border-primary)] bg-[var(--color-bg-primary)] shadow-sm p-2 sm:p-3 flex-1 flex flex-col justify-between overflow-hidden">
                   {isLoading ? (
-                     <div className="h-[200px] w-full bg-[var(--color-bg-secondary)] rounded-md animate-pulse" />
+                    <div className="h-[200px] w-full bg-[var(--color-bg-secondary)] rounded-md animate-pulse" />
                   ) : summary ? (
-                     <RecentTransactionsWidget transactions={summary.recentTransactions} limit={10} />
+                    <RecentTransactionsWidget transactions={summary.recentTransactions} limit={10} />
                   ) : null}
                 </div>
               </div>

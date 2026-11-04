@@ -49,14 +49,15 @@ Typical AI finance apps indiscriminately pipe raw user transaction logs to an LL
 - **Zero Financial Hallucinations**: LLMs are language engines, not calculators. All mathematical projections, spending velocities, and health indices are computed via deterministic backend algorithms. The AI explains the numbers—it never invents them.
 - **Enterprise-Grade Cyber Defense**: Built with a defense-in-depth posture mitigating the OWASP Top 10 and CWE Top 25: constant-time timing attack mitigation, SSRF defense against cloud metadata endpoints, BOLA/IDOR database-level access controls, prototype pollution guards, XSS neutralization, and multi-tier rate limiters.
 - **Floating-Point Precision Loss Prevention**: All monetary figures are strictly validated and stored as minor units (e.g., cents as 32-bit integers), preventing IEEE 754 floating-point drift over thousands of ledger entries.
-- **Client-Controlled AI Privacy**: API keys (Groq or OpenAI) are stored client-side or symmetrically encrypted in PostgreSQL using **AES-256-GCM** with authenticated random initialization vectors (IVs).
+- **Client-Controlled AI Privacy**: API keys (Groq or OpenAI) are stored client-side or symmetrically encrypted in PostgreSQL using **AES-256-GCM** with authenticated random initialization vectors (IVs). No API keys or secrets are ever hardcoded in the codebase.
 - **Sub-Millisecond UI Experience**: Built on React 19, Tailwind CSS v4, Framer Motion, and TanStack Query with optimistic cache updates and server-side streaming responses (SSE).
 
 ---
 
 ## Features
 
-- **🧠 Grounded AI Financial Coach**: Explains your finances using real context (net cash flow, top spending categories, savings velocity, health index) with SSE streaming tokens.
+- **🧠 Grounded AI Financial Coach**: Explains your finances with deterministic intelligence powered by an ultra-fast pre-configured Groq cloud engine (`qwen/qwen3.8-27b`) via Server-Sent Events (SSE). Features dual-context pipelines that intelligently distinguish between Demo Workspace accounts (6-month synthetic scenario) and Real User accounts (authentic ledger data).
+- **💬 Modern Conversational UI**: Interactive chat canvas with auto-resizing input, native device statement/file attachments (`.csv`, `.xlsx`, `.pdf`), slash command autocomplete (`/overspending`, `/health`, `/savings`, `/trends`), multi-session switcher, ambient soft-glow illumination, and seamless light/dark mode parity.
 - **📊 Deterministic Analytics & Velocity Telemetry**: Real-time daily burn rate tracking, historical monthly trends, and automated heuristic alerts (e.g., spending spikes, negative net flow).
 - **🩺 4-Pillar Financial Health Engine**: A deterministic 0–100 score synthesized across Savings Rate (35%), Expense Control (25%), Category Balance (20%), and Velocity Discipline (20%).
 - **🎯 Dynamic Savings Goal Feasibility Engine**: Automatically calculates required monthly contributions and evaluates feasibility (`ACHIEVABLE`, `STRETCH`, or `UNREALISTIC`) against actual cash flow capacity.
@@ -191,6 +192,11 @@ JWT_REFRESH_SECRET="generate-a-secure-32-byte-hex-string-for-refresh-token"
 ENCRYPTION_KEY="generate-a-secure-32-byte-hex-string-for-ai-vault"
 
 FRONTEND_URL="http://localhost:5173"
+
+# AI Intelligence Engine (Groq / Cloud LLM)
+GROQ_API_KEY="gsk_your_groq_api_key_here"
+DEFAULT_AI_PROVIDER="groq"
+DEFAULT_AI_MODEL="qwen/qwen3.8-27b"
 
 # Optional OAuth
 GOOGLE_CLIENT_ID=""

@@ -6,6 +6,8 @@ import { AuthenticationError, ConflictError } from '../../core/errors/app-error.
 import { LoginInput, RegisterInput, UserResponse, UpdateProfileInput } from '@finsight/shared';
 import { User } from '@prisma/client';
 import { Profile } from 'passport-google-oauth20';
+import { prisma } from '../../../prisma/index.js';
+import { demoService } from '../demo/demo.service.js';
 
 const ACCESS_TOKEN_EXPIRY = '15m';
 const REFRESH_TOKEN_EXPIRY = '7d';
@@ -54,6 +56,10 @@ export class AuthService {
     const { accessToken, refreshToken } = this.generateTokens(user.id);
     await authRepository.updateRefreshToken(user.id, refreshToken);
 
+    const txCount = await prisma.transaction.count({ where: { userId: user.id } });
+    if (txCount === 0) {
+      await demoService.seedDemoWorkspace(user.id);
+    }
     return { user: this.mapToUserResponse(user), accessToken, refreshToken };
   }
 
