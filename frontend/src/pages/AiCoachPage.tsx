@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useAiConfig, useSaveAiConfig, useChatSessions, useChatSession } from '../features/ai/hooks/useAi.js';
-import { Settings, MessageSquare, Plus, Shield, Cpu, Activity, TrendingDown, Target, Receipt, Loader2, Maximize2, Minimize2, History } from 'lucide-react';
+import { useAiConfig, useSaveAiConfig, useChatSessions, useChatSession, useDeleteChatSession } from '../features/ai/hooks/useAi.js';
+import { Settings, MessageSquare, Plus, Shield, Cpu, Activity, TrendingDown, Target, Receipt, Loader2, Maximize2, Minimize2, History, Trash2 } from 'lucide-react';
 import { cn } from '../lib/utils.js';
 import { useQueryClient } from '@tanstack/react-query';
 import { useFocusTrap } from '../hooks/useFocusTrap.js';
@@ -22,6 +22,7 @@ export default function AiCoachPage() {
   const { data: config, isLoading: configLoading } = useAiConfig();
   const { data: sessions, isLoading: sessionsLoading } = useChatSessions();
   const saveConfig = useSaveAiConfig();
+  const deleteSession = useDeleteChatSession();
 
   const [activeSessionId, setActiveSessionId] = useState<string | null>(null);
   const { data: activeSession } = useChatSession(activeSessionId || undefined);
@@ -82,6 +83,22 @@ export default function AiCoachPage() {
     if (isStreaming) return;
     setActiveSessionId(id);
     setStreamContent('');
+  };
+
+  const handleDeleteSession = (e: React.MouseEvent, id: string) => {
+    e.stopPropagation();
+    if (isStreaming) return;
+
+    deleteSession.mutate(id, {
+      onSuccess: () => {
+        queryClient.removeQueries({ queryKey: ['ai', 'session', id] });
+        if (activeSessionId === id) {
+          setActiveSessionId(null);
+          setMessages([]);
+          setStreamContent('');
+        }
+      }
+    });
   };
 
   const financialSuggestions: CommandSuggestion[] = [
@@ -253,31 +270,63 @@ export default function AiCoachPage() {
         </div>
       )}
 
-      {sessions?.map(s => (
-        <button 
-          key={s.id}
-          type="button"
-          onClick={() => handleSelectSession(s.id)}
-          className={cn(
-            "flex items-center gap-2.5 text-xs sm:text-sm py-2 px-2.5 rounded-lg text-left truncate transition-colors cursor-pointer w-full group", 
-            activeSessionId === s.id 
-              ? "bg-neutral-200/80 dark:bg-white/10 text-[var(--color-text-primary)] font-semibold shadow-xs" 
-              : "text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-neutral-100 dark:hover:bg-white/5"
-          )}
-        >
-          <MessageSquare className={cn(
-            "h-4 w-4 shrink-0 transition-colors",
-            activeSessionId === s.id ? "text-[var(--color-text-primary)]" : "text-[var(--color-text-secondary)] group-hover:text-[var(--color-text-primary)]"
-          )} />
-          <span className="truncate">{s.title || "Untitled Session"}</span>
-        </button>
-      ))}
+      {sessions?.map(s => {
+        const isSelected = activeSessionId === s.id;
+        const isDeleting = deleteSession.isPending && deleteSession.variables === s.id;
 
+        return (
+          <div 
+            key={s.id}
+            role="button"
+            tabIndex={0}
+            onClick={() => handleSelectSession(s.id)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                handleSelectSession(s.id);
+              }
+            }}
+            className={cn(
+              "group relative flex items-center justify-between gap-2 text-xs sm:text-sm py-2 px-2.5 rounded-lg transition-colors cursor-pointer w-full text-left", 
+              isSelected 
+                ? "bg-neutral-200/80 dark:bg-white/10 text-[var(--color-text-primary)] font-semibold shadow-xs" 
+                : "text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-neutral-100 dark:hover:bg-white/5",
+              isDeleting && "opacity-50 pointer-events-none"
+            )}
+          >
+            <div className="flex items-center gap-2.5 min-w-0 flex-1">
+              <MessageSquare className={cn(
+                "h-4 w-4 shrink-0 transition-colors",
+                isSelected ? "text-[var(--color-text-primary)]" : "text-[var(--color-text-secondary)] group-hover:text-[var(--color-text-primary)]"
+              )} />
+              <span className="truncate">{s.title || "Untitled Session"}</span>
+            </div>
+
+            <button
+              type="button"
+              aria-label="Delete session"
+              title="Delete session"
+              disabled={isDeleting || isStreaming}
+              onClick={(e) => handleDeleteSession(e, s.id)}
+              className={cn(
+                "p-1 rounded-md transition-all shrink-0 cursor-pointer opacity-0 group-hover:opacity-100 focus:opacity-100",
+                "text-neutral-400 hover:text-red-500 hover:bg-red-500/10 dark:text-neutral-400 dark:hover:text-red-400 dark:hover:bg-red-500/10",
+                isDeleting && "opacity-100"
+              )}
+            >
+              {isDeleting ? (
+                <Loader2 className="h-3.5 w-3.5 animate-spin text-red-500" />
+              ) : (
+                <Trash2 className="h-3.5 w-3.5" />
+              )}
+            </button>
+          </div>
+        );
+      })}
 
       {!sessionsLoading && (!sessions || sessions.length === 0) && (
         <div className="text-xs text-[var(--color-text-secondary)] py-2 px-2.5">
           No recent sessions
-
         </div>
       )}
     </div>

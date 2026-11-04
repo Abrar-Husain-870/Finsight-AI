@@ -69,6 +69,21 @@ export class AiRepository {
       }
     });
   }
+
+  async deleteSession(sessionId: string, userId: string) {
+    const session = await prisma.chatSession.findFirst({
+      where: { id: sessionId, userId }
+    });
+    if (!session) {
+      return null;
+    }
+    await prisma.chatMessage.deleteMany({
+      where: { sessionId }
+    });
+    return prisma.chatSession.delete({
+      where: { id: sessionId }
+    });
+  }
 }
 
 export const aiRepository = new AiRepository();

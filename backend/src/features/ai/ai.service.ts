@@ -10,7 +10,7 @@ import { prisma } from '../../../prisma/index.js';
 import { env } from '../../core/config/env.js';
 import { Response } from 'express';
 import { isSafeOutboundUrl } from '../../core/utils/ssrf.util.js';
-import { ValidationError } from '../../core/errors/app-error.js';
+import { ValidationError, NotFoundError } from '../../core/errors/app-error.js';
 
 export class AiService {
   async saveConfig(userId: string, data: SaveAiConfigInput): Promise<AiConfigResponse> {
@@ -252,6 +252,14 @@ ${recentTxText}
 
   async getSession(userId: string, sessionId: string) {
     return aiRepository.getSession(sessionId, userId);
+  }
+
+  async deleteSession(userId: string, sessionId: string) {
+    const deleted = await aiRepository.deleteSession(sessionId, userId);
+    if (!deleted) {
+      throw new NotFoundError('Session not found');
+    }
+    return { success: true };
   }
 }
 

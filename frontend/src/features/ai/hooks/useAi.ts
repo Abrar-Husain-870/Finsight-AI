@@ -30,3 +30,13 @@ export function useChatSession(sessionId?: string) {
     enabled: !!sessionId
   });
 }
+
+export function useDeleteChatSession() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (sessionId: string) => aiApi.deleteSession(sessionId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['ai', 'sessions'] });
+    }
+  });
+}

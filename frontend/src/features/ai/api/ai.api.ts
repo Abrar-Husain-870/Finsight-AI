@@ -17,5 +17,9 @@ export const aiApi = {
   getSession: async (id: string): Promise<ChatSessionResponse> => {
     const response = await apiClient.get<{ data: ChatSessionResponse }>(`/ai/sessions/${id}`);
     return response.data.data;
+  },
+  deleteSession: async (id: string): Promise<{ message: string }> => {
+    const response = await apiClient.delete<{ data: { message: string } }>(`/ai/sessions/${id}`);
+    return response.data.data;
   }
 };
