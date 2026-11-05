@@ -54,7 +54,7 @@ export default function GoalsPage() {
         />
       ) : data && (
         <>
-          <div className="flex flex-col md:flex-row gap-6 p-8 rounded-2xl bg-[var(--color-bg-secondary)]/30 backdrop-blur-sm border border-[var(--color-border-primary)]/30">
+          <div id="goals-summary" className="scroll-mt-24 flex flex-col md:flex-row gap-6 p-8 rounded-2xl bg-[var(--color-bg-secondary)]/30 backdrop-blur-sm border border-[var(--color-border-primary)]/30">
             <div className="flex flex-col gap-1 flex-1">
               <div className="flex items-center gap-2 text-sm font-medium text-[var(--color-text-secondary)]">
                 <Flag className="h-4 w-4" /> Total Target
@@ -96,7 +96,7 @@ export default function GoalsPage() {
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
-            <div className="lg:col-span-2 flex flex-col gap-6">
+            <div id="goals-grid" className="scroll-mt-24 lg:col-span-2 flex flex-col gap-6">
               <h3 className="text-lg font-semibold text-[var(--color-text-primary)]">Your Goals</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {data.goals.map(goal => (
@@ -115,7 +115,7 @@ export default function GoalsPage() {
               </div>
             </div>
             
-            <div className="flex flex-col gap-6">
+            <div id="goals-recommendations" className="scroll-mt-24 flex flex-col gap-6">
               <h3 className="text-lg font-semibold text-[var(--color-text-primary)]">Planning Recommendations</h3>
               <div className="flex flex-col gap-4">
                 {data.recommendations.map(r => (

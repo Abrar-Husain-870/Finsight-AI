@@ -32,7 +32,7 @@ export default function SimulationPage() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-10 lg:gap-16">
-        <div className="md:col-span-1 flex flex-col gap-8">
+        <div id="simulation-controls" className="scroll-mt-24 md:col-span-1 flex flex-col gap-8">
           <div className="flex flex-col gap-6 p-6 rounded-[var(--radius-lg)] bg-[var(--color-bg-secondary)]/30 border border-[var(--color-border-primary)]/30 backdrop-blur-sm">
             <h3 className="text-sm font-semibold text-[var(--color-text-primary)] uppercase tracking-wider">Scenario Controls</h3>
             
@@ -108,7 +108,7 @@ export default function SimulationPage() {
                </div>
              </div>
           ) : (
-            <div className="flex flex-col gap-6">
+            <div id="simulation-projection" className="scroll-mt-24 flex flex-col gap-6">
               <h3 className="text-lg font-semibold text-[var(--color-text-primary)]">Projection Impact</h3>
               
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -203,7 +203,7 @@ export default function SimulationPage() {
                 </div>
               </div>
 
-              <div className="relative overflow-hidden rounded-[var(--radius-lg)] bg-[var(--color-bg-secondary)]/40 p-8 flex flex-col gap-6 group">
+              <div id="simulation-goals" className="scroll-mt-24 relative overflow-hidden rounded-[var(--radius-lg)] bg-[var(--color-bg-secondary)]/40 p-8 flex flex-col gap-6 group">
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[var(--color-accent-primary)]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 -skew-x-12 translate-x-[-100%] group-hover:translate-x-[100%]"></div>
                 
                 <div className="flex items-center gap-2 text-[var(--color-text-primary)] font-semibold text-sm relative z-10">

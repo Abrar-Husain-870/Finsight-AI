@@ -76,7 +76,7 @@ export default function HealthPage() {
     <GridBackground variant="default" className="min-h-screen">
       <div className="relative flex h-full flex-col p-6 sm:p-8 max-w-[1340px] mx-auto w-full gap-7 pb-16">
         {/* 1. Header Row (Greeting, Date Range Selector, Action CTA) */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div id="health-header" className="scroll-mt-24 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-xs font-semibold text-emerald-500 mb-2 shadow-2xs">
               <HeartPulse className="h-3.5 w-3.5" />
@@ -161,7 +161,7 @@ export default function HealthPage() {
         data && (
           <>
             {/* 2. Top Diagnostic Spotlight & Actionable Prescriptions */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 sm:gap-6 items-stretch">
+            <div id="health-score-spotlight" className="scroll-mt-24 grid grid-cols-1 lg:grid-cols-3 gap-5 sm:gap-6 items-stretch">
               {/* Radial Vo2Max Progress Ring Card */}
               <div className="lg:col-span-1 flex flex-col items-center justify-center">
                 <ScoreCircle score={data.overallScore} trend={data.trend} />
@@ -207,7 +207,7 @@ export default function HealthPage() {
             </div>
 
             {/* 3. Summary Metric Cards Row (4 Equal-Width Cards with Sparklines & Mini Gauge) */}
-            <HealthSummaryCards score={data.overallScore} trend={data.trend} />
+            <div id="health-summary-metrics" className="scroll-mt-24"><HealthSummaryCards score={data.overallScore} trend={data.trend} /></div>
 
             {/* 4. Middle Section: 3-Column Layout (Cash Flow + Net Worth Trend + Smart Insights) */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 sm:gap-6">
@@ -217,10 +217,10 @@ export default function HealthPage() {
             </div>
 
             {/* 5. Financial Shock Resilience & Stress Tests Matrix */}
-            <HealthStressTestMatrix />
+            <div id="health-stress-matrix" className="scroll-mt-24"><HealthStressTestMatrix /></div>
 
             {/* 6. Bottom 3-Column Grid (Score Component Factors + Buffer Donut + Daily Spending Outflow) */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-6">
+            <div id="health-factors-burn" className="scroll-mt-24 grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-6">
               {/* Column 1: Diagnostic Score Factors */}
               <FeatureCard
                 title="Score Components"

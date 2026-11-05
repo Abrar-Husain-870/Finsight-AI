@@ -119,19 +119,21 @@ export default function AnalyticsPage() {
         )}
 
         {/* FinSight Bento Performance Showcase Grid (Health Score, Net Cash Flow, Streak & 4 Radial Metrics) */}
+        <div id="analytics-bento" className="scroll-mt-24">
         <StatsBento
           isLoading={isAnalyticsLoading}
           netCashFlow={analyticsData.cashFlow.total}
           monthlyTrend={analyticsData.monthlyTrends}
         />
+        </div>
 
         {/* 📊 Section 1: Expense Necessity & Discipline Analytics (Rating-Based KPIs) */}
-        <div id="expense-discipline" className="scroll-mt-6">
+        <div id="expense-discipline" className="scroll-mt-24">
           <ExpenseDisciplineSection transactions={transactionsList} />
         </div>
 
         {/* 📈 Section 2: Core Financial Health & Velocity Cards & Graphs */}
-        <div id="financial-health-velocity" className="scroll-mt-6">
+        <div id="financial-health-velocity" className="scroll-mt-24">
           <FinancialHealthVelocitySection
             healthData={healthData}
             analyticsData={analyticsData}
@@ -139,7 +141,7 @@ export default function AnalyticsPage() {
         </div>
 
         {/* 🏷️ Section 3: Category & Merchant Deep-Dive Visualizations */}
-        <div id="category-merchant-deepdive" className="scroll-mt-6">
+        <div id="category-merchant-deepdive" className="scroll-mt-24">
           <CategoryMerchantDeepDiveSection
             analyticsData={analyticsData}
             transactions={transactionsList}
@@ -147,7 +149,7 @@ export default function AnalyticsPage() {
         </div>
 
         {/* 🎯 Section 4: Savings Goals & Financial Buffer Analytics */}
-        <div id="savings-goals-buffer" className="scroll-mt-6">
+        <div id="savings-goals-buffer" className="scroll-mt-24">
           <SavingsGoalsBufferSection
             goalSummary={goalSummary}
             analyticsData={analyticsData}
@@ -155,7 +157,7 @@ export default function AnalyticsPage() {
         </div>
 
         {/* 🔮 Section 5: AI Insights & Financial Projections */}
-        <div id="ai-insights-projections" className="scroll-mt-6">
+        <div id="ai-insights-projections" className="scroll-mt-24">
           <AiInsightsProjectionsSection
             analyticsData={analyticsData}
           />

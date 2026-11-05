@@ -338,7 +338,7 @@ export default function BudgetPage() {
       </div>
 
       {/* 2. Top Summary Metric Cards (Row 1) */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div id="budget-summary" className="scroll-mt-24 grid grid-cols-1 md:grid-cols-3 gap-6">
         {/* Total Budgeted */}
         <div className="p-6 rounded-2xl border border-[var(--color-border-primary)] bg-[var(--color-bg-primary)] shadow-2xs flex flex-col justify-between gap-2">
           <span className="text-sm font-medium text-[var(--color-text-secondary)]">
@@ -371,7 +371,7 @@ export default function BudgetPage() {
       </div>
 
       {/* 3. Middle Section: Budget Overview (Left) & Category Cards Grid (Right) */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+      <div id="budget-overview-grid" className="scroll-mt-24 grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
         {/* Left 4 Cols: Budget Overview Card */}
         <div className="lg:col-span-4 p-6 sm:p-7 rounded-2xl border border-[var(--color-border-primary)] bg-[var(--color-bg-primary)] shadow-2xs flex flex-col justify-between gap-6">
           <div className="flex items-center justify-between">
@@ -428,7 +428,7 @@ export default function BudgetPage() {
       )}
 
       {/* 4. Bottom Section: Budget vs Actual Bar Chart (Left) & Budget Risk (Right) */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+      <div id="budget-charts" className="scroll-mt-24 grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
         {/* Left 8 Cols: Budget vs Actual Bar Chart */}
         <div className="lg:col-span-8 p-6 sm:p-7 rounded-2xl border border-[var(--color-border-primary)] bg-[var(--color-bg-primary)] shadow-2xs flex flex-col justify-between gap-6">
           <div className="flex items-start justify-between">
