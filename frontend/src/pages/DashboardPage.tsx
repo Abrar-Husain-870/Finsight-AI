@@ -148,7 +148,7 @@ export default function DashboardPage() {
       ) : (
         <>
           {/* Primary Financial Position Header: Compact Responsive Bar */}
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 sm:gap-4">
+          <div id="dashboard-net-position" className="scroll-mt-24 flex flex-col md:flex-row md:items-center md:justify-between gap-3 sm:gap-4">
             <div>
               <span className="text-[11px] font-bold tracking-wider text-[var(--color-text-secondary)] uppercase">
                 Net Cash Position
@@ -193,7 +193,7 @@ export default function DashboardPage() {
           </div>
 
           {/* Section 1: Financial Health & Metric Milestones */}
-          <div className="flex flex-col gap-3 sm:gap-4 -mt-1 sm:-mt-2">
+          <div id="dashboard-health-milestones" className="scroll-mt-24 flex flex-col gap-3 sm:gap-4 -mt-1 sm:-mt-2">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5">
               <div>
                 <div className="flex items-center gap-2.5">
@@ -332,7 +332,7 @@ export default function DashboardPage() {
           </div>
 
           {/* Section 2: Capital Performance & Key Metrics */}
-          <div className="flex flex-col gap-2 pt-2">
+          <div id="dashboard-performance-kpis" className="scroll-mt-24 flex flex-col gap-2 pt-2">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5">
               <div>
                 <div className="flex items-center gap-2.5">
@@ -352,7 +352,7 @@ export default function DashboardPage() {
           </div>
 
           {/* Section 3: Financial Analytics Grid (8 / 4 Allocation) */}
-          <div className="flex flex-col gap-2 pt-2">
+          <div id="dashboard-cashflow-analytics" className="scroll-mt-24 flex flex-col gap-2 pt-2">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5">
               <div>
                 <div className="flex items-center gap-2.5">
@@ -407,7 +407,7 @@ export default function DashboardPage() {
           </div>
 
           {/* Section 4: Portfolio Intelligence & Activity Stream (7 / 5 Allocation) */}
-          <div className="flex flex-col gap-2 pt-2">
+          <div id="dashboard-portfolio-activity" className="scroll-mt-24 flex flex-col gap-2 pt-2">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5">
               <div>
                 <div className="flex items-center gap-2.5">

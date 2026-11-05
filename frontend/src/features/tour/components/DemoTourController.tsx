@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, useCallback } from 'react';
+import React, { useEffect, useRef, useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -7,8 +7,6 @@ import {
   SkipForward,
   SkipBack,
   X,
-  Sparkles,
-  Info,
   Zap,
   CheckCircle2,
   RotateCcw,
@@ -16,8 +14,9 @@ import {
   Maximize2,
   Compass,
   ArrowRight,
-  ShieldCheck,
   Layers,
+  ChevronRight,
+  Eye,
 } from 'lucide-react';
 import { DEMO_TOUR_STEPS, useDemoTourStore, TourStep } from '../demoTourStore.js';
 import { cn } from '../../../lib/utils.js';
@@ -41,6 +40,8 @@ export function DemoTourController() {
     togglePlayPause,
     nextStep,
     prevStep,
+    nextPage,
+    prevPage,
     goToStep,
     stopTour,
     restartTour,
@@ -50,7 +51,7 @@ export function DemoTourController() {
   } = useDemoTourStore();
 
   const currentStep: TourStep = (DEMO_TOUR_STEPS[currentStepIndex] ?? DEMO_TOUR_STEPS[0]) as TourStep;
-  const stepDuration = (currentStep.durationMs || 9500) / playbackSpeed;
+  const stepDuration = (currentStep.durationMs || 5000) / playbackSpeed;
 
   const timerRef = useRef<number | null>(null);
   const startTimeRef = useRef<number>(Date.now());
@@ -63,6 +64,79 @@ export function DemoTourController() {
       navigate(currentStep.route);
     }
   }, [isActive, currentStep.route, location.pathname, navigate]);
+
+  // Smoothly scroll to the target section and apply the spotlight highlight
+  useEffect(() => {
+    if (!isActive) {
+      document.querySelectorAll('.tour-spotlight-active').forEach((el) => {
+        el.classList.remove('tour-spotlight-active');
+      });
+      return;
+    }
+
+    let isCancelled = false;
+
+    const highlightAndScroll = () => {
+      if (isCancelled) return;
+
+      const targetId = currentStep.sectionId;
+      if (!targetId) return;
+
+      const element = document.getElementById(targetId);
+      if (element) {
+        // Clear spotlight from all other elements
+        document.querySelectorAll('.tour-spotlight-active').forEach((el) => {
+          if (el.id !== targetId) {
+            el.classList.remove('tour-spotlight-active');
+          }
+        });
+
+        // Add spotlight to current target
+        element.classList.add('tour-spotlight-active');
+
+        // Smooth scroll to center of viewport
+        element.scrollIntoView({
+          behavior: 'smooth',
+          block: 'center',
+        });
+      } else {
+        // Element might be mounting due to route change, retry after 200ms
+        setTimeout(() => {
+          if (isCancelled) return;
+          const retryEl = document.getElementById(targetId);
+          if (retryEl) {
+            document.querySelectorAll('.tour-spotlight-active').forEach((el) => {
+              if (el.id !== targetId) {
+                el.classList.remove('tour-spotlight-active');
+              }
+            });
+            retryEl.classList.add('tour-spotlight-active');
+            retryEl.scrollIntoView({
+              behavior: 'smooth',
+              block: 'center',
+            });
+          }
+        }, 220);
+      }
+    };
+
+    // Small delay to allow any page transitions to initiate
+    const timer = setTimeout(highlightAndScroll, 80);
+
+    return () => {
+      isCancelled = true;
+      clearTimeout(timer);
+    };
+  }, [isActive, currentStepIndex, currentStep.sectionId, location.pathname]);
+
+  // Clean up any remaining spotlight on tour close / unmount
+  useEffect(() => {
+    return () => {
+      document.querySelectorAll('.tour-spotlight-active').forEach((el) => {
+        el.classList.remove('tour-spotlight-active');
+      });
+    };
+  }, []);
 
   // Handle timer progression and auto-advance
   useEffect(() => {
@@ -87,7 +161,7 @@ export function DemoTourController() {
         elapsedBeforePauseRef.current = 0;
         nextStep();
       }
-    }, 50);
+    }, 40);
 
     return () => {
       if (timerRef.current) {
@@ -103,24 +177,21 @@ export function DemoTourController() {
     setStepProgress(0);
   }, [currentStepIndex, setStepProgress]);
 
-  // Pause tracking when paused
+  // Play / Pause handling
   const handleTogglePlayPause = useCallback(() => {
     if (isPlaying) {
-      // Pausing: save current elapsed time
       elapsedBeforePauseRef.current = Date.now() - startTimeRef.current;
       pauseTour();
     } else {
-      // Resuming
       resumeTour();
     }
   }, [isPlaying, pauseTour, resumeTour]);
 
-  // Global keyboard shortcuts (Space to toggle, Esc to exit, Arrows to step)
+  // Global keyboard shortcuts
   useEffect(() => {
     if (!isActive) return;
 
     const handleKeyDown = (e: KeyboardEvent) => {
-      // Ignore if user is typing in an input or textarea
       const target = e.target as HTMLElement;
       if (target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable)) {
         return;
@@ -137,15 +208,22 @@ export function DemoTourController() {
         e.preventDefault();
         elapsedBeforePauseRef.current = 0;
         prevStep();
+      } else if (e.code === 'ArrowDown' || (e.shiftKey && e.code === 'ArrowRight')) {
+        e.preventDefault();
+        elapsedBeforePauseRef.current = 0;
+        nextPage();
       } else if (e.code === 'Escape') {
         e.preventDefault();
+        document.querySelectorAll('.tour-spotlight-active').forEach((el) => {
+          el.classList.remove('tour-spotlight-active');
+        });
         stopTour();
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isActive, handleTogglePlayPause, nextStep, prevStep, stopTour]);
+  }, [isActive, handleTogglePlayPause, nextStep, prevStep, nextPage, stopTour]);
 
   if (!isActive) return null;
 
@@ -163,7 +241,7 @@ export function DemoTourController() {
             className="pointer-events-auto w-full max-w-lg rounded-3xl bg-[var(--color-bg-primary)]/95 border border-emerald-500/40 p-6 sm:p-7 shadow-2xl backdrop-blur-2xl text-[var(--color-text-primary)] relative overflow-hidden"
           >
             <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-emerald-500 via-[var(--chart-2)] to-emerald-400" />
-            
+
             <div className="flex items-start justify-between gap-4 mb-4">
               <div className="flex items-center gap-3">
                 <div className="h-12 w-12 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-500">
@@ -171,16 +249,21 @@ export function DemoTourController() {
                 </div>
                 <div>
                   <span className="text-[10.5px] font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-2.5 py-0.5 rounded-full border border-emerald-500/20">
-                    Tour Complete
+                    Comprehensive Walkthrough Complete
                   </span>
                   <h3 className="text-xl font-extrabold tracking-tight mt-1 text-[var(--color-text-primary)]">
-                    All Core Features Showcased
+                    All 8 Pages & Nested Sections Explored
                   </h3>
                 </div>
               </div>
               <button
-                onClick={stopTour}
-                className="p-1.5 rounded-full hover:bg-[var(--color-bg-secondary)] text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] transition-colors"
+                onClick={() => {
+                  document.querySelectorAll('.tour-spotlight-active').forEach((el) => {
+                    el.classList.remove('tour-spotlight-active');
+                  });
+                  stopTour();
+                }}
+                className="p-1.5 rounded-full hover:bg-[var(--color-bg-secondary)] text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] transition-colors cursor-pointer"
                 title="Close"
               >
                 <X className="h-5 w-5" />
@@ -188,7 +271,7 @@ export function DemoTourController() {
             </div>
 
             <p className="text-xs sm:text-sm text-[var(--color-text-secondary)] leading-relaxed mb-6 font-medium">
-              You've completed the interactive automated walkthrough of FinSight AI! All 10 deterministic features, behavioral rating analytics, stress tests, and real-time cash velocity modules are active in this workspace.
+              You've completed the automated section-by-section walkthrough across FinSight! All 28 modules, behavioral utility analytics, cash flow velocity pacing, and AI advisory engines are live in this workspace.
             </p>
 
             <div className="flex flex-col sm:flex-row items-center gap-3">
@@ -197,10 +280,15 @@ export function DemoTourController() {
                 className="w-full sm:flex-1 py-2.5 px-4 rounded-xl border border-[var(--color-border-primary)] bg-[var(--color-bg-secondary)] hover:bg-[var(--color-bg-secondary)]/80 text-[var(--color-text-primary)] font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all cursor-pointer"
               >
                 <RotateCcw className="h-4 w-4" />
-                Replay Tour
+                Replay Walkthrough
               </button>
               <button
-                onClick={stopTour}
+                onClick={() => {
+                  document.querySelectorAll('.tour-spotlight-active').forEach((el) => {
+                    el.classList.remove('tour-spotlight-active');
+                  });
+                  stopTour();
+                }}
                 className="w-full sm:flex-1 py-2.5 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-md transition-all cursor-pointer"
               >
                 Explore Workspace Freely
@@ -215,32 +303,38 @@ export function DemoTourController() {
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.8 }}
-            className="pointer-events-auto rounded-full bg-[var(--color-bg-primary)]/90 border border-[var(--color-border-primary)] shadow-xl backdrop-blur-xl px-4 py-2 flex items-center gap-3"
+            className="pointer-events-auto rounded-full bg-[var(--color-bg-primary)]/90 border border-emerald-500/40 shadow-xl backdrop-blur-xl px-4 py-2 flex items-center gap-3"
           >
             <div className="flex items-center gap-2">
               <span className="h-2.5 w-2.5 rounded-full bg-emerald-500 animate-pulse" />
-              <span className="text-xs font-bold text-[var(--color-text-primary)] truncate max-w-[200px]">
-                {currentStep.title}
-              </span>
+              <div className="flex items-center gap-1.5 text-xs font-bold text-[var(--color-text-primary)] truncate max-w-[240px]">
+                <span className="text-emerald-600 dark:text-emerald-400 font-extrabold">{currentStep.pageTitle}:</span>
+                <span className="truncate">{currentStep.title}</span>
+              </div>
             </div>
             <div className="flex items-center gap-1.5 border-l border-[var(--color-border-primary)] pl-2">
               <button
                 onClick={handleTogglePlayPause}
-                className="p-1 rounded-full hover:bg-[var(--color-bg-secondary)] text-[var(--color-text-primary)] transition-colors"
+                className="p-1 rounded-full hover:bg-[var(--color-bg-secondary)] text-[var(--color-text-primary)] transition-colors cursor-pointer"
                 title={isPlaying ? 'Pause (Space)' : 'Play (Space)'}
               >
                 {isPlaying ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4 fill-current" />}
               </button>
               <button
                 onClick={() => setMinimized(false)}
-                className="p-1 rounded-full hover:bg-[var(--color-bg-secondary)] text-[var(--color-text-primary)] transition-colors"
+                className="p-1 rounded-full hover:bg-[var(--color-bg-secondary)] text-[var(--color-text-primary)] transition-colors cursor-pointer"
                 title="Expand Showcase"
               >
                 <Maximize2 className="h-4 w-4" />
               </button>
               <button
-                onClick={stopTour}
-                className="p-1 rounded-full hover:bg-[var(--color-bg-secondary)] text-[var(--color-text-secondary)] hover:text-red-500 transition-colors"
+                onClick={() => {
+                  document.querySelectorAll('.tour-spotlight-active').forEach((el) => {
+                    el.classList.remove('tour-spotlight-active');
+                  });
+                  stopTour();
+                }}
+                className="p-1 rounded-full hover:bg-[var(--color-bg-secondary)] text-[var(--color-text-secondary)] hover:text-red-500 transition-colors cursor-pointer"
                 title="Exit Tour (Esc)"
               >
                 <X className="h-4 w-4" />
@@ -248,7 +342,7 @@ export function DemoTourController() {
             </div>
           </motion.div>
         ) : (
-          /* FULL FLOATING SHOWCASE & PLAYBACK CONTROLLER */
+          /* FULL FLOATING SECTION SHOWCASE & PLAYBACK CONTROLLER */
           <motion.div
             key="tour-full-controller"
             initial={{ opacity: 0, y: 50, scale: 0.96 }}
@@ -257,7 +351,7 @@ export function DemoTourController() {
             transition={{ type: 'spring', damping: 26, stiffness: 320 }}
             className="pointer-events-auto w-full max-w-2xl rounded-3xl bg-[var(--color-bg-primary)]/95 border border-[var(--color-border-primary)] shadow-2xl backdrop-blur-2xl text-[var(--color-text-primary)] overflow-hidden flex flex-col relative"
           >
-            {/* Top Running Step Timer Progress Bar */}
+            {/* Top Running Section Step Timer Progress Bar */}
             <div className="w-full h-1.5 bg-[var(--color-bg-secondary)] overflow-hidden relative">
               <motion.div
                 className={cn(
@@ -268,17 +362,27 @@ export function DemoTourController() {
               />
             </div>
 
-            {/* Showcase Header & Feature Explanation Content */}
+            {/* Showcase Header & Section Content */}
             <div className="p-4 sm:p-5 flex flex-col gap-3">
-              {/* Top Row: Step Index Chip + Badge + Window Controls */}
+              {/* Top Navigation Row: Page & Section Multi-Badge */}
               <div className="flex items-center justify-between gap-3">
                 <div className="flex items-center gap-2 flex-wrap min-w-0">
-                  <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-[var(--color-bg-secondary)] border border-[var(--color-border-primary)] text-[var(--color-text-primary)] tabular-nums shrink-0">
-                    Step {currentStepIndex + 1} of {DEMO_TOUR_STEPS.length}
+                  {/* Current Page Chip */}
+                  <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10.5px] font-extrabold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
+                    <Layers className="h-3 w-3" />
+                    Page {currentStep.pageIndex}/{currentStep.totalPages}: {currentStep.pageTitle}
                   </span>
-                  <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-[var(--chart-2)]/10 text-[var(--chart-2)] border border-[var(--chart-2)]/20 truncate">
+
+                  {/* Nested Section Chip */}
+                  <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-[var(--color-bg-secondary)] border border-[var(--color-border-primary)] text-[var(--color-text-primary)] tabular-nums shrink-0">
+                    Section {currentStep.sectionIndex} of {currentStep.totalSectionsInPage}
+                  </span>
+
+                  {/* Section Category Badge */}
+                  <span className="hidden sm:inline-block px-2 py-0.5 rounded-full text-[10px] font-bold bg-[var(--chart-2)]/10 text-[var(--chart-2)] border border-[var(--chart-2)]/20 truncate">
                     {currentStep.badge}
                   </span>
+
                   {isPaused && (
                     <span className="px-2 py-0.5 rounded-full text-[9.5px] font-bold bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20">
                       Paused
@@ -286,6 +390,7 @@ export function DemoTourController() {
                   )}
                 </div>
 
+                {/* Window Controls */}
                 <div className="flex items-center gap-1 shrink-0">
                   <button
                     onClick={() => setMinimized(true)}
@@ -295,7 +400,12 @@ export function DemoTourController() {
                     <Minimize2 className="h-4 w-4" />
                   </button>
                   <button
-                    onClick={stopTour}
+                    onClick={() => {
+                      document.querySelectorAll('.tour-spotlight-active').forEach((el) => {
+                        el.classList.remove('tour-spotlight-active');
+                      });
+                      stopTour();
+                    }}
                     className="p-1 rounded-lg text-[var(--color-text-secondary)] hover:text-red-500 hover:bg-red-500/10 transition-colors cursor-pointer"
                     title="Exit Demo (Esc)"
                   >
@@ -304,7 +414,7 @@ export function DemoTourController() {
                 </div>
               </div>
 
-              {/* Feature Title and Subtitle */}
+              {/* Section Title and Subtitle */}
               <div>
                 <h3 className="text-base sm:text-lg font-extrabold tracking-tight text-[var(--color-text-primary)] leading-snug">
                   {currentStep.title}
@@ -357,37 +467,44 @@ export function DemoTourController() {
 
             {/* Bottom Playback Media Controls Bar */}
             <div className="px-4 py-3 bg-[var(--color-bg-secondary)]/80 border-t border-[var(--color-border-primary)] flex items-center justify-between gap-3">
-              {/* Left: Step dots navigation */}
-              <div className="hidden sm:flex items-center gap-1">
-                {DEMO_TOUR_STEPS.map((step, idx) => (
-                  <button
-                    key={step.id}
-                    onClick={() => {
-                      elapsedBeforePauseRef.current = 0;
-                      goToStep(idx);
-                    }}
-                    className={cn(
-                      'h-2 rounded-full transition-all duration-300 cursor-pointer',
-                      idx === currentStepIndex
-                        ? 'w-6 bg-emerald-500'
-                        : 'w-2 bg-[var(--color-border-primary)] hover:bg-[var(--color-text-secondary)]'
-                    )}
-                    title={`Jump to ${step.title}`}
-                  />
-                ))}
+              {/* Left: Skip to Prev/Next Page Button */}
+              <div className="flex items-center gap-1.5">
+                <button
+                  onClick={() => {
+                    elapsedBeforePauseRef.current = 0;
+                    prevPage();
+                  }}
+                  disabled={currentStep.pageIndex === 1}
+                  className="px-2.5 py-1 rounded-lg border border-[var(--color-border-primary)] bg-[var(--color-bg-primary)] text-[11px] font-bold text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-bg-secondary)] transition-all disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
+                  title="Jump to Previous Page"
+                >
+                  Prev Page
+                </button>
+                <button
+                  onClick={() => {
+                    elapsedBeforePauseRef.current = 0;
+                    nextPage();
+                  }}
+                  disabled={currentStep.pageIndex === currentStep.totalPages}
+                  className="px-2.5 py-1 rounded-lg border border-[var(--color-border-primary)] bg-[var(--color-bg-primary)] text-[11px] font-bold text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-bg-secondary)] transition-all disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer flex items-center gap-1"
+                  title="Jump to Next Page"
+                >
+                  <span>Next Page</span>
+                  <ChevronRight className="h-3 w-3" />
+                </button>
               </div>
 
               {/* Center: Playback Media Buttons */}
               <div className="flex items-center gap-2 mx-auto sm:mx-0">
-                {/* Previous Step */}
+                {/* Previous Section */}
                 <button
                   onClick={() => {
                     elapsedBeforePauseRef.current = 0;
                     prevStep();
                   }}
                   disabled={currentStepIndex === 0}
-                  className="p-2 rounded-xl border border-[var(--color-border-primary)] bg-[var(--color-bg-primary)] text-[var(--color-text-primary)] hover:bg-[var(--color-bg-secondary)] transition-all disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer shadow-xs"
-                  title="Previous Feature (Left Arrow)"
+                  className="p-2 rounded-xl border border-[var(--color-border-primary)] bg-[var(--color-bg-primary)] text-[var(--color-text-primary)] hover:bg-[var(--color-bg-secondary)] transition-all disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer shadow-xs"
+                  title="Previous Section (Left Arrow)"
                 >
                   <SkipBack className="h-4 w-4" />
                 </button>
@@ -406,7 +523,7 @@ export function DemoTourController() {
                   {isPlaying ? (
                     <>
                       <Pause className="h-4 w-4" />
-                      <span>Pause</span>
+                      <span>Pause (5s)</span>
                     </>
                   ) : (
                     <>
@@ -416,15 +533,15 @@ export function DemoTourController() {
                   )}
                 </button>
 
-                {/* Next Step */}
+                {/* Next Section */}
                 <button
                   onClick={() => {
                     elapsedBeforePauseRef.current = 0;
                     nextStep();
                   }}
                   disabled={currentStepIndex === DEMO_TOUR_STEPS.length - 1}
-                  className="p-2 rounded-xl border border-[var(--color-border-primary)] bg-[var(--color-bg-primary)] text-[var(--color-text-primary)] hover:bg-[var(--color-bg-secondary)] transition-all disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer shadow-xs"
-                  title="Next Feature (Right Arrow)"
+                  className="p-2 rounded-xl border border-[var(--color-border-primary)] bg-[var(--color-bg-primary)] text-[var(--color-text-primary)] hover:bg-[var(--color-bg-secondary)] transition-all disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer shadow-xs"
+                  title="Next Section (Right Arrow)"
                 >
                   <SkipForward className="h-4 w-4" />
                 </button>

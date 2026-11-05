@@ -409,7 +409,7 @@ export default function AiCoachPage() {
     return (
       <div className="flex flex-col h-[calc(100vh-4rem)] w-full overflow-hidden bg-[var(--color-bg-primary)] dark:bg-neutral-950">
         {/* Fullscreen Header Bar */}
-        <div className="shrink-0 h-13 px-4 sm:px-6 flex items-center justify-between border-b border-[var(--color-border-primary)] dark:border-white/10 bg-[var(--color-bg-secondary)]/50 dark:bg-neutral-900/60 backdrop-blur-md z-30">
+        <div id="ai-coach-header" className="scroll-mt-24 shrink-0 h-13 px-4 sm:px-6 flex items-center justify-between border-b border-[var(--color-border-primary)] dark:border-white/10 bg-[var(--color-bg-secondary)]/50 dark:bg-neutral-900/60 backdrop-blur-md z-30">
           <div className="flex items-center gap-3">
             {/* Toggle Sessions Drawer */}
             <button
@@ -497,7 +497,7 @@ export default function AiCoachPage() {
           )}
 
           {/* Full Screen Chat area occupying the entire remaining section */}
-          <div className="flex-1 flex flex-col h-full min-w-0 overflow-hidden relative">
+          <div id="ai-coach-chat" className="scroll-mt-24 flex-1 flex flex-col h-full min-w-0 overflow-hidden relative">
             <AnimatedAIChat
               messages={messages}
               onSendMessage={handleSendMessage}

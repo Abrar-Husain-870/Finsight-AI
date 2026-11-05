@@ -224,7 +224,7 @@ export default function TransactionsPage() {
   return (
     <div className="flex flex-col p-6 sm:p-10 max-w-[1400px] mx-auto w-full gap-6 sm:gap-8">
       {/* ── Page Header ─────────────────────────────────────────────────────── */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div id="transactions-header-search" className="scroll-mt-24 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-3xl font-bold tracking-tight text-[var(--foreground)]">Transactions</h1>
           <p className="text-sm text-[var(--muted-foreground)] mt-1">
@@ -290,7 +290,7 @@ export default function TransactionsPage() {
       )}
 
       {/* ── Filter & Sort Bar ────────────────────────────────────────────────── */}
-      <div className={cn(
+      <div id="transactions-filters" className={cn('scroll-mt-24',
         'flex flex-col sm:flex-row gap-3 p-3.5 rounded-[var(--radius-xl)]',
         'border border-[var(--border)] bg-[var(--card)] shadow-[var(--shadow-sm)]',
       )}>
@@ -393,7 +393,7 @@ export default function TransactionsPage() {
       </div>
 
       {/* ── Table ───────────────────────────────────────────────────────────── */}
-      <div className="w-full">
+      <div id="transactions-table" className="w-full scroll-mt-24">
         {isError ? (
           <ErrorState
             title="Failed to load transactions"
