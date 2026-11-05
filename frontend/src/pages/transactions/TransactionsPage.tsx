@@ -248,7 +248,7 @@ export default function TransactionsPage() {
 
       {/* ── Bulk Action Toolbar (Active when 1 or more selected) ──────────── */}
       {selectedIds.length > 0 && (
-        <div className="sticky top-4 z-30 flex flex-wrap items-center justify-between gap-3 p-3.5 px-5 rounded-[var(--radius-xl)] bg-[var(--card)] border border-[var(--chart-2)]/40 shadow-lg animate-in fade-in slide-in-from-top-2">
+        <div className="sticky top-20 z-30 flex flex-wrap items-center justify-between gap-3 p-3.5 px-5 rounded-[var(--radius-xl)] bg-[var(--card)] border border-[var(--chart-2)]/40 shadow-lg animate-in fade-in slide-in-from-top-2">
           <div className="flex items-center gap-3">
             <span className="inline-flex items-center justify-center h-6 w-6 rounded-full bg-[var(--chart-2)]/10 text-[var(--chart-2)] font-bold text-xs">
               {selectedIds.length}

@@ -49,7 +49,7 @@ export const GridBackground: React.FC<GridBackgroundProps> = ({
         }}
       />
       {/* Foreground Content */}
-      <div className="relative z-10 w-full h-full">
+      <div className="relative z-0 w-full h-full">
         {children}
       </div>
     </div>

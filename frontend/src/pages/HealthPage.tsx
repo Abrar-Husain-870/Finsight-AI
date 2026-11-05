@@ -107,10 +107,10 @@ export default function HealthPage() {
             {showPeriodMenu && (
               <>
                 <div
-                  className="fixed inset-0 z-30"
+                  className="fixed inset-0 z-20"
                   onClick={() => setShowPeriodMenu(false)}
                 />
-                <div className="absolute right-0 mt-1.5 w-52 rounded-xl border border-[var(--color-border-primary)] bg-[var(--color-bg-secondary)] shadow-lg py-1.5 z-40">
+                <div className="absolute right-0 mt-1.5 w-52 rounded-xl border border-[var(--color-border-primary)] bg-[var(--color-bg-secondary)] shadow-lg py-1.5 z-30">
                   {periodOptions.map((opt) => (
                     <button
                       key={opt}

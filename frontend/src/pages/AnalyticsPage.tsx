@@ -87,7 +87,7 @@ export default function AnalyticsPage() {
       />
 
       {/* Page Content elevated above background pattern */}
-      <div className="relative z-10 flex flex-col gap-12">
+      <div className="relative z-0 flex flex-col gap-12">
         {/* Page Header */}
         <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
           <div>
