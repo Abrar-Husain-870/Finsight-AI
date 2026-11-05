@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useUiStore } from '../../store/uiStore.js';
-import { Presentation, Database, Info, AlertTriangle, PanelLeftOpen, PanelLeftClose } from 'lucide-react';
+import { Presentation, Database, Info, AlertTriangle, PanelLeftOpen, PanelLeftClose, Play } from 'lucide-react';
+import { useDemoTourStore } from '../../features/tour/demoTourStore.js';
 import { cn } from '../../lib/utils.js';
 import { useQueryClient } from '@tanstack/react-query';
 import { apiClient } from '../../lib/axios.js';
@@ -9,6 +10,7 @@ import { toast } from 'sonner';
 
 export function SidebarBottomControls({ collapsed = false }: { collapsed?: boolean }) {
   const { presentationMode, setPresentationMode, setAboutModalOpen, sidebarCollapsed, toggleSidebar } = useUiStore();
+  const startTour = useDemoTourStore(s => s.startTour);
   const [showConfirm, setShowConfirm] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const queryClient = useQueryClient();
@@ -33,6 +35,13 @@ export function SidebarBottomControls({ collapsed = false }: { collapsed?: boole
   if (collapsed) {
     return (
       <div className="mt-auto pt-4 flex flex-col items-center gap-2">
+        <button
+          onClick={() => startTour(0)}
+          title="Run Automated Demo"
+          className="p-2 rounded-lg text-emerald-500 hover:text-emerald-400 hover:bg-emerald-500/10 transition-colors cursor-pointer"
+        >
+          <Play className="h-5 w-5 fill-current" />
+        </button>
         <button
           onClick={handleLoadDemo}
           title="Load Demo Workspace"
@@ -66,6 +75,13 @@ export function SidebarBottomControls({ collapsed = false }: { collapsed?: boole
 
   return (
     <div className="mt-auto pt-4 flex flex-col gap-2">
+      <button
+        onClick={() => startTour(0)}
+        className="flex items-center gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-500/10 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 w-full text-left cursor-pointer"
+      >
+        <Play className="h-4 w-4 fill-current shrink-0" />
+        Run Automated Demo
+      </button>
       {showConfirm ? (
         <div className="p-3 bg-[var(--color-warning-muted)] rounded-lg border border-[var(--color-warning)]/30">
           <div className="flex items-start gap-2 mb-2">

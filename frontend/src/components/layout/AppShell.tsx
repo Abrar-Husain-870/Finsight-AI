@@ -6,6 +6,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { pageTransitionVariants } from '../../lib/motion.js';
 import { KeyboardShortcutsDialog } from '../ui/KeyboardShortcutsDialog.js';
 import { AboutModal } from '../ui/AboutModal.js';
+import { DemoTourController } from '../../features/tour/components/DemoTourController.js';
 import { useUiStore } from '../../store/uiStore.js';
 import { cn } from '../../lib/utils.js';
 import { useAuthStore } from '../../features/auth/store/auth.store.js';
@@ -51,6 +52,7 @@ export function AppShell() {
         </main>
         <KeyboardShortcutsDialog />
         <AboutModal />
+        <DemoTourController />
       </div>
     </div>
   );

@@ -9,7 +9,10 @@ import { StreakCard } from '../components/ui/streak-card.js';
 import { AdvancedStats } from '../components/ui/advanced-stats.js';
 import { StockPortfolioCard } from '../components/ui/stock-portfolio-card.js';
 import { useCurrency } from '../lib/hooks/useCurrency.js';
-import { ArrowRight, ShieldCheck, TrendingUp, Info } from 'lucide-react';
+import { ArrowRight, ShieldCheck, TrendingUp, Info, Play, Sparkles } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { useAuthStore } from '../features/auth/store/auth.store.js';
+import { useDemoTourStore } from '../features/tour/demoTourStore.js';
 import { Chart, type ChartConfig, ChartTooltip, ChartTooltipContent } from '../components/ui/bar-chart.js';
 import { Bar, BarChart, YAxis } from 'recharts';
 import { Link } from 'react-router-dom';
@@ -26,6 +29,9 @@ export default function DashboardPage() {
   const { data: summary, isLoading, isError, error, refetch } = useDashboardSummary();
   const queryClient = useQueryClient();
   const { formatMoney, symbol } = useCurrency();
+  const user = useAuthStore(s => s.user);
+  const startTour = useDemoTourStore(s => s.startTour);
+  const isTourActive = useDemoTourStore(s => s.isActive);
 
   useEffect(() => {
     if (summary) {
@@ -99,7 +105,38 @@ export default function DashboardPage() {
 
   return (
     <div className="flex flex-col gap-6 p-4 sm:p-6 lg:p-8 max-w-[1440px] mx-auto w-full">
-
+      {/* Demo Walkthrough Action Card if logged in as Demo User */}
+      {user?.email === 'demo@finsight.local' && !isTourActive && (
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="rounded-2xl border border-emerald-500/30 bg-gradient-to-r from-emerald-500/10 via-[var(--chart-2)]/5 to-transparent p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-sm backdrop-blur-xs"
+        >
+          <div className="flex items-center gap-3.5">
+            <div className="h-10 w-10 rounded-xl bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0 border border-emerald-500/30">
+              <Sparkles className="h-5 w-5" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <h4 className="text-sm font-bold text-[var(--color-text-primary)]">Demo Account Active</h4>
+                <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-600 dark:text-emerald-400">
+                  Interactive Walkthrough
+                </span>
+              </div>
+              <p className="text-xs text-[var(--color-text-secondary)] mt-0.5">
+                Experience FinSight's 10 core features in an automated playback tour showcasing what each feature is and what it does.
+              </p>
+            </div>
+          </div>
+          <button
+            onClick={() => startTour(0)}
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs sm:text-sm shadow-md hover:shadow-lg transition-all shrink-0 cursor-pointer"
+          >
+            <Play className="h-4 w-4 fill-current" />
+            <span>Start Automated Tour</span>
+          </button>
+        </motion.div>
+      )}
       {isError ? (
         <ErrorState
           title="Failed to load dashboard"
