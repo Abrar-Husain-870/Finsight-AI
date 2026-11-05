@@ -523,7 +523,10 @@ export function SidebarNav({
     }
   };
 
-  const handleSelect = onSelect || handleDefaultSelect;
+  const handleSelect = (item: NavItemData) => {
+    onSelect?.(item);
+    handleDefaultSelect(item);
+  };
 
   return (
     <div className={`flex flex-col h-full bg-[var(--color-bg-primary)] p-2 font-sans transition-all duration-300 ${collapsed ? 'w-[72px] items-center px-1' : 'w-[260px]'} ${className}`}>

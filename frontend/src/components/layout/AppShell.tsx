@@ -2,19 +2,16 @@ import React from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import { Sidebar } from './Sidebar.js';
 import { Header } from './Header.js';
-import { AnimatePresence, motion } from 'framer-motion';
-import { pageTransitionVariants } from '../../lib/motion.js';
+import { motion } from 'framer-motion';
 import { KeyboardShortcutsDialog } from '../ui/KeyboardShortcutsDialog.js';
 import { AboutModal } from '../ui/AboutModal.js';
 import { DemoTourController } from '../../features/tour/components/DemoTourController.js';
 import { useUiStore } from '../../store/uiStore.js';
 import { cn } from '../../lib/utils.js';
-import { useAuthStore } from '../../features/auth/store/auth.store.js';
 
 export function AppShell() {
   const location = useLocation();
   const { presentationMode, sidebarCollapsed } = useUiStore();
-  const currency = useAuthStore(s => s.user?.currency || 'USD');
 
   return (
     <div
@@ -37,18 +34,15 @@ export function AppShell() {
       >
         <Header />
         <main id="main-content" className="flex-1 flex flex-col min-w-0" tabIndex={-1}>
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={`${location.pathname}-${currency}`}
-              variants={pageTransitionVariants}
-              initial="initial"
-              animate="animate"
-              exit="exit"
-              className="flex-1 flex flex-col w-full"
-            >
-              <Outlet />
-            </motion.div>
-          </AnimatePresence>
+          <motion.div
+            key={location.pathname}
+            initial={{ opacity: 0, y: 6 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.18, ease: "easeOut" }}
+            className="flex-1 flex flex-col w-full"
+          >
+            <Outlet />
+          </motion.div>
         </main>
         <KeyboardShortcutsDialog />
         <AboutModal />

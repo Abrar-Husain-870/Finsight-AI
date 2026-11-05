@@ -56,7 +56,7 @@ export function App() {
 
             {/* Protected App Routes */}
             <Route path="/" element={<AuthGuard><AppShell /></AuthGuard>}>
-              <Route path="/" element={
+              <Route index element={
                 <React.Suspense fallback={<PageFallback name="Dashboard" />}>
                   <DashboardPage />
                 </React.Suspense>
@@ -109,7 +109,7 @@ export function App() {
                 </React.Suspense>
               } />
               
-              <Route path="settings" element={
+              <Route path="/settings" element={
                 <React.Suspense fallback={<PageFallback name="Settings" />}>
                   <SettingsPage />
                 </React.Suspense>
