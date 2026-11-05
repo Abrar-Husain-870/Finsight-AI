@@ -74,8 +74,8 @@ export function MonthlyTrendChart({ data = [] }: { data?: MonthlyTrend[] }) {
         </span>
         <div className="flex items-center gap-4 text-xs font-medium text-[var(--color-text-secondary)]">
           <div className="flex items-center gap-1.5">
-            <span className="h-2.5 w-2.5 rounded-full bg-[var(--chart-2)]" />
-            <span className="text-[var(--chart-2)] font-semibold">Income (+)</span>
+            <span className="h-2.5 w-2.5 rounded-full bg-[var(--theme-accent-highlight,var(--chart-2))]" />
+            <span className="text-[var(--theme-accent-highlight,var(--chart-2))] font-semibold">Income (+)</span>
           </div>
           <div className="flex items-center gap-1.5">
             <span className="h-2.5 w-2.5 rounded-full bg-[var(--color-text-secondary)]" />
@@ -87,7 +87,7 @@ export function MonthlyTrendChart({ data = [] }: { data?: MonthlyTrend[] }) {
       <div className="w-full flex-1 flex flex-col justify-center min-h-[280px]">
         <AreaChart aspectRatio="2.1 / 1" data={chartData}>
           <Grid horizontal />
-          <Area curve={curveMonotoneX} dataKey="revenue" fill="var(--chart-2)" fillOpacity={0.2} stroke="var(--chart-2)" strokeWidth={2} />
+          <Area curve={curveMonotoneX} dataKey="revenue" fill="var(--theme-accent-highlight,var(--chart-2))" fillOpacity={0.2} stroke="var(--theme-accent-highlight,var(--chart-2))" strokeWidth={2} />
           <Area curve={curveMonotoneX} dataKey="costs" fill="oklch(0.55 0 0)" fillOpacity={0.12} stroke="oklch(0.65 0 0)" strokeWidth={1.5} />
           <SegmentBackground />
           <SegmentLineFrom />

@@ -14,14 +14,14 @@ import {
   LegendLabel,
 } from '../../../components/ui/charts/index.js';
 
-// Single blue shade + harmonious monochrome gray scale palette matching Analytics page theme rules
+// Theme-defined vibrant chart palette: each category slice has an identifiable, distinct hue
 const distinctThemePalette = [
-  'var(--chart-2)',     // Signature Blue
-  'oklch(0.68 0 0)',    // Light Slate Gray
-  'oklch(0.50 0 0)',    // Mid Gray
-  'oklch(0.35 0 0)',    // Dark Gray
-  'oklch(0.82 0 0)',    // Muted Silver
-  'oklch(0.25 0 0)',    // Charcoal Gray
+  'var(--chart-1)',
+  'var(--chart-2)',
+  'var(--chart-3)',
+  'var(--chart-4)',
+  'var(--chart-5)',
+  'var(--chart-6)',
 ];
 
 export function CategoryDonutChart({ data }: { data: CategoryBreakdown[] }) {
@@ -31,10 +31,10 @@ export function CategoryDonutChart({ data }: { data: CategoryBreakdown[] }) {
   const pieData = React.useMemo(() => {
     if (!data || data.length === 0) {
       return [
-        { label: 'Housing', value: 25376, color: 'var(--chart-2)' },
-        { label: 'Food & Dining', value: 14097, color: 'oklch(0.68 0 0)' },
-        { label: 'Transport', value: 11278, color: 'oklch(0.50 0 0)' },
-        { label: 'Others', value: 5639, color: 'oklch(0.35 0 0)' },
+        { label: 'Housing', value: 25376, color: 'var(--chart-1)' },
+        { label: 'Food & Dining', value: 14097, color: 'var(--chart-2)' },
+        { label: 'Transport', value: 11278, color: 'var(--chart-3)' },
+        { label: 'Others', value: 5639, color: 'var(--chart-4)' },
       ];
     }
 
@@ -50,7 +50,7 @@ export function CategoryDonutChart({ data }: { data: CategoryBreakdown[] }) {
   const legendItems = React.useMemo(() => {
     return pieData.map(item => ({
       label: item.label,
-      color: item.color || 'var(--chart-2)',
+      color: item.color || 'var(--chart-1)',
     }));
   }, [pieData]);
 

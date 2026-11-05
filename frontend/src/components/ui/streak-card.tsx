@@ -90,7 +90,7 @@ const StreakCard = React.forwardRef<HTMLDivElement, StreakCardProps>(
       >
             <header className="mb-2 sm:mb-3 flex items-center justify-between gap-2">
               <div className="flex items-center gap-2 min-w-0">
-                <Flame className="text-[var(--chart-2)] h-5 w-5 fill-[var(--chart-2)] shrink-0" aria-hidden="true" />
+                <Flame className="text-[var(--theme-accent-highlight,var(--chart-2))] h-5 w-5 fill-[var(--theme-accent-highlight,var(--chart-2))] shrink-0" aria-hidden="true" />
                 <h3 className="text-lg sm:text-xl leading-none font-bold tracking-tight text-[var(--foreground)] truncate">{title}</h3>
               </div>
               <Button

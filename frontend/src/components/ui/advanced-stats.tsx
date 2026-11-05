@@ -72,14 +72,14 @@ export function AdvancedStats({
                 <div className="flex items-center justify-between mb-2">
                   <div className="flex items-center gap-2">
                     <div className="size-8 rounded-xl bg-[var(--color-bg-tertiary)] border border-[var(--color-border-primary)] flex items-center justify-center text-[var(--color-text-primary)]">
-                      <Target className="w-4 h-4 text-[var(--chart-2)]" />
+                      <Target className="w-4 h-4 text-[var(--theme-accent-highlight,var(--chart-2))]" />
                     </div>
                     <div>
                       <h4 className="font-bold text-sm text-[var(--color-text-primary)] leading-tight">{primaryGoalName}</h4>
                       <span className="text-[10px] text-[var(--color-text-secondary)] font-medium">Primary Goal</span>
                     </div>
                   </div>
-                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
+                  <span data-theme-badge="" className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
                     On Track
                   </span>
                 </div>
@@ -99,7 +99,7 @@ export function AdvancedStats({
                 </div>
                 <div className="w-full h-2 bg-[var(--color-bg-tertiary)] rounded-full overflow-hidden p-0.5 border border-[var(--color-border-primary)]">
                   <div 
-                    className="h-full bg-[var(--chart-2)] rounded-full transition-all duration-500" 
+                    className="h-full bg-[var(--theme-accent-highlight,var(--chart-2))] rounded-full transition-all duration-500" 
                     style={{ width: `${primaryGoalProgress}%` }}
                   />
                 </div>
@@ -115,17 +115,17 @@ export function AdvancedStats({
               <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center gap-2.5">
                   <div className="size-8 rounded-xl bg-[var(--color-bg-tertiary)] border border-[var(--color-border-primary)] flex items-center justify-center text-[var(--color-text-primary)]">
-                    <ShieldCheck className="w-4 h-4 text-[var(--chart-2)]" />
+                    <ShieldCheck className="w-4 h-4 text-[var(--theme-accent-highlight,var(--chart-2))]" />
                   </div>
                   <h4 className="font-bold text-base text-[var(--color-text-primary)]">Financial Growth</h4>
                 </div>
-                <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-[var(--chart-2)]/10 text-[var(--chart-2)] border border-[var(--chart-2)]/20">
+                <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-[var(--theme-accent-highlight,var(--chart-2))]/10 text-[var(--theme-accent-highlight,var(--chart-2))] border border-[var(--theme-accent-highlight,var(--chart-2))]/20">
                   Top Tier Retention
                 </span>
               </div>
               <p className="text-xs sm:text-sm text-[var(--color-text-secondary)] leading-relaxed">
                 Organic net savings are up{' '}
-                <span className="text-[var(--chart-2)] font-bold">24%</span>{' '}
+                <span className="text-[var(--theme-accent-highlight,var(--chart-2))] font-bold">24%</span>{' '}
                 compared to previous quarter, supported by disciplined discretionary spending.
               </p>
             </TimelineAnimation>

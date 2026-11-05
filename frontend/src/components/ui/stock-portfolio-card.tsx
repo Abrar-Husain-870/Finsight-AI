@@ -55,14 +55,14 @@ const defaultInsights: InsightCardItem[] = [
     title: "Your spending is trending lower this month",
     actionText: "View spending insights",
     link: "/analytics",
-    icon: <PieChart className="w-3.5 h-3.5 text-[var(--chart-2)]" />,
+    icon: <PieChart className="w-3.5 h-3.5 text-[var(--theme-accent-highlight,var(--chart-2))]" />,
   },
   {
     category: "FINANCIAL HEALTH",
     title: "Your savings are on track this month",
     actionText: "View financial health",
     link: "/health",
-    icon: <ShieldCheck className="w-3.5 h-3.5 text-[var(--chart-2)]" />,
+    icon: <ShieldCheck className="w-3.5 h-3.5 text-[var(--theme-accent-highlight,var(--chart-2))]" />,
   },
 ];
 

@@ -38,6 +38,7 @@ export function SidebarBottomControls({ collapsed = false }: { collapsed?: boole
         <button
           onClick={() => startTour(0)}
           title="Run Automated Demo"
+          data-sidebar-tour-btn=""
           className="p-2 rounded-lg text-emerald-500 hover:text-emerald-400 hover:bg-emerald-500/10 transition-colors cursor-pointer"
         >
           <Play className="h-5 w-5 fill-current" />
@@ -77,6 +78,7 @@ export function SidebarBottomControls({ collapsed = false }: { collapsed?: boole
     <div className="mt-auto pt-4 flex flex-col gap-2">
       <button
         onClick={() => startTour(0)}
+        data-sidebar-tour-btn=""
         className="flex items-center gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-500/10 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 w-full text-left cursor-pointer"
       >
         <Play className="h-4 w-4 fill-current shrink-0" />

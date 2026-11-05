@@ -271,7 +271,7 @@ function NavItem({
             }
           `}
         >
-          <item.icon className="w-[18px] h-[18px] shrink-0" strokeWidth={1.5} />
+          <item.icon className={cn("w-[18px] h-[18px] shrink-0 transition-colors", (isActive || isFlyoutOpen) ? "text-[var(--theme-accent-highlight,var(--chart-2))]" : "text-[var(--color-text-secondary)] group-hover:text-[var(--color-text-primary)]")} strokeWidth={1.5} />
           {item.badge && (
             <span className="absolute top-1 right-1 w-2 h-2 rounded-full bg-amber-500 ring-2 ring-[var(--color-bg-primary)]" />
           )}
@@ -286,7 +286,7 @@ function NavItem({
           >
             <div className="flex items-center justify-between px-2 pb-2 mb-1 border-b border-[var(--color-border-primary)]">
               <div className="flex items-center gap-2">
-                <div className="p-1 rounded-md bg-emerald-500/10 text-emerald-500 border border-emerald-500/20">
+                <div className="p-1 rounded-md bg-[var(--theme-badge-bg,rgba(16,185,129,0.1))] text-[var(--theme-accent-highlight,var(--chart-2))] border border-[var(--theme-badge-border,rgba(16,185,129,0.2))]">
                   <item.icon className="w-3.5 h-3.5" />
                 </div>
                 <div>
@@ -294,7 +294,7 @@ function NavItem({
                   <span className="text-[10px] text-[var(--color-text-secondary)] font-medium">Extension Panel</span>
                 </div>
               </div>
-              <span className="text-[10px] font-semibold text-emerald-500 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">
+              <span className="text-[10px] font-semibold text-[var(--theme-accent-highlight,var(--chart-2))] bg-[var(--theme-badge-bg,rgba(16,185,129,0.1))] px-2 py-0.5 rounded-full border border-[var(--theme-badge-border,rgba(16,185,129,0.2))]">
                 {item.children!.length} Sections
               </span>
             </div>
@@ -320,7 +320,7 @@ function NavItem({
                     )}
                   >
                     <div className="flex items-center gap-2.5 min-w-0 pr-2">
-                      <div className="p-1 rounded-md bg-[var(--color-bg-secondary)] border border-[var(--color-border-primary)] text-[var(--color-text-secondary)] group-hover/child:text-emerald-500 group-hover/child:border-emerald-500/30 transition-colors shrink-0">
+                      <div className="p-1 rounded-md bg-[var(--color-bg-secondary)] border border-[var(--color-border-primary)] text-[var(--color-text-secondary)] group-hover/child:text-[var(--theme-accent-highlight,var(--chart-2))] group-hover/child:border-[var(--theme-accent-highlight,var(--chart-2))]/30 transition-colors shrink-0">
                         <ChildIcon className="w-3 h-3" />
                       </div>
                       <span className="text-xs font-medium group-hover/child:font-semibold text-[var(--color-text-primary)] truncate leading-tight">
@@ -361,7 +361,7 @@ function NavItem({
         <div className="flex items-center gap-2.5 min-w-0">
           <item.icon 
             className={`w-[16px] h-[16px] shrink-0 transition-colors
-              ${(isActive || isFlyoutOpen) ? 'text-emerald-500' : 'text-[var(--color-text-secondary)] group-hover:text-[var(--color-text-primary)]'}
+              ${(isActive || isFlyoutOpen) ? 'text-[var(--theme-accent-highlight,var(--chart-2))]' : 'text-[var(--color-text-secondary)] group-hover:text-[var(--color-text-primary)]'}
             `} 
             strokeWidth={1.5} 
           />
@@ -385,7 +385,7 @@ function NavItem({
             <ChevronRight 
               className={cn(
                 "w-3.5 h-3.5 text-[var(--color-text-secondary)] transition-transform duration-200",
-                isFlyoutOpen ? "text-emerald-500 translate-x-1" : ""
+                isFlyoutOpen ? "text-[var(--theme-accent-highlight,var(--chart-2))] translate-x-1" : ""
               )}
               strokeWidth={2}
             />
@@ -403,7 +403,7 @@ function NavItem({
           {/* Extension Header */}
           <div className="flex items-center justify-between px-2 pb-2 mb-0.5 border-b border-[var(--color-border-primary)]">
             <div className="flex items-center gap-2">
-              <div className="p-1.5 rounded-lg bg-emerald-500/10 text-emerald-500 border border-emerald-500/20">
+              <div className="p-1.5 rounded-lg bg-[var(--theme-badge-bg,rgba(16,185,129,0.1))] text-[var(--theme-accent-highlight,var(--chart-2))] border border-[var(--theme-badge-border,rgba(16,185,129,0.2))]">
                 <item.icon className="w-3.5 h-3.5" />
               </div>
               <div>
@@ -415,7 +415,7 @@ function NavItem({
                 </span>
               </div>
             </div>
-            <span className="text-[10px] font-semibold text-emerald-500 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">
+            <span className="text-[10px] font-semibold text-[var(--theme-accent-highlight,var(--chart-2))] bg-[var(--theme-badge-bg,rgba(16,185,129,0.1))] px-2 py-0.5 rounded-full border border-[var(--theme-badge-border,rgba(16,185,129,0.2))]">
               {item.children!.length} Deep Dives
             </span>
           </div>
@@ -442,7 +442,7 @@ function NavItem({
                   )}
                 >
                   <div className="flex items-center gap-2.5 min-w-0 pr-2">
-                    <div className="p-1 rounded-md bg-[var(--color-bg-secondary)] border border-[var(--color-border-primary)] text-[var(--color-text-secondary)] group-hover/child:text-emerald-500 group-hover/child:border-emerald-500/30 transition-colors shrink-0">
+                    <div className="p-1 rounded-md bg-[var(--color-bg-secondary)] border border-[var(--color-border-primary)] text-[var(--color-text-secondary)] group-hover/child:text-[var(--theme-accent-highlight,var(--chart-2))] group-hover/child:border-[var(--theme-accent-highlight,var(--chart-2))]/30 transition-colors shrink-0">
                       <ChildIcon className="w-3 h-3" />
                     </div>
                     <span className="text-xs font-medium group-hover/child:font-semibold text-[var(--color-text-primary)] truncate leading-tight">
@@ -464,7 +464,7 @@ function NavItem({
                 setIsFlyoutOpen(false);
                 onSelect(item);
               }}
-              className="w-full flex items-center justify-between px-2.5 py-2 rounded-xl text-[11.5px] font-semibold text-emerald-500 bg-emerald-500/5 hover:bg-emerald-500/10 border border-emerald-500/15 hover:border-emerald-500/25 transition-all cursor-pointer"
+              className="w-full flex items-center justify-between px-2.5 py-2 rounded-xl text-[11.5px] font-semibold text-[var(--theme-accent-highlight,var(--chart-2))] bg-[var(--theme-badge-bg,rgba(16,185,129,0.05))] hover:bg-[var(--theme-badge-bg,rgba(16,185,129,0.1))] border border-[var(--theme-badge-border,rgba(16,185,129,0.15))] transition-all cursor-pointer"
             >
               <span>View Analytics Overview</span>
               <ChevronRight className="w-3.5 h-3.5" />

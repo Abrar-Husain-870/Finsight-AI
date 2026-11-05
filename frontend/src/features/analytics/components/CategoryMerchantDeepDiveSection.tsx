@@ -20,7 +20,7 @@ interface CategoryMerchantDeepDiveSectionProps {
   transactions?: TransactionResponse[];
 }
 
-const CATEGORY_COLORS = ['#3B82F6', '#F59E0B', '#10B981', '#EC4899', '#8B5CF6', '#6366F1', '#14B8A6'];
+const CATEGORY_COLORS = ['var(--chart-1)', 'var(--chart-2)', 'var(--chart-3)', 'var(--chart-4)', 'var(--chart-5)', 'var(--chart-6)'];
 
 export function CategoryMerchantDeepDiveSection({ analyticsData, transactions }: CategoryMerchantDeepDiveSectionProps) {
   const { formatMoney, formatMajor } = useCurrency();
@@ -28,38 +28,38 @@ export function CategoryMerchantDeepDiveSection({ analyticsData, transactions }:
   // 1. Parent Category vs Subcategory Breakdown (Bar Chart Data)
   const categoryData = useMemo(() => {
     if (analyticsData?.categoryAnalysis && analyticsData.categoryAnalysis.length > 0) {
-      return analyticsData.categoryAnalysis.map(c => ({
+      return analyticsData.categoryAnalysis.map((c, idx) => ({
         browser: c.categoryName,
         users: fromMinor(c.amount),
-        fill: 'var(--primary)'
+        fill: CATEGORY_COLORS[idx % CATEGORY_COLORS.length]
       })).slice(0, 7);
     }
     return [
-      { browser: 'Rent/Mortgage', users: 1800, fill: 'var(--primary)' },
-      { browser: 'Groceries', users: 850, fill: 'var(--primary)' },
-      { browser: 'Restaurants', users: 620, fill: 'var(--primary)' },
-      { browser: 'Crypto/Stocks', users: 450, fill: 'var(--primary)' },
-      { browser: 'Utilities', users: 310, fill: 'var(--primary)' },
-      { browser: 'Coffee', users: 240, fill: 'var(--primary)' },
-      { browser: 'Public Transit', users: 190, fill: 'var(--primary)' },
+      { browser: 'Rent/Mortgage', users: 1800, fill: CATEGORY_COLORS[0] },
+      { browser: 'Groceries', users: 850, fill: CATEGORY_COLORS[1] },
+      { browser: 'Restaurants', users: 620, fill: CATEGORY_COLORS[2] },
+      { browser: 'Crypto/Stocks', users: 450, fill: CATEGORY_COLORS[3] },
+      { browser: 'Utilities', users: 310, fill: CATEGORY_COLORS[4] },
+      { browser: 'Coffee', users: 240, fill: CATEGORY_COLORS[5] },
+      { browser: 'Public Transit', users: 190, fill: CATEGORY_COLORS[0] },
     ];
   }, [analyticsData]);
 
   // 2. Top Merchant Frequency & Spend (Bar Chart Data)
   const merchantData = useMemo(() => {
     if (analyticsData?.merchantAnalysis && analyticsData.merchantAnalysis.length > 0) {
-      return analyticsData.merchantAnalysis.map(m => ({
+      return analyticsData.merchantAnalysis.map((m, idx) => ({
         browser: m.merchant.toUpperCase(),
         users: fromMinor(m.amount),
-        fill: 'var(--primary)'
+        fill: CATEGORY_COLORS[idx % CATEGORY_COLORS.length]
       })).slice(0, 6);
     }
     return [
-      { browser: 'AMAZON', users: 1240, fill: 'var(--primary)' },
-      { browser: 'WHOLE FOODS', users: 890, fill: 'var(--primary)' },
-      { browser: 'TRADER JOES', users: 540, fill: 'var(--primary)' },
-      { browser: 'STARBUCKS', users: 320, fill: 'var(--primary)' },
-      { browser: 'UBER', users: 210, fill: 'var(--primary)' },
+      { browser: 'AMAZON', users: 1240, fill: CATEGORY_COLORS[0] },
+      { browser: 'WHOLE FOODS', users: 890, fill: CATEGORY_COLORS[1] },
+      { browser: 'TRADER JOES', users: 540, fill: CATEGORY_COLORS[2] },
+      { browser: 'STARBUCKS', users: 320, fill: CATEGORY_COLORS[3] },
+      { browser: 'UBER', users: 210, fill: CATEGORY_COLORS[4] },
     ];
   }, [analyticsData]);
 

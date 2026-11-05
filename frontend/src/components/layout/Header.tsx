@@ -8,6 +8,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { useDemoTourStore } from '../../features/tour/demoTourStore.js';
 import { FinSightLogo } from '../ui/FinSightLogo.js';
+import { ThemePaletteSelector } from '../ui/ThemePaletteSelector.js';
 
 export function Header() {
   const clearAuth = useAuthStore(s => s.clearAuth);
@@ -96,6 +97,7 @@ export function Header() {
             whileHover={{ scale: 1.04 }}
             whileTap={{ scale: 0.96 }}
             onClick={() => startTour(0)}
+            data-tour-btn=""
             className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-gradient-to-r from-emerald-500 to-teal-600 text-white shadow-sm hover:shadow-md transition-all cursor-pointer border border-emerald-400/30"
             title="Start automated interactive feature tour"
           >
@@ -104,6 +106,9 @@ export function Header() {
             <span className="sm:hidden">Tour</span>
           </motion.button>
         )}
+        {/* Theme Palette Selector Popover */}
+        <ThemePaletteSelector variant="navbar" />
+
         <motion.button
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}

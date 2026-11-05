@@ -36,7 +36,7 @@ export function HealthSummaryCards({ score = 88, trend = 4 }: HealthSummaryCards
             +{trend} pts vs last month
           </span>
           {/* Micro Sparkline Curve */}
-          <svg width="60" height="20" className="overflow-visible stroke-emerald-500 fill-none stroke-2">
+          <svg width="60" height="20" className="overflow-visible fill-none stroke-2" stroke="var(--theme-accent-highlight, #10B981)">
             <path d="M 0 16 Q 15 14, 30 8 T 60 4" strokeLinecap="round" />
           </svg>
         </div>
@@ -65,7 +65,7 @@ export function HealthSummaryCards({ score = 88, trend = 4 }: HealthSummaryCards
             +0.6 mo vs last month
           </span>
           {/* Micro Sparkline Curve */}
-          <svg width="60" height="20" className="overflow-visible stroke-emerald-500 fill-none stroke-2">
+          <svg width="60" height="20" className="overflow-visible fill-none stroke-2" stroke="var(--theme-accent-highlight, #10B981)">
             <path d="M 0 14 Q 20 12, 40 6 T 60 3" strokeLinecap="round" />
           </svg>
         </div>
@@ -94,7 +94,7 @@ export function HealthSummaryCards({ score = 88, trend = 4 }: HealthSummaryCards
             -2.1% (Safe &lt; 35%)
           </span>
           {/* Micro Sparkline Curve */}
-          <svg width="60" height="20" className="overflow-visible stroke-emerald-500/70 fill-none stroke-2">
+          <svg width="60" height="20" className="overflow-visible fill-none stroke-2" stroke="var(--theme-accent-highlight, #10B981)">
             <path d="M 0 6 Q 20 10, 40 14 T 60 16" strokeLinecap="round" />
           </svg>
         </div>
@@ -119,7 +119,7 @@ export function HealthSummaryCards({ score = 88, trend = 4 }: HealthSummaryCards
               r="22"
               strokeWidth="5"
               fill="transparent"
-              className="stroke-emerald-500"
+              stroke="var(--theme-accent-highlight, #10B981)"
               strokeDasharray={2 * Math.PI * 22}
               strokeDashoffset={2 * Math.PI * 22 * (1 - 0.382)}
               strokeLinecap="round"

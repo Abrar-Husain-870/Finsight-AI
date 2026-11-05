@@ -46,9 +46,9 @@ function getDefaultItems(symbol: string): StatItem[] {
       currentText: "9 of 12 goals reached",
       description: "75% of target objectives actively on track",
       badge: "On Track",
-      fill: "var(--chart-2)", // Blue
+      fill: "var(--theme-accent-highlight, var(--chart-2))",
       href: "/goals",
-      icon: <Target className="w-4 h-4 text-[var(--chart-2)]" />,
+      icon: <Target className="w-4 h-4 text-[var(--theme-accent-highlight,var(--chart-2))]" />,
     },
     {
       name: "Budget Allocation",
@@ -66,9 +66,9 @@ function getDefaultItems(symbol: string): StatItem[] {
       currentText: "5.4 of 6 months covered",
       description: "Liquid cushion for unexpected obligations",
       badge: "Resilient",
-      fill: "var(--chart-2)", // Blue
+      fill: "var(--theme-accent-highlight, var(--chart-2))",
       href: "/simulation",
-      icon: <ShieldAlert className="w-4 h-4 text-[var(--chart-2)]" />,
+      icon: <ShieldAlert className="w-4 h-4 text-[var(--theme-accent-highlight,var(--chart-2))]" />,
     },
   ];
 }

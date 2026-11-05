@@ -5,8 +5,8 @@ import { ShieldCheck } from 'lucide-react';
 
 export function ScoreCircle({ score, trend }: { score: number; trend?: number }) {
   const { status, strokeColor } = React.useMemo(() => {
-    if (score >= 80) return { status: 'Optimal', strokeColor: '#10B981' };
-    if (score >= 65) return { status: 'Stable', strokeColor: '#34D399' };
+    if (score >= 80) return { status: 'Optimal', strokeColor: 'var(--health-score-stroke, #10B981)' };
+    if (score >= 65) return { status: 'Stable', strokeColor: 'var(--health-score-stroke, #34D399)' };
     if (score >= 50) return { status: 'Fair', strokeColor: '#94A3B8' };
     return { status: 'At Risk', strokeColor: '#64748B' };
   }, [score]);

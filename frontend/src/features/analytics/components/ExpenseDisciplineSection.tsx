@@ -149,33 +149,42 @@ export function ExpenseDisciplineSection({ transactions }: ExpenseDisciplineSect
     ];
 
     // 3. Average Expense Satisfaction per Category (Bar Chart Data)
+    const satisfactionColors = [
+      'var(--chart-1)',
+      'var(--chart-2)',
+      'var(--chart-3)',
+      'var(--chart-4)',
+      'var(--chart-5)',
+      'var(--chart-6)',
+    ];
+
     const satisfactionData = Object.entries(categoryRatings)
       .filter(([cat]) => cat !== 'General' || Object.keys(categoryRatings).length === 1)
-      .map(([category, data]) => ({
+      .map(([category, data], idx) => ({
         browser: category,
         users: Number((data.totalRating / data.count).toFixed(1)),
-        fill: 'var(--primary)'
+        fill: satisfactionColors[idx % satisfactionColors.length]
       })).slice(0, 6);
 
     if (satisfactionData.length <= 1) {
       satisfactionData.length = 0;
       satisfactionData.push(
-        { browser: 'Housing', users: 4.8, fill: 'var(--primary)' },
-        { browser: 'Food & Dining', users: 4.2, fill: 'var(--primary)' },
-        { browser: 'Investments', users: 4.9, fill: 'var(--primary)' },
-        { browser: 'Transportation', users: 3.5, fill: 'var(--primary)' },
-        { browser: 'Shopping', users: 3.8, fill: 'var(--primary)' },
-        { browser: 'Entertainment', users: 4.1, fill: 'var(--primary)' }
+        { browser: 'Housing', users: 4.8, fill: 'var(--chart-1)' },
+        { browser: 'Food & Dining', users: 4.2, fill: 'var(--chart-2)' },
+        { browser: 'Investments', users: 4.9, fill: 'var(--chart-3)' },
+        { browser: 'Transportation', users: 3.5, fill: 'var(--chart-4)' },
+        { browser: 'Shopping', users: 3.8, fill: 'var(--chart-5)' },
+        { browser: 'Entertainment', users: 4.1, fill: 'var(--chart-6)' }
       );
     }
 
-    // 4. Expense Rating Breakdown (Pie Chart Data)
+    // 4. Expense Rating Breakdown (Pie Chart Data with distinct theme hues)
     const pieData = [
-      { label: '1★ Regret', value: ratingAmounts[1] || 150, color: 'var(--muted-foreground)' },
-      { label: '2★ Impulsive', value: ratingAmounts[2] || 220, color: 'var(--border)' },
-      { label: '3★ Neutral', value: ratingAmounts[3] || 450, color: 'var(--muted)' },
+      { label: '1★ Regret', value: ratingAmounts[1] || 150, color: 'var(--chart-line-secondary, #EF4444)' },
+      { label: '2★ Impulsive', value: ratingAmounts[2] || 220, color: 'var(--chart-4)' },
+      { label: '3★ Neutral', value: ratingAmounts[3] || 450, color: 'var(--chart-3)' },
       { label: '4★ Useful', value: ratingAmounts[4] || 890, color: 'var(--chart-2)' },
-      { label: '5★ Essential', value: ratingAmounts[5] || 1200, color: 'var(--primary)' },
+      { label: '5★ Essential', value: ratingAmounts[5] || 1200, color: 'var(--chart-1)' },
     ];
 
     // 5. Regret vs. Essential Spend by Category (Stacked Bar Chart Data)

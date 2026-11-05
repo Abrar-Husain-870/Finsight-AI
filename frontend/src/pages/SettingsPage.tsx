@@ -6,6 +6,7 @@ import { Button } from '../components/ui/Button.js';
 import { emitSystemAlert } from '../lib/errors.js';
 import { authApi } from '../features/auth/api/auth.api.js';
 import { motion } from 'framer-motion';
+import { ThemePaletteSelector } from '../components/ui/ThemePaletteSelector.js';
 
 const CURRENCIES = [
   { value: 'USD', label: 'USD ($)' },
@@ -149,6 +150,17 @@ export default function SettingsPage() {
                 <span className="text-xs text-[var(--color-text-secondary)] mt-1">Easy on the eyes, cinematic feel</span>
               </div>
             </button>
+          </div>
+
+          {/* Theme Palette Selection */}
+          <div className="mt-8 pt-8 border-t border-[var(--color-border-primary)]/40">
+            <div className="mb-4">
+              <h3 className="text-sm font-semibold text-[var(--color-text-primary)]">Color Palette</h3>
+              <p className="text-xs text-[var(--color-text-secondary)] mt-0.5">
+                Choose from 7 bespoke palettes built on the 5-color distribution standard with distinct analytics chart hues.
+              </p>
+            </div>
+            <ThemePaletteSelector variant="grid" />
           </div>
         </section>
 

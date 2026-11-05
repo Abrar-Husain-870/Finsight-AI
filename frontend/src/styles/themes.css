@@ -1,0 +1,670 @@
+/* ==========================================================================
+   FinSight Dynamic Theme Palettes
+   Each palette strictly follows the 5-Color Distribution Breakdown:
+   • 60% Canvas (Color 1 Main Background + Color 2 Secondary Background/Cards)
+   • 30% Structure & Content (Color 3 High-contrast Text + Color 4 Dividers/Borders)
+   • 10% Focal Points (Color 5 Accent / CTA button / Active States)
+   
+   IMPORTANT:
+   - All chart colors (--chart-1 through --chart-6) and status accents are STRICTLY
+     derived from each theme's defined 5 colors (shades, tints, and luminance steps).
+   - No foreign hues (e.g. random greens, cyans, pinks, purples) are permitted.
+   - High-contrast, solid cards with crisp separation (no blurry/frosted blending).
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. Arctic Reflection (Glacial Navy, Frost & Cobalt)
+   Source: #5289AD, #243C4C, #ACBCBF, #F4FCFB, #698696
+   -------------------------------------------------------------------------- */
+[data-palette="arctic"] {
+  --health-score-stroke: var(--theme-accent-highlight);
+  --health-chart-accent: var(--theme-accent-highlight);
+  --chart-1-health: #5289AD;
+  --chart-2-health: #ACBCBF;
+  --chart-3-health: #243C4C;
+  --background: #E5EFF1;
+  --card: #FFFFFF;
+  --muted: #D8E6E9;
+  --secondary: #CCE0E4;
+  --popover: #FFFFFF;
+  --sidebar: #DCEDF0;
+  --foreground: #243C4C;
+  --card-foreground: #243C4C;
+  --popover-foreground: #243C4C;
+  --muted-foreground: #698696;
+  --secondary-foreground: #243C4C;
+  --border: #B6CCD1;
+  --input: #B6CCD1;
+  --sidebar-border: #B6CCD1;
+  --sidebar-accent: #D8E6E9;
+  --sidebar-foreground: #243C4C;
+  --sidebar-primary: #5289AD;
+  --sidebar-primary-foreground: #FFFFFF;
+  --primary: #5289AD;
+  --primary-foreground: #FFFFFF;
+  --accent: #D8E6E9;
+  --accent-foreground: #243C4C;
+  --ring: #5289AD;
+  --color-border-hover: #5289AD;
+
+  --theme-accent-highlight: #5289AD;
+  --theme-accent-highlight-foreground: #FFFFFF;
+  --theme-badge-bg: rgba(82, 137, 173, 0.15);
+  --theme-badge-text: #243C4C;
+  --theme-badge-border: rgba(82, 137, 173, 0.35);
+
+  --chart-1: #5289AD; /* Cobalt Ice Blue */
+  --chart-2: #ACBCBF; /* Ice Mist Gray */
+  --chart-3: #243C4C; /* Deep Abyssal Navy */
+  --chart-4: #8EB7D2; /* Sky Frost Tint */
+  --chart-5: #3B6582; /* Deep Oceanic Slate */
+  --chart-6: #698696; /* Fjord Blue */
+  --chart-line-primary: #5289AD;
+  --chart-line-secondary: #698696;
+  --grid-line: rgba(36, 60, 76, 0.08);
+}
+
+.dark[data-palette="arctic"],
+[data-palette="arctic"].dark {
+  --chart-1-health: #5289AD;
+  --chart-2-health: #ACBCBF;
+  --chart-3-health: #3D637E;
+  --background: #0E171E;
+  --card: #182833;
+  --muted: #213543;
+  --secondary: #2A4253;
+  --popover: #182833;
+  --sidebar: #121E26;
+  --foreground: #F4FCFB;
+  --card-foreground: #F4FCFB;
+  --popover-foreground: #F4FCFB;
+  --muted-foreground: #ACBCBF;
+  --secondary-foreground: #F4FCFB;
+  --border: #2E4657;
+  --input: #2E4657;
+  --sidebar-border: #243745;
+  --sidebar-accent: #213543;
+  --sidebar-foreground: #F4FCFB;
+  --sidebar-primary: #5289AD;
+  --sidebar-primary-foreground: #FFFFFF;
+  --primary: #5289AD;
+  --primary-foreground: #FFFFFF;
+  --accent: #213543;
+  --accent-foreground: #F4FCFB;
+  --ring: #5289AD;
+  --color-border-hover: #5289AD;
+
+  --theme-accent-highlight: #5289AD;
+  --theme-accent-highlight-foreground: #FFFFFF;
+  --theme-badge-bg: rgba(82, 137, 173, 0.22);
+  --theme-badge-text: #ACBCBF;
+  --theme-badge-border: rgba(82, 137, 173, 0.45);
+
+  --chart-1: #5289AD; /* Cobalt Ice Blue */
+  --chart-2: #ACBCBF; /* Ice Mist Gray */
+  --chart-3: #698696; /* Fjord Blue */
+  --chart-4: #8EB7D2; /* Sky Frost Tint */
+  --chart-5: #3B6582; /* Deep Oceanic Slate */
+  --chart-6: #D6E3E6; /* Pale Frost Tint */
+  --chart-line-primary: #5289AD;
+  --chart-line-secondary: #ACBCBF;
+  --grid-line: rgba(244, 252, 251, 0.08);
+}
+
+/* --------------------------------------------------------------------------
+   2. Nothing UI (Minimalist Charcoal & Safety Orange)
+   Source: #FFFCF2, #CCC5B9, #403D39, #252422, #EB5E28
+   -------------------------------------------------------------------------- */
+[data-palette="nothing"] {
+  --health-score-stroke: var(--theme-accent-highlight);
+  --health-chart-accent: var(--theme-accent-highlight);
+  --chart-1-health: #EB5E28;
+  --chart-2-health: #CCC5B9;
+  --chart-3-health: #252422;
+  --background: #F4EFE6;
+  --card: #FFFFFF;
+  --muted: #EAE3D6;
+  --secondary: #E0D7C6;
+  --popover: #FFFFFF;
+  --sidebar: #EFE9DC;
+  --foreground: #252422;
+  --card-foreground: #252422;
+  --popover-foreground: #252422;
+  --muted-foreground: #403D39;
+  --secondary-foreground: #252422;
+  --border: #D2C9BB;
+  --input: #D2C9BB;
+  --sidebar-border: #D2C9BB;
+  --sidebar-accent: #EAE3D6;
+  --sidebar-foreground: #252422;
+  --sidebar-primary: #EB5E28;
+  --sidebar-primary-foreground: #FFFFFF;
+  --primary: #EB5E28;
+  --primary-foreground: #FFFFFF;
+  --accent: #EAE3D6;
+  --accent-foreground: #252422;
+  --ring: #EB5E28;
+  --color-border-hover: #EB5E28;
+
+  --theme-accent-highlight: #EB5E28;
+  --theme-accent-highlight-foreground: #FFFFFF;
+  --theme-badge-bg: rgba(235, 94, 40, 0.15);
+  --theme-badge-text: #C04212;
+  --theme-badge-border: rgba(235, 94, 40, 0.35);
+
+  --chart-1: #EB5E28; /* Safety Orange */
+  --chart-2: #CCC5B9; /* Warm Stone Gray */
+  --chart-3: #252422; /* Deep Charcoal Black */
+  --chart-4: #F2895C; /* Light Flame Coral */
+  --chart-5: #403D39; /* Deep Slate Gray */
+  --chart-6: #B84312; /* Dark Burnt Flame */
+  --chart-line-primary: #EB5E28;
+  --chart-line-secondary: #403D39;
+  --grid-line: rgba(37, 36, 34, 0.08);
+}
+
+.dark[data-palette="nothing"],
+[data-palette="nothing"].dark {
+  --chart-1-health: #EB5E28;
+  --chart-2-health: #CCC5B9;
+  --chart-3-health: #403D39;
+  --background: #141312;
+  --card: #22201E;
+  --muted: #302E2B;
+  --secondary: #3B3835;
+  --popover: #22201E;
+  --sidebar: #1A1918;
+  --foreground: #FFFCF2;
+  --card-foreground: #FFFCF2;
+  --popover-foreground: #FFFCF2;
+  --muted-foreground: #CCC5B9;
+  --secondary-foreground: #FFFCF2;
+  --border: #3E3A34;
+  --input: #3E3A34;
+  --sidebar-border: #302D28;
+  --sidebar-accent: #302E2B;
+  --sidebar-foreground: #FFFCF2;
+  --sidebar-primary: #EB5E28;
+  --sidebar-primary-foreground: #FFFFFF;
+  --primary: #EB5E28;
+  --primary-foreground: #FFFFFF;
+  --accent: #302E2B;
+  --accent-foreground: #FFFCF2;
+  --ring: #EB5E28;
+  --color-border-hover: #EB5E28;
+
+  --theme-accent-highlight: #EB5E28;
+  --theme-accent-highlight-foreground: #FFFFFF;
+  --theme-badge-bg: rgba(235, 94, 40, 0.22);
+  --theme-badge-text: #F2895C;
+  --theme-badge-border: rgba(235, 94, 40, 0.45);
+
+  --chart-1: #EB5E28; /* Safety Orange */
+  --chart-2: #CCC5B9; /* Stone Gray */
+  --chart-3: #403D39; /* Slate Gray */
+  --chart-4: #F2895C; /* Light Flame Coral */
+  --chart-5: #BF4312; /* Dark Burnt Flame */
+  --chart-6: #8C8479; /* Warm Ash Gray */
+  --chart-line-primary: #EB5E28;
+  --chart-line-secondary: #CCC5B9;
+  --grid-line: rgba(255, 252, 242, 0.08);
+}
+
+/* --------------------------------------------------------------------------
+   3. Amber Walnut Morning (Dark Espresso & Cinnamon Amber)
+   Source: #EBEFEE, #CCB499, #C8906D, #BB6C43, #4A413C
+   -------------------------------------------------------------------------- */
+[data-palette="amber-walnut"] {
+  --health-score-stroke: var(--theme-accent-highlight);
+  --health-chart-accent: var(--theme-accent-highlight);
+  --chart-1-health: #BB6C43;
+  --chart-2-health: #CCB499;
+  --chart-3-health: #4A413C;
+  --background: #EDE7E1;
+  --card: #FFFFFF;
+  --muted: #DFD6CD;
+  --secondary: #D4C9BF;
+  --popover: #FFFFFF;
+  --sidebar: #E5DED6;
+  --foreground: #4A413C;
+  --card-foreground: #4A413C;
+  --popover-foreground: #4A413C;
+  --muted-foreground: #6E5F57;
+  --secondary-foreground: #4A413C;
+  --border: #C9BCB0;
+  --input: #C9BCB0;
+  --sidebar-border: #C9BCB0;
+  --sidebar-accent: #DFD6CD;
+  --sidebar-foreground: #4A413C;
+  --sidebar-primary: #BB6C43;
+  --sidebar-primary-foreground: #FFFFFF;
+  --primary: #BB6C43;
+  --primary-foreground: #FFFFFF;
+  --accent: #DFD6CD;
+  --accent-foreground: #4A413C;
+  --ring: #BB6C43;
+  --color-border-hover: #BB6C43;
+
+  --theme-accent-highlight: #BB6C43;
+  --theme-accent-highlight-foreground: #FFFFFF;
+  --theme-badge-bg: rgba(187, 108, 67, 0.15);
+  --theme-badge-text: #9B4F29;
+  --theme-badge-border: rgba(187, 108, 67, 0.35);
+
+  --chart-1: #BB6C43; /* Roasted Amber */
+  --chart-2: #CCB499; /* Warm Sand Beige */
+  --chart-3: #4A413C; /* Espresso Walnut */
+  --chart-4: #DC9570; /* Spiced Cinnamon Tint */
+  --chart-5: #C8906D; /* Terracotta Clay */
+  --chart-6: #8E4B26; /* Dark Walnut Roast Shade */
+  --chart-line-primary: #BB6C43;
+  --chart-line-secondary: #C8906D;
+  --grid-line: rgba(74, 65, 60, 0.08);
+}
+
+.dark[data-palette="amber-walnut"],
+[data-palette="amber-walnut"].dark {
+  --chart-1-health: #BB6C43;
+  --chart-2-health: #CCB499;
+  --chart-3-health: #706158;
+  --background: #181412;
+  --card: #28211D;
+  --muted: #382F2A;
+  --secondary: #453A34;
+  --popover: #28211D;
+  --sidebar: #1F1A17;
+  --foreground: #FAF8F5;
+  --card-foreground: #FAF8F5;
+  --popover-foreground: #FAF8F5;
+  --muted-foreground: #CCB499;
+  --secondary-foreground: #FAF8F5;
+  --border: #4C3D35;
+  --input: #4C3D35;
+  --sidebar-border: #3B2E27;
+  --sidebar-accent: #382F2A;
+  --sidebar-foreground: #FAF8F5;
+  --sidebar-primary: #BB6C43;
+  --sidebar-primary-foreground: #FFFFFF;
+  --primary: #BB6C43;
+  --primary-foreground: #FFFFFF;
+  --accent: #382F2A;
+  --accent-foreground: #FAF8F5;
+  --ring: #BB6C43;
+  --color-border-hover: #C8906D;
+
+  --theme-accent-highlight: #BB6C43;
+  --theme-accent-highlight-foreground: #FFFFFF;
+  --theme-badge-bg: rgba(187, 108, 67, 0.22);
+  --theme-badge-text: #DC9570;
+  --theme-badge-border: rgba(187, 108, 67, 0.45);
+
+  --chart-1: #BB6C43; /* Roasted Amber */
+  --chart-2: #CCB499; /* Warm Sand Beige */
+  --chart-3: #C8906D; /* Terracotta Clay */
+  --chart-4: #DC9570; /* Spiced Cinnamon Tint */
+  --chart-5: #8E4B26; /* Dark Walnut Roast Shade */
+  --chart-6: #706158; /* Espresso Gray */
+  --chart-line-primary: #BB6C43;
+  --chart-line-secondary: #CCB499;
+  --grid-line: rgba(250, 248, 245, 0.08);
+}
+
+/* --------------------------------------------------------------------------
+   4. Urban Nocturne (Pitch Noir & Cyber Neon Yellow)
+   Source: #141414, #444444, #979797, #D6D6D6, #E2E800
+   -------------------------------------------------------------------------- */
+[data-palette="urban-nocturne"] {
+  --health-score-stroke: var(--theme-accent-highlight);
+  --health-chart-accent: var(--theme-accent-highlight);
+  --chart-1-health: #C8CE00;
+  --chart-2-health: #D6D6D6;
+  --chart-3-health: #444444;
+  --background: #EEEEEE;
+  --card: #FFFFFF;
+  --muted: #E2E2E2;
+  --secondary: #D6D6D6;
+  --popover: #FFFFFF;
+  --sidebar: #E7E7E7;
+  --foreground: #141414;
+  --card-foreground: #141414;
+  --popover-foreground: #141414;
+  --muted-foreground: #555555;
+  --secondary-foreground: #141414;
+  --border: #CCCCCC;
+  --input: #CCCCCC;
+  --sidebar-border: #CCCCCC;
+  --sidebar-accent: #E2E2E2;
+  --sidebar-foreground: #141414;
+  --sidebar-primary: #141414;
+  --sidebar-primary-foreground: #E2E800;
+  --primary: #141414;
+  --primary-foreground: #E2E800;
+  --accent: #E2E2E2;
+  --accent-foreground: #141414;
+  --ring: #141414;
+  --color-border-hover: #141414;
+
+  --theme-accent-highlight: #C8CE00;
+  --theme-accent-highlight-foreground: #141414;
+  --theme-badge-bg: rgba(200, 206, 0, 0.16);
+  --theme-badge-text: #7A7E00;
+  --theme-badge-border: rgba(200, 206, 0, 0.4);
+
+  --chart-1: #C8CE00; /* Cyber Yellow */
+  --chart-2: #141414; /* Deep Charcoal Noir */
+  --chart-3: #979797; /* Mid Steel Grey */
+  --chart-4: #555555; /* Graphite Dark Grey */
+  --chart-5: #B0B600; /* Deep Olive Yellow */
+  --chart-6: #E8EE40; /* Light Cyber Yellow */
+  --chart-line-primary: #8E9400;
+  --chart-line-secondary: #555555;
+  --grid-line: rgba(20, 20, 20, 0.08);
+}
+
+.dark[data-palette="urban-nocturne"],
+[data-palette="urban-nocturne"].dark {
+  --chart-1-health: #E2E800;
+  --chart-2-health: #D6D6D6;
+  --chart-3-health: #444444;
+  --background: #0E0E0E;
+  --card: #1A1A1A;
+  --muted: #262626;
+  --secondary: #303030;
+  --popover: #1A1A1A;
+  --sidebar: #141414;
+  --foreground: #F5F5F5;
+  --card-foreground: #F5F5F5;
+  --popover-foreground: #F5F5F5;
+  --muted-foreground: #979797;
+  --secondary-foreground: #F5F5F5;
+  --border: #333333;
+  --input: #333333;
+  --sidebar-border: #262626;
+  --sidebar-accent: #262626;
+  --sidebar-foreground: #F5F5F5;
+  --sidebar-primary: #E2E800;
+  --sidebar-primary-foreground: #141414;
+  --primary: #E2E800;
+  --primary-foreground: #141414;
+  --accent: #262626;
+  --accent-foreground: #E2E800;
+  --ring: #E2E800;
+  --color-border-hover: #E2E800;
+
+  --theme-accent-highlight: #E2E800;
+  --theme-accent-highlight-foreground: #141414;
+  --theme-badge-bg: rgba(226, 232, 0, 0.16);
+  --theme-badge-text: #E2E800;
+  --theme-badge-border: rgba(226, 232, 0, 0.4);
+
+  --chart-1: #E2E800; /* Cyber Yellow */
+  --chart-2: #D6D6D6; /* Silver */
+  --chart-3: #979797; /* Mid Steel Grey */
+  --chart-4: #555555; /* Graphite */
+  --chart-5: #B8BE00; /* Deep Olive Yellow */
+  --chart-6: #F5F875; /* Pale Lemon Tint */
+  --chart-line-primary: #E2E800;
+  --chart-line-secondary: #979797;
+  --grid-line: rgba(245, 245, 245, 0.08);
+}
+
+/* --------------------------------------------------------------------------
+   5. Urban Slate (Nordic Denim, Granite & Taupe)
+   Source: #E9E6E7, #7B7F8A, #5E5653, #AB978C, #6B7C98
+   -------------------------------------------------------------------------- */
+[data-palette="urban-slate"] {
+  --health-score-stroke: var(--theme-accent-highlight);
+  --health-chart-accent: var(--theme-accent-highlight);
+  --chart-1-health: #6B7C98;
+  --chart-2-health: #AB978C;
+  --chart-3-health: #5E5653;
+  --background: #E8E6E8;
+  --card: #FFFFFF;
+  --muted: #DDD9DD;
+  --secondary: #D1CCD1;
+  --popover: #FFFFFF;
+  --sidebar: #E2DFE2;
+  --foreground: #2B2929;
+  --card-foreground: #2B2929;
+  --popover-foreground: #2B2929;
+  --muted-foreground: #5E5653;
+  --secondary-foreground: #2B2929;
+  --border: #C6C2C5;
+  --input: #C6C2C5;
+  --sidebar-border: #C6C2C5;
+  --sidebar-accent: #DDD9DD;
+  --sidebar-foreground: #2B2929;
+  --sidebar-primary: #6B7C98;
+  --sidebar-primary-foreground: #FFFFFF;
+  --primary: #6B7C98;
+  --primary-foreground: #FFFFFF;
+  --accent: #DDD9DD;
+  --accent-foreground: #2B2929;
+  --ring: #6B7C98;
+  --color-border-hover: #6B7C98;
+
+  --theme-accent-highlight: #6B7C98;
+  --theme-accent-highlight-foreground: #FFFFFF;
+  --theme-badge-bg: rgba(107, 124, 152, 0.15);
+  --theme-badge-text: #4E5F7B;
+  --theme-badge-border: rgba(107, 124, 152, 0.35);
+
+  --chart-1: #6B7C98; /* Nordic Denim Blue */
+  --chart-2: #AB978C; /* Clay Taupe */
+  --chart-3: #5E5653; /* Granite Brown-Gray */
+  --chart-4: #92A1BA; /* Soft Ice Denim Tint */
+  --chart-5: #7B7F8A; /* Steel Slate Gray */
+  --chart-6: #47546B; /* Deep Denim Navy Shade */
+  --chart-line-primary: #6B7C98;
+  --chart-line-secondary: #AB978C;
+  --grid-line: rgba(43, 41, 41, 0.08);
+}
+
+.dark[data-palette="urban-slate"],
+[data-palette="urban-slate"].dark {
+  --chart-1-health: #6B7C98;
+  --chart-2-health: #AB978C;
+  --chart-3-health: #5E5653;
+  --background: #14161A;
+  --card: #20242B;
+  --muted: #2B313A;
+  --secondary: #363D49;
+  --popover: #20242B;
+  --sidebar: #171A1F;
+  --foreground: #E9E6E7;
+  --card-foreground: #E9E6E7;
+  --popover-foreground: #E9E6E7;
+  --muted-foreground: #AB978C;
+  --secondary-foreground: #E9E6E7;
+  --border: #363C47;
+  --input: #363C47;
+  --sidebar-border: #272C35;
+  --sidebar-accent: #2B313A;
+  --sidebar-foreground: #E9E6E7;
+  --sidebar-primary: #6B7C98;
+  --sidebar-primary-foreground: #FFFFFF;
+  --primary: #6B7C98;
+  --primary-foreground: #FFFFFF;
+  --accent: #2B313A;
+  --accent-foreground: #E9E6E7;
+  --ring: #6B7C98;
+  --color-border-hover: #AB978C;
+
+  --theme-accent-highlight: #6B7C98;
+  --theme-accent-highlight-foreground: #FFFFFF;
+  --theme-badge-bg: rgba(107, 124, 152, 0.22);
+  --theme-badge-text: #92A1BA;
+  --theme-badge-border: rgba(107, 124, 152, 0.45);
+
+  --chart-1: #6B7C98; /* Nordic Denim Blue */
+  --chart-2: #AB978C; /* Clay Taupe */
+  --chart-3: #7B7F8A; /* Steel Slate Gray */
+  --chart-4: #92A1BA; /* Soft Ice Denim Tint */
+  --chart-5: #47546B; /* Deep Denim Navy Shade */
+  --chart-6: #5E5653; /* Granite Brown-Gray */
+  --chart-line-primary: #6B7C98;
+  --chart-line-secondary: #AB978C;
+  --grid-line: rgba(233, 230, 231, 0.08);
+}
+
+/* --------------------------------------------------------------------------
+   6. Ink Wash (Traditional Sumi Ink & Silver Wash)
+   Source: #FFFFFF, #CFCFCF, #7D7D7D, #545454, #252525
+   -------------------------------------------------------------------------- */
+[data-palette="ink-wash"] {
+  --health-score-stroke: var(--theme-accent-highlight);
+  --health-chart-accent: var(--theme-accent-highlight);
+  --chart-1-health: #252525;
+  --chart-2-health: #7D7D7D;
+  --chart-3-health: #CFCFCF;
+  --background: #EDEDED;
+  --card: #FFFFFF;
+  --muted: #E0E0E0;
+  --secondary: #D4D4D4;
+  --popover: #FFFFFF;
+  --sidebar: #E5E5E5;
+  --foreground: #252525;
+  --card-foreground: #252525;
+  --popover-foreground: #252525;
+  --muted-foreground: #555555;
+  --secondary-foreground: #252525;
+  --border: #CCCCCC;
+  --input: #CCCCCC;
+  --sidebar-border: #CCCCCC;
+  --sidebar-accent: #E0E0E0;
+  --sidebar-foreground: #252525;
+  --sidebar-primary: #252525;
+  --sidebar-primary-foreground: #FFFFFF;
+  --primary: #252525;
+  --primary-foreground: #FFFFFF;
+  --accent: #E0E0E0;
+  --accent-foreground: #252525;
+  --ring: #252525;
+  --color-border-hover: #252525;
+
+  --theme-accent-highlight: #252525;
+  --theme-accent-highlight-foreground: #FFFFFF;
+  --theme-badge-bg: rgba(37, 37, 37, 0.12);
+  --theme-badge-text: #252525;
+  --theme-badge-border: rgba(37, 37, 37, 0.3);
+
+  --chart-1: #252525; /* Dense Sumi Black */
+  --chart-2: #CFCFCF; /* Light Wash Silver */
+  --chart-3: #545454; /* Charcoal Ink */
+  --chart-4: #A8A8A8; /* Silver Gray */
+  --chart-5: #111111; /* Pitch Jet Ink */
+  --chart-6: #7D7D7D; /* Mid Wash Gray */
+  --chart-line-primary: #252525;
+  --chart-line-secondary: #7D7D7D;
+  --grid-line: rgba(37, 37, 37, 0.08);
+}
+
+.dark[data-palette="ink-wash"],
+[data-palette="ink-wash"].dark {
+  --chart-1-health: #F4F4F4;
+  --chart-2-health: #7D7D7D;
+  --chart-3-health: #353535;
+  --background: #111111;
+  --card: #1C1C1C;
+  --muted: #262626;
+  --secondary: #303030;
+  --popover: #1C1C1C;
+  --sidebar: #151515;
+  --foreground: #F4F4F4;
+  --card-foreground: #F4F4F4;
+  --popover-foreground: #F4FCFB;
+  --muted-foreground: #A8A8A8;
+  --secondary-foreground: #F4F4F4;
+  --border: #333333;
+  --input: #333333;
+  --sidebar-border: #262626;
+  --sidebar-accent: #262626;
+  --sidebar-foreground: #F4F4F4;
+  --sidebar-primary: #F4F4F4;
+  --sidebar-primary-foreground: #111111;
+  --primary: #F4F4F4;
+  --primary-foreground: #111111;
+  --accent: #262626;
+  --accent-foreground: #F4F4F4;
+  --ring: #F4F4F4;
+  --color-border-hover: #F4F4F4;
+
+  --theme-accent-highlight: #F4F4F4;
+  --theme-accent-highlight-foreground: #111111;
+  --theme-badge-bg: rgba(244, 244, 244, 0.15);
+  --theme-badge-text: #F4F4F4;
+  --theme-badge-border: rgba(244, 244, 244, 0.35);
+
+  --chart-1: #F4F4F4; /* Parchment Pure White */
+  --chart-2: #545454; /* Charcoal Ink */
+  --chart-3: #CFCFCF; /* Light Wash Silver */
+  --chart-4: #353535; /* Deep Sumi Slate */
+  --chart-5: #7D7D7D; /* Mid Wash Gray */
+  --chart-6: #A8A8A8; /* Silver Gray */
+  --chart-line-primary: #F4F4F4;
+  --chart-line-secondary: #7D7D7D;
+  --grid-line: rgba(244, 244, 244, 0.08);
+}
+
+/* ==========================================================================
+   Scoped Theme Overrides ONLY for Custom Palettes [data-palette]
+   Default theme has NO data-palette attribute, so these never affect default.
+   ========================================================================== */
+[data-palette] [data-tour-btn] {
+  background: var(--theme-accent-highlight) !important;
+  color: var(--theme-accent-highlight-foreground) !important;
+  border-color: var(--theme-badge-border) !important;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15) !important;
+}
+
+[data-palette] [data-theme-badge] {
+  background-color: var(--theme-badge-bg) !important;
+  color: var(--theme-badge-text) !important;
+  border-color: var(--theme-badge-border) !important;
+}
+
+[data-palette] [data-sidebar-tour-btn] {
+  color: var(--theme-accent-highlight) !important;
+}
+
+[data-palette] [data-sidebar-tour-btn]:hover {
+  background-color: var(--theme-badge-bg) !important;
+  color: var(--theme-accent-highlight) !important;
+}
+
+[data-palette] .tour-spotlight-active {
+  outline-color: var(--theme-accent-highlight) !important;
+  box-shadow: 0 0 35px var(--theme-badge-bg), inset 0 0 20px var(--theme-badge-bg) !important;
+}
+
+/* ==========================================================================
+   Financial Health Page Theme Harmonization ONLY for Custom Palettes [data-palette]
+   Default theme has NO data-palette attribute, keeping its original green theme intact.
+   ========================================================================== */
+[data-palette] [class*="text-emerald-"],
+[data-palette] [class*="hover:text-emerald-"]:hover,
+[data-palette] .group:hover [class*="group-hover:text-emerald-"] {
+  color: var(--theme-accent-highlight) !important;
+}
+
+[data-palette] [class*="stroke-emerald-"] {
+  stroke: var(--theme-accent-highlight) !important;
+}
+
+[data-palette] [class*="bg-emerald-500/"],
+[data-palette] [class*="bg-emerald-400/"] {
+  background-color: var(--theme-badge-bg) !important;
+}
+
+[data-palette] .bg-emerald-500,
+[data-palette] .bg-emerald-400 {
+  background-color: var(--theme-accent-highlight) !important;
+}
+
+[data-palette] [class*="border-emerald-"] {
+  border-color: var(--theme-badge-border) !important;
+}
+
+[data-palette] [class*="hover:bg-emerald-500"]:hover {
+  background-color: var(--theme-badge-bg) !important;
+}

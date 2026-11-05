@@ -65,6 +65,8 @@
   --chart-line-primary: #10B981;
   --chart-line-secondary: #EF4444;
   --grid-line: rgba(71, 85, 105, 0.12);
+  --theme-accent-highlight: var(--chart-2);
+  --theme-accent-highlight-foreground: #ffffff;
 }
 
 .dark {
@@ -130,6 +132,8 @@
   --color-danger-foreground: #ffffff;
   --color-danger-muted: oklch(0.65 0.22 24.5 / 0.20);
   --color-overlay: oklch(0 0 0 / 0.6);
+  --theme-accent-highlight: var(--chart-2);
+  --theme-accent-highlight-foreground: #ffffff;
 }
 
 @theme inline {

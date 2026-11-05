@@ -22,6 +22,24 @@ import abstractImg from '../Public/Abstract.png';
 
 export default function LandingPage() {
   const [isLoading, setIsLoading] = useState(false);
+
+  // The landing page always strictly preserves the original default FinSight theme
+  React.useEffect(() => {
+    const root = document.documentElement;
+    const previousPalette = root.getAttribute('data-palette');
+    if (previousPalette) {
+      root.removeAttribute('data-palette');
+    }
+    return () => {
+      // Restore user-chosen palette when leaving the landing page
+      const currentStored = localStorage.getItem('finsight-ui-palette');
+      if (currentStored && currentStored !== 'default') {
+        root.setAttribute('data-palette', currentStored);
+      } else if (previousPalette) {
+        root.setAttribute('data-palette', previousPalette);
+      }
+    };
+  }, []);
   const { resolvedTheme, toggleTheme } = useTheme();
   const setAuth = useAuthStore(s => s.setAuth);
   const navigate = useNavigate();

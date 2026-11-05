@@ -14,9 +14,9 @@ export function HealthAssetBufferCard() {
 
   // Buffer allocation with ONLY 1 Green and shades of Black/Grey
   const pieData = [
-    { name: 'Liquid Reserve', percentage: 48, label: 'Liquid Reserve (48%)', value: 302400, color: '#10B981' }, // Only 1 Green (Emerald)
-    { name: 'Wealth Vaults', percentage: 38, label: 'Wealth Vaults (38%)', value: 245000, color: '#64748B' }, // Slate Grey
-    { name: 'Operating Cash', percentage: 14, label: 'Operating Cash (14%)', value: 85000, color: '#1E293B' }, // Deep Charcoal / Black-Grey
+    { name: 'Liquid Reserve', percentage: 48, label: 'Liquid Reserve (48%)', value: 302400, color: 'var(--chart-1-health, #10B981)' }, // Only 1 Green (Emerald)
+    { name: 'Wealth Vaults', percentage: 38, label: 'Wealth Vaults (38%)', value: 245000, color: 'var(--chart-2-health, #64748B)' }, // Slate Grey
+    { name: 'Operating Cash', percentage: 14, label: 'Operating Cash (14%)', value: 85000, color: 'var(--chart-3-health, #1E293B)' }, // Deep Charcoal / Black-Grey
   ];
 
   const totalBuffer = 632400;

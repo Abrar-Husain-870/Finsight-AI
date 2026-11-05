@@ -41,7 +41,7 @@ export function ClippedAreaChart() {
         </div>
 
         <div className="flex items-center gap-3 bg-[var(--color-bg-primary)] px-3.5 py-1.5 rounded-full border border-[var(--color-border-primary)] shadow-2xs">
-          <TrendingUp className="w-4 h-4 text-[var(--chart-2)]" />
+          <TrendingUp className="w-4 h-4 text-[var(--theme-accent-highlight,var(--chart-2))]" />
           <span className="text-xs font-semibold text-[var(--color-text-primary)]">
             +18.4% this quarter
           </span>
@@ -52,7 +52,7 @@ export function ClippedAreaChart() {
       <div className="w-full">
         <AreaChart aspectRatio="4 / 1" data={chartData}>
           <Grid horizontal />
-          <Area curve={curveMonotoneX} dataKey="revenue" fill="var(--chart-2)" fillOpacity={0.25} stroke="var(--chart-2)" strokeWidth={2} />
+          <Area curve={curveMonotoneX} dataKey="revenue" fill="var(--theme-accent-highlight,var(--chart-2))" fillOpacity={0.25} stroke="var(--theme-accent-highlight,var(--chart-2))" strokeWidth={2} />
           <Area curve={curveMonotoneX} dataKey="costs" fill="oklch(0.50 0 0)" fillOpacity={0.12} stroke="oklch(0.50 0 0)" strokeWidth={1.5} />
           <SegmentBackground />
           <SegmentLineFrom />
