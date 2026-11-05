@@ -12,8 +12,9 @@ export function KeyboardShortcutsDialog() {
 
   const shortcuts = [
     { keys: ['?'], description: 'Show keyboard shortcuts' },
+    { keys: ['⌘ / Ctrl', 'K'], description: 'Quick Search & Command Palette' },
+    { keys: ['/'], description: 'Quick Search / Focus Ledger Search' },
     { keys: ['N'], description: 'New Transaction (when on Transactions page)' },
-    { keys: ['/'], description: 'Focus Search (if implemented)' },
     { keys: ['Ctrl', 'Enter'], description: 'Submit Form / Send AI Message' },
     { keys: ['Esc'], description: 'Close Dialogs / Drawers' },
   ];

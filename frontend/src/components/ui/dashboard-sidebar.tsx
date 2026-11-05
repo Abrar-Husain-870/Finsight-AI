@@ -249,10 +249,9 @@ function NavItem({
     }, 200);
   };
 
-  const handleClick = () => {
-    if (item.path) {
-      onSelect(item);
-    }
+  const handleClick = (e?: React.MouseEvent) => {
+    e?.stopPropagation();
+    onSelect(item);
   };
 
   if (collapsed) {
