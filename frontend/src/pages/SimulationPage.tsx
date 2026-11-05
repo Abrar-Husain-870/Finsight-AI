@@ -193,13 +193,13 @@ export default function SimulationPage() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[var(--color-border-primary)] pb-6">
         <div>
           <div className="flex items-center gap-2.5 mb-1.5">
-            <div className="p-2 rounded-xl bg-[var(--theme-badge-bg,rgba(16,185,129,0.1))] text-[var(--theme-accent-highlight,var(--chart-2))] border border-[var(--theme-badge-border,rgba(16,185,129,0.2))]">
+            <div className="p-2 rounded-xl bg-[var(--theme-badge-bg)] text-[var(--theme-badge-text)] border border-[var(--theme-badge-border)]">
               <Calculator className="h-5 w-5" />
             </div>
             <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-[var(--color-text-primary)]">
               Financial Scenario Simulation
             </h1>
-            <span className="hidden sm:inline-flex text-[11px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-[var(--theme-badge-bg,rgba(16,185,129,0.1))] text-[var(--theme-accent-highlight,var(--chart-2))] border border-[var(--theme-badge-border,rgba(16,185,129,0.2))]">
+            <span className="hidden sm:inline-flex text-[11px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-[var(--theme-badge-bg)] text-[var(--theme-badge-text)] border border-[var(--theme-badge-border)]">
               Deterministic Engine
             </span>
           </div>
@@ -241,7 +241,7 @@ export default function SimulationPage() {
                 <div className={cn(
                   "p-1.5 rounded-lg shrink-0 transition-colors",
                   isSelected
-                    ? "bg-[var(--theme-badge-bg,rgba(16,185,129,0.1))] text-[var(--theme-accent-highlight,var(--chart-2))]"
+                    ? "bg-[var(--theme-badge-bg)] text-[var(--theme-badge-text)]"
                     : "bg-[var(--color-bg-secondary)] text-[var(--color-text-secondary)] group-hover:text-[var(--color-text-primary)]"
                 )}>
                   <Icon className="h-4 w-4" />
@@ -316,7 +316,7 @@ export default function SimulationPage() {
                   setIncomeShiftMajor(parseFloat(e.target.value) || 0);
                   setActivePreset('custom');
                 }}
-                className="w-full h-2 bg-[var(--color-border-secondary)] rounded-full appearance-none cursor-pointer accent-[var(--theme-accent-highlight,#10B981)]"
+                className="w-full h-2.5 bg-slate-200 dark:bg-zinc-800 border border-[var(--color-border-primary)] rounded-full appearance-none cursor-pointer accent-[var(--theme-accent-highlight)] [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[var(--theme-accent-highlight)] [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-white dark:[&::-webkit-slider-thumb]:border-zinc-900 [&::-webkit-slider-thumb]:shadow-md [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-[var(--theme-accent-highlight)] [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-white dark:[&::-moz-range-thumb]:border-zinc-900 transition-all"
               />
 
               <div className="flex items-center justify-between text-[10px] font-medium text-[var(--color-text-secondary)]">
@@ -384,7 +384,7 @@ export default function SimulationPage() {
                   setExpenseShiftMajor(parseFloat(e.target.value) || 0);
                   setActivePreset('custom');
                 }}
-                className="w-full h-2 bg-[var(--color-border-secondary)] rounded-full appearance-none cursor-pointer accent-[var(--theme-accent-highlight,#10B981)]"
+                className="w-full h-2.5 bg-slate-200 dark:bg-zinc-800 border border-[var(--color-border-primary)] rounded-full appearance-none cursor-pointer accent-[var(--theme-accent-highlight)] [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[var(--theme-accent-highlight)] [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-white dark:[&::-webkit-slider-thumb]:border-zinc-900 [&::-webkit-slider-thumb]:shadow-md [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-[var(--theme-accent-highlight)] [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-white dark:[&::-moz-range-thumb]:border-zinc-900 transition-all"
               />
 
               <div className="flex items-center justify-between text-[10px] font-medium text-[var(--color-text-secondary)]">
@@ -422,14 +422,14 @@ export default function SimulationPage() {
               diagnosticFeedback.isCritical
                 ? "bg-[var(--color-danger)]/5 border-[var(--color-danger)]/30"
                 : diagnosticFeedback.isImproved
-                ? "bg-[var(--theme-badge-bg,rgba(16,185,129,0.05))] border-[var(--theme-badge-border,rgba(16,185,129,0.2))]"
+                ? "bg-[var(--theme-badge-bg)] border-[var(--theme-badge-border)]"
                 : "bg-[var(--color-bg-primary)] border-[var(--color-border-primary)]"
             )}>
               <div className="flex items-center gap-2">
                 {diagnosticFeedback.isCritical ? (
                   <AlertTriangle className="h-4 w-4 text-[var(--color-danger)] shrink-0" />
                 ) : diagnosticFeedback.isImproved ? (
-                  <Sparkles className="h-4 w-4 text-[var(--theme-accent-highlight,var(--chart-2))] shrink-0" />
+                  <Sparkles className="h-4 w-4 text-[var(--theme-badge-text)] shrink-0" />
                 ) : (
                   <CheckCircle2 className="h-4 w-4 text-[var(--color-text-secondary)] shrink-0" />
                 )}
@@ -581,11 +581,11 @@ export default function SimulationPage() {
 
               <div className="flex items-center gap-4 text-xs">
                 <div className="flex items-center gap-1.5">
-                  <span className="w-2.5 h-2.5 rounded-full bg-[var(--color-border-secondary)]" />
+                  <span className="w-2.5 h-2.5 rounded-full bg-slate-300 dark:bg-zinc-700" />
                   <span className="text-[var(--color-text-secondary)] font-medium">Baseline</span>
                 </div>
                 <div className="flex items-center gap-1.5">
-                  <span className="w-2.5 h-2.5 rounded-full bg-[var(--theme-accent-highlight,#10B981)]" />
+                  <span className="w-2.5 h-2.5 rounded-full bg-[var(--theme-accent-highlight)]" />
                   <span className="text-[var(--color-text-primary)] font-bold">Simulated</span>
                 </div>
               </div>
@@ -597,12 +597,12 @@ export default function SimulationPage() {
                 <AreaChart data={trajectoryData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                   <defs>
                     <linearGradient id="simulatedGradient" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="var(--theme-accent-highlight, #10B981)" stopOpacity={0.4} />
-                      <stop offset="95%" stopColor="var(--theme-accent-highlight, #10B981)" stopOpacity={0.0} />
+                      <stop offset="5%" stopColor="var(--theme-accent-highlight)" stopOpacity={0.4} />
+                      <stop offset="95%" stopColor="var(--theme-accent-highlight)" stopOpacity={0.0} />
                     </linearGradient>
                     <linearGradient id="baselineGradient" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="var(--color-border-secondary)" stopOpacity={0.2} />
-                      <stop offset="95%" stopColor="var(--color-border-secondary)" stopOpacity={0.0} />
+                      <stop offset="5%" stopColor="var(--color-border-primary)" stopOpacity={0.2} />
+                      <stop offset="95%" stopColor="var(--color-border-primary)" stopOpacity={0.0} />
                     </linearGradient>
                   </defs>
                   <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--color-border-primary)" opacity={0.4} />
@@ -656,7 +656,7 @@ export default function SimulationPage() {
                   <Area
                     type="monotone"
                     dataKey="baseline"
-                    stroke="var(--color-border-secondary)"
+                    stroke="var(--color-border-primary)"
                     strokeWidth={2}
                     fillOpacity={1}
                     fill="url(#baselineGradient)"
@@ -664,7 +664,7 @@ export default function SimulationPage() {
                   <Area
                     type="monotone"
                     dataKey="projected"
-                    stroke="var(--theme-accent-highlight, #10B981)"
+                    stroke="var(--theme-accent-highlight)"
                     strokeWidth={2.5}
                     fillOpacity={1}
                     fill="url(#simulatedGradient)"

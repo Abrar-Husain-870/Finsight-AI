@@ -67,6 +67,9 @@
   --grid-line: rgba(71, 85, 105, 0.12);
   --theme-accent-highlight: var(--chart-2);
   --theme-accent-highlight-foreground: #ffffff;
+  --theme-badge-bg: rgba(2, 132, 199, 0.12);
+  --theme-badge-text: #0284c7;
+  --theme-badge-border: rgba(2, 132, 199, 0.25);
 }
 
 .dark {
@@ -134,6 +137,9 @@
   --color-overlay: oklch(0 0 0 / 0.6);
   --theme-accent-highlight: var(--chart-2);
   --theme-accent-highlight-foreground: #ffffff;
+  --theme-badge-bg: rgba(56, 189, 248, 0.16);
+  --theme-badge-text: #38bdf8;
+  --theme-badge-border: rgba(56, 189, 248, 0.3);
 }
 
 @theme inline {
