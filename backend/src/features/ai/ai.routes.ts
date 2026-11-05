@@ -10,6 +10,7 @@ router.get('/config', aiController.getConfig.bind(aiController));
 router.post('/config', aiController.saveConfig.bind(aiController));
 router.get('/sessions', aiController.getSessions.bind(aiController));
 router.get('/sessions/:id', aiController.getSession.bind(aiController));
+router.delete('/sessions/:id', aiController.deleteSession.bind(aiController));
 router.post('/chat', aiRateLimiter, aiController.chat.bind(aiController));
 
 export { router as aiRouter };

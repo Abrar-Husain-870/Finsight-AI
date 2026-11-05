@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { SidebarBottomControls } from './SidebarBottomControls.js';
 import { useUiStore } from '../../store/uiStore.js';
 import { SidebarNav } from '../ui/dashboard-sidebar.js';
+import { FinSightBrand } from '../ui/FinSightLogo.js';
 
 export function Sidebar() {
   const { mobileMenuOpen, setMobileMenuOpen, sidebarCollapsed } = useUiStore();
@@ -56,7 +57,7 @@ export function Sidebar() {
                 className="relative mr-16 flex w-full max-w-xs flex-1 flex-col bg-[var(--color-bg-primary)] px-4 pb-4 pt-5 border-r border-[var(--color-border-primary)] shadow-2xl"
               >
                 <div className="flex items-center justify-between px-2 mb-2">
-                  <span className="text-xl font-bold tracking-tight text-[var(--color-text-primary)]">FinSight</span>
+                  <FinSightBrand logoClassName="h-7 w-7 rounded-lg shadow-xs" textClassName="text-xl font-bold tracking-tight text-[var(--color-text-primary)]" />
                   <button
                     type="button"
                     onClick={() => setMobileMenuOpen(false)}

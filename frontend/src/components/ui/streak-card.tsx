@@ -62,7 +62,7 @@ const StreakCard = React.forwardRef<HTMLDivElement, StreakCardProps>(
       currentStreak = 16,
       longestStreak = 100,
       total = 131,
-      title = "Financial Tracking Streak",
+      title = "Tracking Streak",
       actionLabel = "View Details",
       onActionClick,
       showHowItWorks = true,
@@ -83,110 +83,110 @@ const StreakCard = React.forwardRef<HTMLDivElement, StreakCardProps>(
         ref={ref}
         aria-label="Streak summary card"
         className={cn(
-          "bg-[var(--color-bg-primary)] rounded-3xl border border-[var(--color-border-primary)] p-6 sm:p-8 shadow-xs text-[var(--color-text-primary)] transition-all hover:border-[var(--color-border-hover)]",
+          "bg-[var(--color-bg-primary)] rounded-3xl border border-[var(--color-border-primary)] p-5 sm:p-6 shadow-xs text-[var(--color-text-primary)] transition-all hover:border-[var(--color-border-hover)] flex flex-col justify-between",
           className
         )}
         {...props}
       >
-        <header className="mb-3 flex items-center justify-between gap-3">
-          <div className="flex items-center gap-2">
-            <Flame className="text-[var(--chart-2)] h-6 w-6 fill-[var(--chart-2)]" aria-hidden="true" />
-            <h3 className="text-xl sm:text-2xl leading-none font-bold tracking-tight text-[var(--foreground)]">{title}</h3>
-          </div>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={onActionClick}
-            aria-label={actionLabel}
-            className="text-[var(--muted-foreground)] hover:text-[var(--foreground)] text-xs font-semibold transition-colors"
-          >
-            {actionLabel}
-          </Button>
-        </header>
-
-        <p className="mb-4 text-4xl sm:text-5xl leading-none font-extrabold tracking-tight tabular-nums text-[var(--foreground)]">
-          {currentStreak}
-          <span className="text-[var(--muted-foreground)] ml-2 text-xl sm:text-2xl font-semibold">
-            days active
-          </span>
-        </p>
-
-        <StreakCalendar
-          streak={streak}
-          view="week"
-          startOfWeek={1}
-          className="max-w-none"
-        />
-
-        <div
-          className="mt-4 grid grid-cols-2 gap-4 border-t border-[var(--border)] border-dashed pt-4"
-          aria-label="Streak stats"
-        >
-          <div>
-            <p className="text-[var(--muted-foreground)] text-xs font-semibold uppercase tracking-wider">Longest Streak</p>
-            <p className="text-2xl sm:text-3xl leading-tight font-bold tabular-nums text-[var(--foreground)]">
-              {longestStreak}
-              <span className="ml-1 text-base font-semibold text-[var(--muted-foreground)]">days</span>
-            </p>
-          </div>
-          <div className="text-right">
-            <p className="text-[var(--muted-foreground)] text-xs font-semibold uppercase tracking-wider">Total Logged</p>
-            <p className="text-2xl sm:text-3xl leading-tight font-bold tabular-nums text-[var(--foreground)]">{total}</p>
-          </div>
-        </div>
-
-        {showHowItWorks && (
-          <div className="mt-4 border-t border-[var(--border)] pt-4">
-            <button
-              type="button"
-              className="bg-[var(--card)] flex w-full items-center justify-between rounded-2xl px-4 py-3 text-left border border-[var(--border)] cursor-pointer"
-              onClick={() => setIsHowItWorksOpen((prev) => !prev)}
-              aria-expanded={isHowItWorksOpen}
-              aria-controls={howItWorksContentId}
-            >
-              <span className="text-sm font-bold text-[var(--foreground)]">{howItWorksTitle}</span>
-              <ChevronDown
-                className={cn(
-                  "text-[var(--muted-foreground)] h-4 w-4 transition-transform duration-200",
-                  isHowItWorksOpen && "rotate-180"
-                )}
-                aria-hidden="true"
-              />
-            </button>
-
-            {isHowItWorksOpen && (
-              <div id={howItWorksContentId} className="space-y-3 px-2 pt-4">
-                {howItWorksItems.map((item, index) => {
-                  const Icon =
-                    index === 0
-                      ? CheckCircle2
-                      : index === 1
-                        ? Flame
-                        : RefreshCcw;
-                  return (
-                    <div
-                      key={`${item}-${index}`}
-                      className="flex items-start gap-2.5"
-                    >
-                      <Icon
-                        className="text-[var(--chart-2)] mt-0.5 h-4 w-4 shrink-0"
-                        aria-hidden="true"
-                      />
-                      <p className="text-[var(--color-text-secondary)] text-xs sm:text-sm leading-relaxed">
-                        {item}
-                      </p>
-                    </div>
-                  );
-                })}
+            <header className="mb-2 sm:mb-3 flex items-center justify-between gap-2">
+              <div className="flex items-center gap-2 min-w-0">
+                <Flame className="text-[var(--chart-2)] h-5 w-5 fill-[var(--chart-2)] shrink-0" aria-hidden="true" />
+                <h3 className="text-lg sm:text-xl leading-none font-bold tracking-tight text-[var(--foreground)] truncate">{title}</h3>
               </div>
-            )}
-          </div>
-        )}
-      </section>
-    );
-  }
-);
-StreakCard.displayName = "StreakCard";
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={onActionClick}
+                aria-label={actionLabel}
+                className="text-[var(--muted-foreground)] hover:text-[var(--foreground)] text-xs font-semibold transition-colors shrink-0"
+              >
+                {actionLabel}
+              </Button>
+            </header>
 
-export { StreakCard };
-export default StreakCard;
+              <p className="mb-3 text-3xl sm:text-4xl leading-none font-extrabold tracking-tight tabular-nums text-[var(--foreground)]">
+                {currentStreak}
+                  <span className="text-[var(--muted-foreground)] ml-2 text-lg sm:text-xl font-semibold">
+                    days active
+                  </span>
+              </p>
+
+              <StreakCalendar
+                streak={streak}
+                view="week"
+                startOfWeek={1}
+                className="max-w-none"
+              />
+
+              <div
+                className="mt-3 grid grid-cols-2 gap-3 border-t border-[var(--border)] border-dashed pt-3"
+                aria-label="Streak stats"
+              >
+                <div>
+                  <p className="text-[var(--muted-foreground)] text-xs font-semibold uppercase tracking-wider">Longest Streak</p>
+                    <p className="text-xl sm:text-2xl leading-tight font-bold tabular-nums text-[var(--foreground)]">
+                      {longestStreak}
+                      <span className="ml-1 text-sm font-semibold text-[var(--muted-foreground)]">days</span>
+                    </p>
+                </div>
+                <div className="text-right">
+                  <p className="text-[var(--muted-foreground)] text-xs font-semibold uppercase tracking-wider">Total Logged</p>
+                  <p className="text-xl sm:text-2xl leading-tight font-bold tabular-nums text-[var(--foreground)]">{total}</p>
+                </div>
+              </div>
+
+              {showHowItWorks && (
+                <div className="mt-4 border-t border-[var(--border)] pt-4">
+                  <button
+                    type="button"
+                    className="bg-[var(--card)] flex w-full items-center justify-between rounded-2xl px-4 py-3 text-left border border-[var(--border)] cursor-pointer"
+                    onClick={() => setIsHowItWorksOpen((prev) => !prev)}
+                    aria-expanded={isHowItWorksOpen}
+                    aria-controls={howItWorksContentId}
+                  >
+                    <span className="text-sm font-bold text-[var(--foreground)]">{howItWorksTitle}</span>
+                    <ChevronDown
+                      className={cn(
+                        "text-[var(--muted-foreground)] h-4 w-4 transition-transform duration-200",
+                        isHowItWorksOpen && "rotate-180"
+                      )}
+                      aria-hidden="true"
+                    />
+                  </button>
+
+                  {isHowItWorksOpen && (
+                    <div id={howItWorksContentId} className="space-y-3 px-2 pt-4">
+                      {howItWorksItems.map((item, index) => {
+                        const Icon =
+                          index === 0
+                            ? CheckCircle2
+                            : index === 1
+                              ? Flame
+                              : RefreshCcw;
+                        return (
+                          <div
+                            key={`${item}-${index}`}
+                            className="flex items-start gap-2.5"
+                          >
+                            <Icon
+                              className="text-[var(--chart-2)] mt-0.5 h-4 w-4 shrink-0"
+                              aria-hidden="true"
+                            />
+                            <p className="text-[var(--color-text-secondary)] text-xs sm:text-sm leading-relaxed">
+                              {item}
+                            </p>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+              )}
+            </section>
+            );
+  }
+            );
+            StreakCard.displayName = "StreakCard";
+
+            export {StreakCard};
+            export default StreakCard;

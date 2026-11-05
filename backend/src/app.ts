@@ -31,7 +31,7 @@ app.disable('x-powered-by');
 // Defense-in-depth HTTP security headers
 app.use(helmet({
   contentSecurityPolicy: true,
-  crossOriginResourcePolicy: { policy: 'same-origin' },
+  crossOriginResourcePolicy: { policy: 'cross-origin' },
   crossOriginOpenerPolicy: { policy: 'same-origin' },
   hsts: {
     maxAge: 31536000,
@@ -47,6 +47,8 @@ app.use(helmet({
 const configuredFrontend = env.FRONTEND_URL ? env.FRONTEND_URL.replace(/\/+$/, '') : '';
 const allowedOrigins = [
   configuredFrontend,
+  'https://finsight-ai-updated.vercel.app',
+  'https://finsight-ai-frontend-sigma.vercel.app',
   'http://localhost:5173',
   'http://localhost:5174',
   'http://localhost:5175',
@@ -60,11 +62,12 @@ app.use(cors({
     if (!origin) return callback(null, true);
     const cleanOrigin = origin.replace(/\/+$/, '');
     
-    // Strict origin whitelist: Only pre-approved frontend domains & dev local ports
+    // Strict origin whitelist: approved frontend domains, Vercel deployments, & dev local ports
     const isExplicit = allowedOrigins.includes(cleanOrigin);
+    const isVercel = /^https:\/\/[a-zA-Z0-9-]+\.vercel\.app$/.test(cleanOrigin) || cleanOrigin.endsWith('.vercel.app');
     const isDevLocalhost = env.NODE_ENV === 'development' && /^http:\/\/(localhost|127\.0\.0\.1):\d+$/.test(cleanOrigin);
     
-    if (isExplicit || isDevLocalhost) {
+    if (isExplicit || isVercel || isDevLocalhost) {
       return callback(null, true);
     }
     return callback(null, false);
@@ -110,20 +113,31 @@ app.get('/api', (req, res) => {
   });
 });
 
-// Routes
+// Routes - mounted both with /api and directly for route resiliency
 app.use('/api/auth', authRouter);
+app.use('/auth', authRouter);
 app.use('/api/categories', categoryRouter);
+app.use('/categories', categoryRouter);
 app.use('/api/transactions', transactionRouter);
+app.use('/transactions', transactionRouter);
 app.use('/api/dashboard', dashboardRouter);
+app.use('/dashboard', dashboardRouter);
 app.use('/api/import', importRouter);
+app.use('/import', importRouter);
 app.use('/api/analytics', analyticsRouter);
+app.use('/analytics', analyticsRouter);
 app.use('/api/health-score', healthRouter);
+app.use('/health-score', healthRouter);
 app.use('/api/goals', goalRouter);
+app.use('/goals', goalRouter);
 app.use('/api/simulation', simulationRouter);
+app.use('/simulation', simulationRouter);
 app.use('/api/ai', aiRouter);
+app.use('/ai', aiRouter);
 app.use('/api/demo', demoRouter);
+app.use('/demo', demoRouter);
 
-app.get('/api/health', async (req, res, next) => {
+app.get(['/api/health', '/health'], async (req, res, next) => {
   try {
     await prisma.$queryRaw`SELECT 1`;
     

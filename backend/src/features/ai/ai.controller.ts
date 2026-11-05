@@ -46,6 +46,16 @@ export class AiController {
     }
   }
 
+  async deleteSession(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const authReq = req as AuthenticatedRequest;
+      await aiService.deleteSession(authReq.user!.id, req.params.id as string);
+      sendSuccess(res, { message: 'Session deleted successfully' });
+    } catch (error) {
+      next(error);
+    }
+  }
+
   async chat(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const authReq = req as AuthenticatedRequest;

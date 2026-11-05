@@ -1,10 +1,13 @@
 'use client';
 
+import { getBaseUrl } from '../../lib/axios.js';
+
 import React, { useState, useRef, useEffect } from 'react';
 import { Eye, EyeOff, Mail, Lock, Chrome, UserCheck, Sun, Moon, User, ShieldCheck } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '../../lib/utils.js';
 import { useTheme } from '../../providers/ThemeProvider.js';
+import { FinSightLogo } from './FinSightLogo.js';
 import loopVideo from '../../Public/signin_page_loop_vid.mp4';
 
 interface LoginFormProps {
@@ -123,7 +126,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, onDemoLogin, onG
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [remember, setRemember] = useState(false);
-  const { theme, setTheme } = useTheme();
+  const { resolvedTheme, toggleTheme } = useTheme();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -134,30 +137,28 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, onDemoLogin, onG
     <div className="relative p-6 sm:p-8 rounded-2xl backdrop-blur-xl bg-[var(--color-bg-primary)]/90 border border-[var(--color-border-primary)] shadow-2xl text-[var(--color-text-primary)]">
       {/* Header / Brand Title & Theme Toggle */}
       <div className="mb-6 flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <div className="h-8 w-8 rounded-lg bg-[var(--color-text-primary)] text-[var(--color-bg-primary)] flex items-center justify-center font-bold text-base shadow-xs">
-            F
-          </div>
+        <div className="flex items-center gap-2.5">
+          <FinSightLogo className="h-8 w-8 rounded-lg shadow-xs" />
           <span className="font-extrabold text-xl tracking-tight text-[var(--color-text-primary)]">FinSight</span>
         </div>
 
         <motion.button
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
-          onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+          onClick={toggleTheme}
           className="p-2 text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] transition-colors rounded-full border border-[var(--color-border-primary)] bg-[var(--color-bg-secondary)] cursor-pointer"
           aria-label="Toggle theme"
         >
           <span className="sr-only">Toggle theme</span>
           <AnimatePresence mode="wait" initial={false}>
             <motion.div
-              key={theme}
+              key={resolvedTheme}
               initial={{ y: -20, opacity: 0, rotate: -90 }}
               animate={{ y: 0, opacity: 1, rotate: 0 }}
               exit={{ y: 20, opacity: 0, rotate: 90 }}
               transition={{ duration: 0.2 }}
             >
-              {theme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+              {resolvedTheme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
             </motion.div>
           </AnimatePresence>
         </motion.button>
@@ -270,7 +271,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, onDemoLogin, onG
           <button
             type="button"
             onClick={onGoogleLogin ? onGoogleLogin : () => {
-              window.location.href = `${import.meta.env.VITE_API_URL || 'http://localhost:3000/api/v1'}/auth/google`;
+              window.location.href = `${getBaseUrl()}/auth/google`;
             }}
             className="flex items-center justify-center gap-2 py-2.5 px-3 bg-[var(--color-bg-secondary)] border border-[var(--color-border-primary)] rounded-xl text-xs font-semibold text-[var(--color-text-primary)] hover:bg-[var(--color-bg-tertiary)] transition-all cursor-pointer shadow-xs"
           >
@@ -297,7 +298,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({ onSubmit, onDemoLogi
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const { theme, setTheme } = useTheme();
+  const { resolvedTheme, toggleTheme } = useTheme();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -308,30 +309,28 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({ onSubmit, onDemoLogi
     <div className="relative p-6 sm:p-8 rounded-2xl backdrop-blur-xl bg-[var(--color-bg-primary)]/90 border border-[var(--color-border-primary)] shadow-2xl text-[var(--color-text-primary)]">
       {/* Header / Brand Title & Theme Toggle */}
       <div className="mb-6 flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <div className="h-8 w-8 rounded-lg bg-[var(--color-text-primary)] text-[var(--color-bg-primary)] flex items-center justify-center font-bold text-base shadow-xs">
-            F
-          </div>
+        <div className="flex items-center gap-2.5">
+          <FinSightLogo className="h-8 w-8 rounded-lg shadow-xs" />
           <span className="font-extrabold text-xl tracking-tight text-[var(--color-text-primary)]">FinSight</span>
         </div>
 
         <motion.button
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
-          onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+          onClick={toggleTheme}
           className="p-2 text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] transition-colors rounded-full border border-[var(--color-border-primary)] bg-[var(--color-bg-secondary)] cursor-pointer"
           aria-label="Toggle theme"
         >
           <span className="sr-only">Toggle theme</span>
           <AnimatePresence mode="wait" initial={false}>
             <motion.div
-              key={theme}
+              key={resolvedTheme}
               initial={{ y: -20, opacity: 0, rotate: -90 }}
               animate={{ y: 0, opacity: 1, rotate: 0 }}
               exit={{ y: 20, opacity: 0, rotate: 90 }}
               transition={{ duration: 0.2 }}
             >
-              {theme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+              {resolvedTheme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
             </motion.div>
           </AnimatePresence>
         </motion.button>
@@ -438,7 +437,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({ onSubmit, onDemoLogi
           <button
             type="button"
             onClick={onGoogleLogin ? onGoogleLogin : () => {
-              window.location.href = `${import.meta.env.VITE_API_URL || 'http://localhost:3000/api/v1'}/auth/google`;
+              window.location.href = `${getBaseUrl()}/auth/google`;
             }}
             className="flex items-center justify-center gap-2 py-2.5 px-3 bg-[var(--color-bg-secondary)] border border-[var(--color-border-primary)] rounded-xl text-xs font-semibold text-[var(--color-text-primary)] hover:bg-[var(--color-bg-tertiary)] transition-all cursor-pointer shadow-xs"
           >

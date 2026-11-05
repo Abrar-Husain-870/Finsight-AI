@@ -28,6 +28,7 @@ import {
   Sparkles,
   Wallet
 } from 'lucide-react';
+import { FinSightLogo } from './FinSightLogo.js';
 import { cn } from '../../lib/utils.js';
 import { useAuthStore } from '../../features/auth/store/auth.store.js';
 
@@ -147,9 +148,13 @@ function WorkspaceSwitcher({
         <div 
           onClick={() => setIsOpen(!isOpen)}
           title={current}
-          className="w-9 h-9 rounded-xl bg-[var(--color-text-primary)] text-[var(--color-bg-primary)] flex items-center justify-center font-bold text-xs shadow-xs cursor-pointer hover:scale-105 transition-transform"
+          className="w-9 h-9 rounded-xl bg-[var(--color-bg-secondary)] border border-[var(--color-border-primary)] p-1 flex items-center justify-center shadow-xs cursor-pointer hover:scale-105 transition-transform"
         >
-          {current.charAt(0)}
+          {current.startsWith('FinSight') ? (
+            <FinSightLogo className="w-full h-full object-contain rounded-md" />
+          ) : (
+            <span className="font-bold text-xs text-[var(--color-text-primary)]">{current.charAt(0)}</span>
+          )}
         </div>
       </div>
     );
@@ -162,8 +167,12 @@ function WorkspaceSwitcher({
         className="flex items-center justify-between px-2.5 py-2 mb-3 rounded-xl hover:bg-black/5 dark:hover:bg-white/5 cursor-pointer transition-colors select-none group border border-[var(--color-border-primary)]/50"
       >
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-lg bg-[var(--color-text-primary)] text-[var(--color-bg-primary)] flex items-center justify-center font-bold text-xs shadow-xs">
-            {current.charAt(0)}
+          <div className="w-8 h-8 rounded-lg bg-[var(--color-bg-secondary)] border border-[var(--color-border-primary)] p-0.5 flex items-center justify-center shadow-xs shrink-0">
+            {current.startsWith('FinSight') ? (
+              <FinSightLogo className="w-full h-full object-contain rounded-md" />
+            ) : (
+              <span className="font-bold text-xs text-[var(--color-text-primary)]">{current.charAt(0)}</span>
+            )}
           </div>
           <div className="flex flex-col overflow-hidden">
             <span className="text-[13px] font-bold leading-none mb-1 text-[var(--color-text-primary)] truncate max-w-[130px]">{current}</span>

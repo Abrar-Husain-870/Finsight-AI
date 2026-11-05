@@ -21,7 +21,7 @@ export default function SettingsPage() {
   const user = useAuthStore(s => s.user);
   const accessToken = useAuthStore(s => s.accessToken);
   const setAuth = useAuthStore(s => s.setAuth);
-  const { theme, setTheme } = useTheme();
+  const { resolvedTheme, setTheme } = useTheme();
   const [isClearing, setIsClearing] = useState(false);
   const [isUpdatingCurrency, setIsUpdatingCurrency] = useState(false);
 
@@ -117,17 +117,17 @@ export default function SettingsPage() {
             <button
               onClick={() => setTheme('light')}
               className={`relative flex items-start gap-4 p-5 rounded-[var(--radius-xl)] transition-all overflow-hidden ${
-                theme === 'light' 
+                resolvedTheme === 'light' 
                   ? 'bg-[var(--color-bg-secondary)] border-transparent shadow-sm' 
                   : 'bg-transparent border border-[var(--color-border-primary)] hover:bg-[var(--color-bg-secondary)]/50'
               }`}
             >
-              {theme === 'light' && (
+              {resolvedTheme === 'light' && (
                 <motion.div layoutId="theme-active" className="absolute inset-0 border-2 border-[var(--color-text-primary)] rounded-[var(--radius-xl)] pointer-events-none" />
               )}
-              <Sun className={`h-5 w-5 mt-0.5 ${theme === 'light' ? 'text-[var(--color-text-primary)]' : 'text-[var(--color-text-secondary)]'}`} />
+              <Sun className={`h-5 w-5 mt-0.5 ${resolvedTheme === 'light' ? 'text-[var(--color-text-primary)]' : 'text-[var(--color-text-secondary)]'}`} />
               <div className="flex flex-col text-left">
-                <span className={`font-medium ${theme === 'light' ? 'text-[var(--color-text-primary)]' : 'text-[var(--color-text-primary)]'}`}>Light</span>
+                <span className={`font-medium ${resolvedTheme === 'light' ? 'text-[var(--color-text-primary)]' : 'text-[var(--color-text-primary)]'}`}>Light</span>
                 <span className="text-xs text-[var(--color-text-secondary)] mt-1">Clean and bright aesthetics</span>
               </div>
             </button>
@@ -135,17 +135,17 @@ export default function SettingsPage() {
             <button
               onClick={() => setTheme('dark')}
               className={`relative flex items-start gap-4 p-5 rounded-[var(--radius-xl)] transition-all overflow-hidden ${
-                theme === 'dark' 
+                resolvedTheme === 'dark' 
                   ? 'bg-[var(--color-bg-secondary)] border-transparent shadow-sm' 
                   : 'bg-transparent border border-[var(--color-border-primary)] hover:bg-[var(--color-bg-secondary)]/50'
               }`}
             >
-              {theme === 'dark' && (
+              {resolvedTheme === 'dark' && (
                 <motion.div layoutId="theme-active" className="absolute inset-0 border-2 border-[var(--color-text-primary)] rounded-[var(--radius-xl)] pointer-events-none" />
               )}
-              <Moon className={`h-5 w-5 mt-0.5 ${theme === 'dark' ? 'text-[var(--color-text-primary)]' : 'text-[var(--color-text-secondary)]'}`} />
+              <Moon className={`h-5 w-5 mt-0.5 ${resolvedTheme === 'dark' ? 'text-[var(--color-text-primary)]' : 'text-[var(--color-text-secondary)]'}`} />
               <div className="flex flex-col text-left">
-                <span className={`font-medium ${theme === 'dark' ? 'text-[var(--color-text-primary)]' : 'text-[var(--color-text-primary)]'}`}>Dark</span>
+                <span className={`font-medium ${resolvedTheme === 'dark' ? 'text-[var(--color-text-primary)]' : 'text-[var(--color-text-primary)]'}`}>Dark</span>
                 <span className="text-xs text-[var(--color-text-secondary)] mt-1">Easy on the eyes, cinematic feel</span>
               </div>
             </button>

@@ -1,5 +1,6 @@
 import React from 'react';
 import { Outlet } from 'react-router-dom';
+import { FinSightLogo } from '../ui/FinSightLogo.js';
 
 export function AuthLayout() {
   return (
@@ -12,8 +13,8 @@ export function AuthLayout() {
       {/* Centered Form Container */}
       <div className="relative z-10 w-full max-w-md px-6 py-12 sm:px-10 flex flex-col">
         <div className="flex flex-col items-center mb-10 space-y-4">
-          <div className="flex items-center gap-2">
-            <div className="h-8 w-8 rounded-lg bg-[var(--color-accent-primary)] shadow-sm" />
+          <div className="flex items-center gap-2.5">
+            <FinSightLogo className="h-8 w-8 rounded-lg shadow-sm" />
             <span className="text-xl font-bold tracking-tight text-[var(--color-text-primary)]">FinSight</span>
           </div>
         </div>

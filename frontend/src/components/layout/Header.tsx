@@ -7,11 +7,12 @@ import { useUiStore } from '../../store/uiStore.js';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { useDemoTourStore } from '../../features/tour/demoTourStore.js';
+import { FinSightLogo } from '../ui/FinSightLogo.js';
 
 export function Header() {
   const clearAuth = useAuthStore(s => s.clearAuth);
   const user = useAuthStore(s => s.user);
-  const { theme, setTheme } = useTheme();
+  const { resolvedTheme, toggleTheme } = useTheme();
   const setMobileMenuOpen = useUiStore(s => s.setMobileMenuOpen);
   const { sidebarCollapsed, toggleSidebar } = useUiStore();
   const isDemoUser = user?.email === 'demo@finsight.local';
@@ -76,7 +77,17 @@ export function Header() {
           )}
         </button>
 
-        <span className="text-lg font-bold tracking-tight text-[var(--color-text-primary)] lg:hidden">FinSight</span>
+        {sidebarCollapsed && (
+          <div className="hidden lg:flex items-center gap-2 ml-2">
+            <FinSightLogo className="h-7 w-7 rounded-lg shadow-xs" />
+            <span className="text-base font-bold tracking-tight text-[var(--color-text-primary)]">FinSight</span>
+          </div>
+        )}
+
+        <div className="flex items-center gap-2 lg:hidden">
+          <FinSightLogo className="h-7 w-7 rounded-lg shadow-xs" />
+          <span className="text-lg font-bold tracking-tight text-[var(--color-text-primary)]">FinSight</span>
+        </div>
       </div>
 
       <div className="flex items-center gap-x-3 sm:gap-x-4 lg:gap-x-6">
@@ -96,20 +107,20 @@ export function Header() {
         <motion.button
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
-          onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-          className="-m-2.5 p-2.5 text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] transition-colors rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-border-focus)]"
+          onClick={toggleTheme}
+          className="-m-2.5 p-2.5 text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] transition-colors rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-border-focus)] cursor-pointer"
           aria-label="Toggle theme"
         >
           <span className="sr-only">Toggle theme</span>
           <AnimatePresence mode="wait" initial={false}>
             <motion.div
-              key={theme}
+              key={resolvedTheme}
               initial={{ y: -20, opacity: 0, rotate: -90 }}
               animate={{ y: 0, opacity: 1, rotate: 0 }}
               exit={{ y: 20, opacity: 0, rotate: 90 }}
               transition={{ duration: 0.2 }}
             >
-              {theme === 'dark' ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+              {resolvedTheme === 'dark' ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
             </motion.div>
           </AnimatePresence>
         </motion.button>

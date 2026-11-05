@@ -21,6 +21,7 @@ import {
   Bell
 } from 'lucide-react';
 import { cn } from '../../lib/utils.js';
+import { FinSightLogo } from './FinSightLogo.js';
 
 export function FinSightDashboardShowcase({ className }: { className?: string }) {
   return (
@@ -29,10 +30,8 @@ export function FinSightDashboardShowcase({ className }: { className?: string })
       <aside className="w-full md:w-56 shrink-0 border-b md:border-b-0 md:border-r border-[var(--color-border-primary)] bg-[var(--color-bg-secondary)]/50 p-4 flex flex-col justify-between">
         <div className="space-y-6">
           {/* Logo */}
-          <div className="flex items-center gap-2 px-2 py-1">
-            <div className="h-7 w-7 rounded-lg bg-[var(--color-text-primary)] text-[var(--color-bg-primary)] flex items-center justify-center font-bold text-base shadow-xs">
-              F
-            </div>
+          <div className="flex items-center gap-2.5 px-2 py-1">
+            <FinSightLogo className="h-7 w-7 rounded-lg shadow-xs" />
             <span className="font-bold text-base tracking-tight text-[var(--color-text-primary)]">FinSight</span>
           </div>
 
