@@ -6,12 +6,22 @@ import { motion } from 'framer-motion';
 import { KeyboardShortcutsDialog } from '../ui/KeyboardShortcutsDialog.js';
 import { AboutModal } from '../ui/AboutModal.js';
 import { DemoTourController } from '../../features/tour/components/DemoTourController.js';
+import { QuickSearchModal } from '../ui/QuickSearchModal.js';
+import { useKeyboardShortcuts } from '../../hooks/useKeyboardShortcuts.js';
 import { useUiStore } from '../../store/uiStore.js';
 import { cn } from '../../lib/utils.js';
 
 export function AppShell() {
   const location = useLocation();
-  const { presentationMode, sidebarCollapsed } = useUiStore();
+  const { presentationMode, sidebarCollapsed, toggleQuickSearch, setQuickSearchOpen } = useUiStore();
+
+  useKeyboardShortcuts({
+    'ctrl+k': toggleQuickSearch,
+    '/': (e) => {
+      e.preventDefault();
+      setQuickSearchOpen(true);
+    },
+  });
 
   return (
     <div
@@ -47,6 +57,7 @@ export function AppShell() {
         <KeyboardShortcutsDialog />
         <AboutModal />
         <DemoTourController />
+        <QuickSearchModal />
       </div>
     </div>
   );

@@ -31,6 +31,7 @@ import {
 import { FinSightLogo } from './FinSightLogo.js';
 import { cn } from '../../lib/utils.js';
 import { useAuthStore } from '../../features/auth/store/auth.store.js';
+import { useUiStore } from '../../store/uiStore.js';
 
 export type NavItemData = {
   id: string;
@@ -494,10 +495,15 @@ export function SidebarNav({
   const navigate = useNavigate();
   const location = useLocation();
   const clearAuth = useAuthStore(s => s.clearAuth);
+  const setQuickSearchOpen = useUiStore(s => s.setQuickSearchOpen);
 
   const currentPath = activePath !== undefined ? activePath : (location.pathname + location.hash);
 
   const handleDefaultSelect = (item: NavItemData) => {
+    if (item.id === 'search') {
+      setQuickSearchOpen(true);
+      return;
+    }
     if (item.id === 'logout') {
       clearAuth();
       navigate('/login');

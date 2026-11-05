@@ -5,6 +5,15 @@ type KeyHandler = (e: KeyboardEvent) => void;
 export function useKeyboardShortcuts(shortcuts: Record<string, KeyHandler>) {
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
+      // Global shortcut for Command Palette / Quick Search (Cmd+K / Ctrl+K)
+      if ((e.key === 'k' || e.key === 'K') && (e.ctrlKey || e.metaKey)) {
+        if (shortcuts['ctrl+k']) {
+          e.preventDefault();
+          shortcuts['ctrl+k'](e);
+          return;
+        }
+      }
+
       // Ignore if typing in an input
       if (['INPUT', 'TEXTAREA', 'SELECT'].includes((e.target as HTMLElement).tagName)) {
         // Exception for Ctrl+Enter
