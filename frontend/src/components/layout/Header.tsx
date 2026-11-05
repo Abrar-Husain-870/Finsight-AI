@@ -1,11 +1,12 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useTheme } from '../../providers/ThemeProvider.js';
-import { Moon, Sun, LogOut, Settings, User, ChevronDown, Menu, PanelLeftClose, PanelLeftOpen } from 'lucide-react';
+import { Moon, Sun, LogOut, Settings, User, ChevronDown, Menu, PanelLeftClose, PanelLeftOpen, Play } from 'lucide-react';
 import { authApi } from '../../features/auth/api/auth.api.js';
 import { useAuthStore } from '../../features/auth/store/auth.store.js';
 import { useUiStore } from '../../store/uiStore.js';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
+import { useDemoTourStore } from '../../features/tour/demoTourStore.js';
 
 export function Header() {
   const clearAuth = useAuthStore(s => s.clearAuth);
@@ -13,6 +14,8 @@ export function Header() {
   const { theme, setTheme } = useTheme();
   const setMobileMenuOpen = useUiStore(s => s.setMobileMenuOpen);
   const { sidebarCollapsed, toggleSidebar } = useUiStore();
+  const isDemoUser = user?.email === 'demo@finsight.local';
+  const startTour = useDemoTourStore(s => s.startTour);
   
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -76,7 +79,20 @@ export function Header() {
         <span className="text-lg font-bold tracking-tight text-[var(--color-text-primary)] lg:hidden">FinSight</span>
       </div>
 
-      <div className="flex items-center gap-x-4 lg:gap-x-6">
+      <div className="flex items-center gap-x-3 sm:gap-x-4 lg:gap-x-6">
+        {isDemoUser && (
+          <motion.button
+            whileHover={{ scale: 1.04 }}
+            whileTap={{ scale: 0.96 }}
+            onClick={() => startTour(0)}
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-gradient-to-r from-emerald-500 to-teal-600 text-white shadow-sm hover:shadow-md transition-all cursor-pointer border border-emerald-400/30"
+            title="Start automated interactive feature tour"
+          >
+            <Play className="h-3 w-3 fill-current" />
+            <span className="hidden sm:inline">Run Demo Tour</span>
+            <span className="sm:hidden">Tour</span>
+          </motion.button>
+        )}
         <motion.button
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
