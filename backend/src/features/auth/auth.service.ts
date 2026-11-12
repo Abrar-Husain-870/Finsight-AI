@@ -56,9 +56,12 @@ export class AuthService {
     const { accessToken, refreshToken } = this.generateTokens(user.id);
     await authRepository.updateRefreshToken(user.id, refreshToken);
 
-    const txCount = await prisma.transaction.count({ where: { userId: user.id } });
-    if (txCount === 0) {
-      await demoService.seedDemoWorkspace(user.id);
+    const isDemo = data.email === 'demo@finsight.local' || data.name.toLowerCase().includes('demo');
+    if (isDemo) {
+      const txCount = await prisma.transaction.count({ where: { userId: user.id } });
+      if (txCount === 0) {
+        await demoService.seedDemoWorkspace(user.id);
+      }
     }
     return { user: this.mapToUserResponse(user), accessToken, refreshToken };
   }
